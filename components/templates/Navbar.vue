@@ -1,8 +1,6 @@
 <script setup>
-    
 </script>
 
 <template>
     <Button/>
-    <Navbar/>
 </template>
