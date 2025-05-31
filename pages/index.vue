@@ -3,6 +3,5 @@
 </script>
 
 <template>
-    <Button/>
     <Navbar/>
 </template>
