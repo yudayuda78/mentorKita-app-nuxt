@@ -17,4 +17,16 @@ export default defineNuxtConfig({
       tailwindcss(),
     ],
   },
+  app: {
+    head: {
+      title: 'MentorKita',
+      meta: [
+        { name: 'description', content: 'Platform bimbingan belajar dan mentoring online.' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/mentorkita.ico' }
+
+      ]
+    }
+  }
 })

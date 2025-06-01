@@ -4,4 +4,6 @@
 
 <template>
     <Navbar/>
+    <Section/>
+
 </template>
