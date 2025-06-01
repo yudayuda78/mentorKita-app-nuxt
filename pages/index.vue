@@ -4,6 +4,6 @@
 
 <template>
     <Navbar/>
-    <Section/>
+    <LandingPageContent/>
 
 </template>
