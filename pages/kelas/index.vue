@@ -1,9 +1,7 @@
 <script setup>
-    
 </script>
 
 <template>
     <Navbar/>
-    <LandingPageContent/>
-    <Footer/>
+    <div>coming soon</div>
 </template>

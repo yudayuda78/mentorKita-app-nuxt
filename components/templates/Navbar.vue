@@ -11,7 +11,9 @@ const toggleMenu = () => {
     <div class="flex items-center justify-between px-0 md:px-12">
       <!-- Logo -->
       <div class="flex items-center gap-4">
+        <NuxtLink to="/">
         <img src="/public/mentorkita23.webp" class="h-10" alt="MentorKita Logo" />
+        </NuxtLink>
 
       </div>
 
@@ -35,8 +37,12 @@ const toggleMenu = () => {
 
       <!-- Menu Desktop -->
       <ul class="hidden md:flex gap-6 items-center">
+        <NuxtLink to="/kelas">
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Kelas</a></li>
+        </NuxtLink>
+        <NuxtLink to="/tryout">
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Try Out</a></li>
+        </NuxtLink>
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Mentoring</a></li>
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Product</a></li>
         <li>

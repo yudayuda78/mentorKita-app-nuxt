@@ -3,13 +3,17 @@ defineProps({
   height: {
     type: String,
     default: 'h-[70vh]'
+  },
+  color: {
+    type: String,
+    default: ''
   }
 })
 defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <section :class="[' px-18 py-4', height]" v-bind="$attrs">
+  <section :class="[' px-18 py-4', height, color]" v-bind="$attrs">
     <div class=" flex h-[100%]">
       <slot />
     </div>
