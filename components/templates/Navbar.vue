@@ -7,7 +7,7 @@ const toggleMenu = () => {
 </script>
 
 <template>
-  <nav class="bg-white shadow-md px-6 py-4">
+  <nav class="bg-white shadow-md px-16 py-4">
     <div class="flex items-center justify-between px-0 md:px-12">
       <!-- Logo -->
       <div class="flex items-center gap-4">
