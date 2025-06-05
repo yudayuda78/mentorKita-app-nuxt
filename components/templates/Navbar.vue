@@ -43,7 +43,9 @@ const toggleMenu = () => {
         <NuxtLink to="/tryout">
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Try Out</a></li>
         </NuxtLink>
+        <NuxtLink to="/mentoring">
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Mentoring</a></li>
+        </NuxtLink>
         <li><a href="#" class="text-gray-700 hover:text-blue-600">Product</a></li>
         <li>
           <Button :colorClass="'bg-[#2966F2] text-white'" class="p-2 px-4 text-sm font-medium">

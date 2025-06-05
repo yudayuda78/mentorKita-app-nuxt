@@ -49,7 +49,7 @@
     </div>
 
     <div class="mt-10 border-t border-gray-700 pt-6 text-center text-sm text-gray-500">
-      &copy; 2025 Foscal. All rights reserved.
+      &copy; 2025 MentorKita. All rights reserved.
     </div>
   </div>
 </footer>
