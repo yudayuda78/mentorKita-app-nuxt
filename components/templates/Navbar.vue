@@ -1,20 +1,23 @@
 <script setup>
-import { ref } from 'vue'
-const isMobileMenuOpen = ref(false)
+import { ref } from "vue";
+const isMobileMenuOpen = ref(false);
 const toggleMenu = () => {
-  isMobileMenuOpen.value = !isMobileMenuOpen.value
-}
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
 </script>
 
 <template>
-  <nav class="bg-white shadow-md px-16 py-4">
+  <nav class="bg-white shadow-md px-6 md:px-16 py-4">
     <div class="flex items-center justify-between px-0 md:px-12">
       <!-- Logo -->
       <div class="flex items-center gap-4">
         <NuxtLink to="/">
-        <img src="/public/mentorkita23.webp" class="h-10" alt="MentorKita Logo" />
+          <img
+            src="/mentorkita23.webp"
+            class="h-10"
+            alt="MentorKita Logo"
+          />
         </NuxtLink>
-
       </div>
 
       <!-- Hamburger Button -->
@@ -35,33 +38,59 @@ const toggleMenu = () => {
         </svg>
       </button>
 
-      <!-- Menu Desktop -->
-      <ul class="hidden md:flex gap-6 items-center">
-        <NuxtLink to="/kelas">
-        <li><a href="#" class="text-gray-700 hover:text-blue-600">Kelas</a></li>
-        </NuxtLink>
-        <NuxtLink to="/tryout">
-        <li><a href="#" class="text-gray-700 hover:text-blue-600">Try Out</a></li>
-        </NuxtLink>
-        <NuxtLink to="/mentoring">
-        <li><a href="#" class="text-gray-700 hover:text-blue-600">Mentoring</a></li>
-        </NuxtLink>
-        <li><a href="#" class="text-gray-700 hover:text-blue-600">Product</a></li>
-        <li>
-          <Button :colorClass="'bg-[#2966F2] text-white'" class="p-2 px-4 text-sm font-medium">
-            Login
-          </Button>
-        </li>
-      </ul>
+      <!-- Menu Desktop (dijalankan hanya di client) -->
+      <ClientOnly>
+        <ul class="hidden md:flex gap-6 items-center">
+          <li>
+            <NuxtLink to="/kelas" class="text-gray-700 hover:text-blue-600">
+              Kelas
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/tryout" class="text-gray-700 hover:text-blue-600">
+              Try Out
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/mentoring" class="text-gray-700 hover:text-blue-600">
+              Mentoring
+            </NuxtLink>
+          </li>
+          <li>
+            <NuxtLink to="/product" class="text-gray-700 hover:text-blue-600">
+              Product
+            </NuxtLink>
+          </li>
+          <li>
+            <Button
+              :colorClass="'bg-[#2966F2] text-white'"
+              class="p-2 px-4 text-sm font-medium"
+            >
+              Login
+            </Button>
+          </li>
+        </ul>
+      </ClientOnly>
     </div>
 
     <!-- Mobile Menu -->
     <div v-if="isMobileMenuOpen" class="md:hidden mt-4 space-y-3">
-      <a href="#" class="block text-gray-700 hover:text-blue-600">Kelas</a>
-      <a href="#" class="block text-gray-700 hover:text-blue-600">Try Out</a>
-      <a href="#" class="block text-gray-700 hover:text-blue-600">Mentoring</a>
-      <a href="#" class="block text-gray-700 hover:text-blue-600">Product</a>
-      <Button :colorClass="'bg-[#2966F2] text-white'" class="w-full text-center p-2 text-sm font-medium">
+      <NuxtLink to="/kelas" class="block text-gray-700 hover:text-blue-600">
+        Kelas
+      </NuxtLink>
+      <NuxtLink to="/tryout" class="block text-gray-700 hover:text-blue-600">
+        Try Out
+      </NuxtLink>
+      <NuxtLink to="/mentoring" class="block text-gray-700 hover:text-blue-600">
+        Mentoring
+      </NuxtLink>
+      <NuxtLink to="/product" class="block text-gray-700 hover:text-blue-600">
+        Product
+      </NuxtLink>
+      <Button
+        :colorClass="'bg-[#2966F2] text-white'"
+        class="w-full text-center p-2 text-sm font-medium"
+      >
         Login
       </Button>
     </div>

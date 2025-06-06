@@ -1,7 +1,12 @@
 <script setup>
+import Section from '~/components/ui/Section.vue';
+
 </script>
 
 <template>
     <Navbar/>
-    <div>coming soon</div>
+    <Section>
+        hello
+    </Section>
+    <Footer/>
 </template>

@@ -9,7 +9,7 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
         <!-- Bimbingan Online -->
         <div class="bg-white shadow-md rounded-2xl p-6 flex flex-col space-y-4">
-          <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Belajar Online SD-SMP-SMA</h2>
+          <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Bimbel Online SD-SMP-SMA</h2>
           <ul class="text-gray-600 space-y-1">
             <li>📚 Bisa request materi</li>
             <li>⏰ Waktu fleksibel</li>
@@ -20,7 +20,7 @@
 
         <!-- Bimbingan Offline -->
         <div class="bg-white shadow-md rounded-2xl p-6 flex flex-col space-y-4">
-          <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Belajar Offline SD-SMP-SMA</h2>
+          <h2 class="text-lg sm:text-xl font-semibold text-gray-800">Bimbel Offline SD-SMP-SMA</h2>
           <ul class="text-gray-600 space-y-1">
             <li>📚 Bisa request materi</li>
             <li>⏰ Waktu fleksibel</li>
