@@ -8,12 +8,16 @@
         Belajar, Latihan dan Dibimbing
       </p>
       <div class="flex gap-4">
+        <NuxtLink to="/tryout">
         <Button :colorClass="'bg-[#FFFA6D] text-[#2966F2] font-bold'">
           Ikuti Try Out Gratis
         </Button>
+        </NuxtLink>
+        <NuxtLink to="/kelas">
         <Button :colorClass="'bg-[#FFFA6D] text-[#2966F2] font-bold'">
           Mulai Belajar
         </Button>
+        </NuxtLink>
       </div>
     </div>
 
