@@ -7,15 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-   id       Int    @id @default(autoincrement())
-  name     String
-  email    String @unique
-  phone    String
-  isActive Boolean @default(true)
+model LatihanClass {
+  id      Int             @id @default(autoincrement())
+  name    String
+  courses LatihanCourse[]
 }
 
-model LatihanClass{
-  id      Int @id @default(autoincrement())
-  name    String
+model LatihanCourse {
+  id       Int             @id @default(autoincrement())
+  name     String
+  classes  LatihanClass  @relation(fields: [latihanClassId], references: [id])
+  latihanClassId Int  
+  materi    LatihanMateri[]
+}
+
+model LatihanMateri {
+  id        Int          @id @default(autoincrement())
+  name      String
+  course    LatihanCourse @relation(fields: [courseId], references: [id])
+  courseId  Int
+  soal    LatihanSoal[]
+}
+
+model LatihanSoal {
+  id         Int            @id @default(autoincrement())
+  question   String
+  materi     LatihanMateri  @relation(fields: [materiId], references: [id])
+  materiId   Int
 }
