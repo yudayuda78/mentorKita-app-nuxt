@@ -32,13 +32,27 @@ model LatihanMateri {
 model LatihanSoal {
   id         Int            @id @default(autoincrement())
   question   String
+  type             SoalType
+  optionA          String?
+  optionB          String?
+  optionC          String?
+  optionD          String?
+  optionE          String?
+  correctOption    AnswerOption?   // untuk pilihan ganda
+  correctEssay     String? 
   materi     LatihanMateri  @relation(fields: [materiId], references: [id])
   materiId   Int
-  type       String
-  a           String
-  b         String
-  c         String
-  d         String
-  e         String
-  correctAnswer String
+}
+
+enum SoalType {
+  PILIHAN_GANDA
+  ESAI
+}
+
+enum AnswerOption {
+  A
+  B
+  C
+  D
+  E
 }
