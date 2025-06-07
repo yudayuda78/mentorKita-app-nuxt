@@ -15,5 +15,8 @@ const kelas = await prisma.latihanClass.findMany({
     }
   })
 
-  return kelas
+  return {
+    status: 200,
+    data: kelas,
+  } 
 })

@@ -6,7 +6,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   typescript: { strict: false },
-  modules: ["@prisma/nuxt"],
+  modules: ["@prisma/nuxt", "@pinia/nuxt"],
   components: [
     '~/components',  // seluruh components
     '~/components/ui', // juga pastikan ini kalau kamu override array
