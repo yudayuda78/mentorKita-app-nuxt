@@ -4,7 +4,7 @@
 <template>
   <Navbar />
 
-  <Section>
+  <Section height="h-[70vh]">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
       <!-- Latihan Soal -->
       <div class="bg-white shadow-md rounded-xl p-6 flex flex-col justify-between">

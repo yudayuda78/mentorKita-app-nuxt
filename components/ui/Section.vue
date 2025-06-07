@@ -2,7 +2,7 @@
 defineProps({
   height: {
     type: String,
-    default: 'h-[70vh]'
+    default: ''
   },
   color: {
     type: String,
