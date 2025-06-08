@@ -33,13 +33,14 @@ model LatihanMateri {
   name      String
   course    LatihanCourse @relation(fields: [courseId], references: [id])
   courseId  Int
+  slug      String?
   soal    LatihanSoal[]
 }
 
 model LatihanSoal {
   id         Int            @id @default(autoincrement())
   question   String
-  type             SoalType
+  type             SoalType @default(PILIHAN_GANDA)
   optionA          String?
   optionB          String?
   optionC          String?

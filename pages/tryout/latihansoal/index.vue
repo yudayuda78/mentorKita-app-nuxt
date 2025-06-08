@@ -27,7 +27,9 @@ onMounted( async () => {
                       <summary class="cursor-pointer">{{ course.name }}</summary>
                       <ul class="ml-4 mt-1 list-disc">
                         <li v-for="materi in course.materi" :key="materi.id">
+                        <NuxtLink :to="`/tryout/latihansoal/${materi.slug}`">
                           {{ materi.name }}
+                          </NuxtLink>
                         </li>
                       </ul>
                     </details>
