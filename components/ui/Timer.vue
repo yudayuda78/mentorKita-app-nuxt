@@ -1,13 +1,14 @@
 <script setup>
 
 
-const remainingTime = ref(600) // dalam detik (10 menit)
+const remainingTime = ref(6000) // dalam detik (10 menit)
 let timer = null
 
 const formatTime = (seconds) => {
-  const m = String(Math.floor(seconds / 60)).padStart(2, '0')
+    const h = String(Math.floor(seconds / 3600)).padStart(2, '0')
+  const m = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0')
   const s = String(seconds % 60).padStart(2, '0')
-  return `${m}:${s}`
+  return `${h}:${m}:${s}`
 }
 
 onMounted(() => {

@@ -16,9 +16,10 @@ onMounted(async () => {
 
     
 <template>
-    
-     <Section height="h-auto">
+    <Section>
         <Timer/>
+    </Section>
+     <Section height="h-auto">
       <div v-if="materi">
         <h2 class="text-xl font-bold mb-4">Materi: {{ materi.name }}</h2>
         <div v-if="materi.soal && materi.soal.length">
@@ -48,4 +49,5 @@ onMounted(async () => {
       </div>
     </Section>
     
+    <NavSoal/>
 </template>
