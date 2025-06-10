@@ -2,4 +2,5 @@
 </script>
 
 <template>
+    <Register/>
 </template>
