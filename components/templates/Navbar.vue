@@ -62,12 +62,14 @@ const toggleMenu = () => {
             </NuxtLink>
           </li>
           <li>
+            <NuxtLink to="/login">
             <Button
               :colorClass="'bg-[#2966F2] text-white'"
               class="p-2 px-4 text-sm font-medium"
             >
               Login
             </Button>
+            </NuxtLink>
           </li>
         </ul>
       </ClientOnly>
@@ -87,12 +89,14 @@ const toggleMenu = () => {
       <NuxtLink to="/product" class="block text-gray-700 hover:text-blue-600">
         Product
       </NuxtLink>
+      <NuxtLink to="/login">
       <Button
         :colorClass="'bg-[#2966F2] text-white'"
         class="w-full text-center p-2 text-sm font-medium"
       >
         Login
       </Button>
+    </NuxtLink>
     </div>
   </nav>
 </template>
