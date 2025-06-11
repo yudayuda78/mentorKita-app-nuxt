@@ -1,47 +1,110 @@
 <script setup>
+
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
+
+const auth = useAuthStore()
+
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const passwordConfirmation = ref('')
+
+const error = ref('')
+
+const handleRegister = async() => {
+  if (password.value !== passwordConfirmation.value) {
+    error.value = 'Password dan konfirmasi password tidak cocok'
+    return
+  }
+
+  error.value = ''
+  await auth.register(username.value, email.value, password.value)
+  console.log('auth.error:', auth.error)
+  if (!auth.error) {
+    await navigateTo('/login')
+  }
+}
 </script>
 
 <template>
   <div class="flex h-screen flex-col md:flex-row relative">
-    <!-- Text Login di atas kanan (desktop), di bawah form (mobile) -->
-    <p
+     <p
       class="text-sm text-right text-gray-600 md:absolute md:top-4 md:right-4 md:text-base md:block hidden"
     >
       Sudah punya akun? <a href="/login" class="text-blue-600 underline">Login di sini</a>
     </p>
+    <div class="hidden md:block bg-amber-200 w-full md:w-[40%] h-[200px] md:h-full"></div>
 
-    <!-- Panel kiri -->
-    <div class="hidden md:block bg-amber-200 w-full md:w-[40%] h-[200px] md:h-full">
-      <!-- Bisa isi dengan gambar, ilustrasi, atau info tambahan -->
-    </div>
-
-    <!-- Form Register -->
     <div class="flex items-center justify-center w-full md:w-[60%] min-h-screen md:min-h-full">
       <div class="w-[90%] max-w-[400px] space-y-4 p-6 bg-white rounded-xl shadow-md">
-        <!-- Text login versi mobile -->
-       
-
         <h2 class="text-2xl font-bold text-center">Buat Akun MentorKita</h2>
         <p class="text-center text-gray-600">Silahkan isi form berikut untuk melanjutkan</p>
 
-        <Input name="username" type="text" placeholder="Masukkan username">
-          Username
-        </Input>
+        <input
+          v-model="username"
+          type="text"
+          placeholder="Masukkan username"
+          class="w-full px-3 py-2 border rounded-md"
+        />
 
-        <Input name="email" type="email" placeholder="Masukkan email">
-          Email
-        </Input>
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Masukkan email"
+          class="w-full px-3 py-2 border rounded-md"
+        />
 
-        <Input name="password" type="password" placeholder="Masukkan password">
-          Password
-        </Input>
+        <!-- Password -->
+        <div>
+          <div class="relative">
+            <input
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              name="password"
+              placeholder="Masukkan password"
+              class="w-full px-3 py-2 border rounded-md"
+            />
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+            >
+              {{ showPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+        </div>
 
-        <Input name="password-confirmation" type="password" placeholder="Konfirmasi password">
-          Konfirmasi Password
-        </Input>
+        <!-- Konfirmasi Password -->
+        <div>
+          <div class="relative">
+            <input
+              v-model="passwordConfirmation"
+              :type="showConfirmPassword ? 'text' : 'password'"
+              name="password-confirmation"
+              placeholder="Konfirmasi password"
+              class="w-full px-3 py-2 border rounded-md"
+            />
+            <button
+              type="button"
+              @click="showConfirmPassword = !showConfirmPassword"
+              class="absolute inset-y-0 right-2 flex items-center text-sm text-gray-600"
+            >
+              {{ showConfirmPassword ? '🙈' : '👁️' }}
+            </button>
+          </div>
+        </div>
 
-        <Button class="w-full">Register</Button>
-        <Button class="w-full bg-red-500 hover:bg-red-600 text-white">Daftar Menggunakan Google</Button>
+        <!-- Pesan Error -->
+        <p v-if="error" class="text-red-600 text-sm text-center">{{ error }}</p>
+
+        <button @click="handleRegister" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-md">
+          Register
+        </button>
+
+        <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md">
+          Daftar Menggunakan Google
+        </button>
 
         <p class="text-xs text-center text-gray-500">
           Dengan membuat akun, saya setuju dengan
@@ -49,7 +112,7 @@
           <span class="text-blue-600 underline">Kebijakan Privasi</span>.
         </p>
 
-        <p class="text-sm text-center text-gray-600 md:hidden">
+         <p class="text-sm text-center text-gray-600 md:hidden">
           Sudah punya akun? <a href="/login" class="text-blue-600 underline">Login di sini</a>
         </p>
       </div>
