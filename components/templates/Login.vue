@@ -1,4 +1,19 @@
 <script setup>
+  const auth = useAuthStore()
+  const email = ref('')
+  const password = ref('')
+  const errorMessage = ref('')
+
+  const handleLogin = async() => {
+    const response = await auth.login(email.value, password.value)
+    if (response === false) {
+    errorMessage.value = auth.error
+  } else {
+    auth.user = response.user
+    await navigateTo('/')
+  }
+  }
+
 </script>
 
 <script setup>
@@ -17,15 +32,17 @@
         <h2 class="text-2xl font-bold text-center">Masuk ke MentorKita</h2>
         <p class="text-center text-gray-600">Silahkan isi form berikut untuk melanjutkan</p>
 
-        <Input name="email" type="email" placeholder="Masukkan email">
+        <Input v-model="email" name="email" type="email" placeholder="Masukkan email">
           Email
         </Input>
 
-        <Input name="password" type="password" placeholder="Masukkan password">
+        <Input v-model="password" name="password" type="password" placeholder="Masukkan password">
           Password
         </Input>
 
-        <Button class="w-full">Login</Button>
+        <p v-if="errorMessage" class="text-red-500 text-center text-sm">{{ errorMessage }}</p>
+
+        <Button @click="handleLogin" class="w-full">Login</Button>
         <Button class="w-full  text-white">Daftar Menggunakan Google</Button>
       </div>
     </div>
