@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "LatihanSoal" ADD COLUMN     "nomorSoal" INTEGER;
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "createAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;
