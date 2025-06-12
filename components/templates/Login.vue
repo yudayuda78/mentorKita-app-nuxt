@@ -9,8 +9,9 @@
     if (response === false) {
     errorMessage.value = auth.error
   } else {
-    auth.user = response.user
-    await navigateTo('/')
+    if (auth.user) {
+      await navigateTo('/')
+    }
   }
   }
 

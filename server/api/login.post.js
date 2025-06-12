@@ -23,6 +23,12 @@ export default defineEventHandler(async(event) => {
         { expiresIn: '7d' }
     )
 
+    setCookie(event, 'token', token, {
+        httpOnly: true,
+        sameSite: 'strict',
+        maxAge: 60 * 60 * 24 * 7 // 7 hari
+    })
+
     return {
         token,
         user: {

@@ -34,17 +34,31 @@ export const useAuthStore = defineStore('auth',  () => {
                 }
             })
 
-            return response
+            const { user: me } = await $fetch('/api/me')
+            user.value = me
+
+            return true
         }catch(err){
             error.value = err.data?.message || err.message || 'Gagal login'
             return false
         }
     }
 
+    const logout = async () => {
+        try {
+            await $fetch('/api/logout', { method: 'POST' })
+            user.value = null
+        } catch (err) {
+            error.value = 'Gagal logout'
+        }
+    }
+
+
     return {
         user,
         error,
         register,
-        login
+        login,
+        logout
     }
 })
