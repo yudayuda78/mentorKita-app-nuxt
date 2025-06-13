@@ -1,68 +1,93 @@
 <script setup>
-const route = useRoute()
-const latihanStore = useLatihanStore()
-const slug = route.params.slug
+const route = useRoute();
+const latihanStore = useLatihanStore();
+const slug = route.params.slug;
 
-const materi = ref(null)
-const isSoalStart = ref(false)
-const currentIndex = ref(0)
-const jawabanUser = ref([])
-const terkunci = ref([])
+const materi = ref(null);
+const timerRef = ref(null)
+const isSoalStart = ref(false);
+const currentIndex = ref(0);
+const jawabanUser = ref([]);
+const terkunci = ref([]);
+const ragu = ref([]);
 
 const soalStart = () => {
-  isSoalStart.value = true
-}
+  isSoalStart.value = true;
+  timerRef.value?.startTimer()
+};
 
 onMounted(async () => {
-  await latihanStore.latihanFetch()
+  await latihanStore.latihanFetch();
   const data = latihanStore.latihanData.flatMap((kelas) =>
     kelas.courses.flatMap((course) => course.materi)
-  )
+  );
   materi.value = data.find(
     (item) => item.slug === Number(slug) || item.slug === slug
-  )
+  );
 
   // Inisialisasi array jawaban dan kunci
   if (materi.value?.soal) {
-    jawabanUser.value = Array(materi.value.soal.length).fill('')
-    terkunci.value = Array(materi.value.soal.length).fill(false)
+    jawabanUser.value = Array(materi.value.soal.length).fill("");
+    terkunci.value = Array(materi.value.soal.length).fill(false);
   }
-})
+  ragu.value = Array(materi.value.soal.length).fill(false);
+});
 
-const currentSoal = computed(() =>
-  materi.value?.soal?.[currentIndex.value] || {}
-)
+const currentSoal = computed(
+  () => materi.value?.soal?.[currentIndex.value] || {}
+);
 
 const isSelected = (option) => {
-  return jawabanUser.value[currentIndex.value] === option
-}
+  return jawabanUser.value[currentIndex.value] === option;
+};
 
 const pilihJawaban = (option) => {
   if (!terkunci.value[currentIndex.value]) {
-    jawabanUser.value[currentIndex.value] = option
+    jawabanUser.value[currentIndex.value] = option;
   }
-}
+};
 
 const nextSoal = () => {
   if (currentIndex.value < materi.value.soal.length - 1) {
-    currentIndex.value++
+    currentIndex.value++;
   }
-}
+};
 
 const prevSoal = () => {
   if (currentIndex.value > 0) {
-    currentIndex.value--
+    currentIndex.value--;
   }
-}
+};
 
 const lockJawaban = () => {
-  terkunci.value[currentIndex.value] = true
-}
+  terkunci.value[currentIndex.value] = true;
+  ragu.value[currentIndex.value] = false;
+};
+
+const bukaKunci = () => {
+  // Hanya bisa dibuka kalau terkunci
+  if (terkunci.value[currentIndex.value]) {
+    terkunci.value[currentIndex.value] = false;
+    ragu.value[currentIndex.value] = true;
+  }
+};
+
+const soalStatus = computed(() => {
+  return jawabanUser.value.map((jawaban, index) => {
+    if (terkunci.value[index]) return "terkunci";
+    if (jawaban) return "dijawab";
+    return "belum";
+  });
+});
+
+const goToSoal = (index) => {
+  currentIndex.value = index;
+};
 </script>
 
 <template>
   <Section>
-    <Timer />
+    <Timer ref="timerRef" />
   </Section>
 
   <Section height="h-auto">
@@ -158,7 +183,9 @@ const lockJawaban = () => {
               </div>
 
               <div class="mt-4 flex gap-2">
-                <Button @click="prevSoal" :disabled="currentIndex === 0">Sebelumnya</Button>
+                <Button @click="prevSoal" :disabled="currentIndex === 0"
+                  >Sebelumnya</Button
+                >
                 <Button
                   @click="nextSoal"
                   :disabled="currentIndex === materi.soal.length - 1"
@@ -171,6 +198,14 @@ const lockJawaban = () => {
                   class="bg-red-500 text-white"
                 >
                   Kunci Jawaban
+                </Button>
+
+                <Button
+                  v-if="terkunci[currentIndex]"
+                  @click="bukaKunci"
+                  class="bg-yellow-400 text-black"
+                >
+                  Belum Yakin
                 </Button>
               </div>
             </div>
@@ -185,7 +220,11 @@ const lockJawaban = () => {
       </div>
 
       <div class="navsoal w-[20%]">
-        <NavSoal />
+        <NavSoal
+          :jumlahSoal="materi?.soal?.length || 0"
+          :statusList="soalStatus"
+          :goToSoal="goToSoal"
+        />
       </div>
     </div>
   </Section>
