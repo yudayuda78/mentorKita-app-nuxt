@@ -36,6 +36,7 @@ export const useAuthStore = defineStore('auth',  () => {
 
             const { user: me } = await $fetch('/api/me')
             user.value = me
+            
 
             return true
         }catch(err){

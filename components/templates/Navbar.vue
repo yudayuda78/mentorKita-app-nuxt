@@ -6,6 +6,7 @@ const showDropdown = ref(false);
 const dropdownRef = ref(null);
 const username = computed(() => auth.user?.username || "");
 
+
 const handleLogout = async () => {
   await auth.logout();
   navigateTo("/login");
@@ -69,7 +70,7 @@ onBeforeUnmount(() => {
               v-show="showDropdown"
               class="absolute mt-2 bg-white shadow-lg rounded p-2 right-0 z-10"
             >
-              <NuxtLink to="/profil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</NuxtLink>
+              <NuxtLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</NuxtLink>
               <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</button>
             </div>
           </li>
