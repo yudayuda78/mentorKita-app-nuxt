@@ -1,5 +1,4 @@
 <script setup>
-
 const route = useRoute()
 const latihanStore = useLatihanStore()
 const slug = route.params.slug
@@ -14,21 +13,34 @@ const soalStart = () => {
   isSoalStart.value = true
 }
 
-const currentSoal = computed(() => {
-  return materi.value?.soal?.[currentIndex.value] ?? null
+onMounted(async () => {
+  await latihanStore.latihanFetch()
+  const data = latihanStore.latihanData.flatMap((kelas) =>
+    kelas.courses.flatMap((course) => course.materi)
+  )
+  materi.value = data.find(
+    (item) => item.slug === Number(slug) || item.slug === slug
+  )
+
+  // Inisialisasi array jawaban dan kunci
+  if (materi.value?.soal) {
+    jawabanUser.value = Array(materi.value.soal.length).fill('')
+    terkunci.value = Array(materi.value.soal.length).fill(false)
+  }
 })
 
-const pilihJawaban = (huruf) => {
-  if (terkunci.value[currentIndex.value]) return // jika sudah dikunci, tidak bisa pilih
-  jawabanUser.value[currentIndex.value] = huruf
+const currentSoal = computed(() =>
+  materi.value?.soal?.[currentIndex.value] || {}
+)
+
+const isSelected = (option) => {
+  return jawabanUser.value[currentIndex.value] === option
 }
 
-const isSelected = (huruf) => {
-  return jawabanUser.value[currentIndex.value] === huruf
-}
-
-const lockJawaban = () => {
-  terkunci.value[currentIndex.value] = true
+const pilihJawaban = (option) => {
+  if (!terkunci.value[currentIndex.value]) {
+    jawabanUser.value[currentIndex.value] = option
+  }
 }
 
 const nextSoal = () => {
@@ -43,19 +55,9 @@ const prevSoal = () => {
   }
 }
 
-onMounted(async () => {
-  await latihanStore.latihanFetch()
-  const data = latihanStore.latihanData.flatMap((kelas) =>
-    kelas.courses.flatMap((course) => course.materi)
-  )
-  materi.value = data.find(
-    (item) => item.slug === Number(slug) || item.slug === slug
-  )
-  if (materi.value && materi.value.soal) {
-    jawabanUser.value = new Array(materi.value.soal.length).fill(null)
-    terkunci.value = new Array(materi.value.soal.length).fill(false)
-  }
-})
+const lockJawaban = () => {
+  terkunci.value[currentIndex.value] = true
+}
 </script>
 
 <template>
@@ -68,59 +70,120 @@ onMounted(async () => {
       <Button @click="soalStart">Mulai Kerjakan</Button>
     </div>
 
-    <div v-else class="flex w-full gap-6">
+    <div v-else class="flex gap-4 w-full">
       <div class="soal w-[80%]">
-        <div v-if="currentSoal">
-          <p class="font-bold mb-2">Soal {{ currentIndex + 1 }}:</p>
-          <p class="mb-4">{{ currentSoal.question }}</p>
-          <div class="space-y-2 ml-4">
-            <div
-              v-if="currentSoal.optionA"
-              :class="['cursor-pointer', 'p-2 rounded', isSelected('A') ? 'bg-blue-200' : '', terkunci[currentIndex] ? 'pointer-events-none opacity-60' : '']"
-              @click="pilihJawaban('A')"
-            >
-              A. {{ currentSoal.optionA }}
-            </div>
-            <div
-              v-if="currentSoal.optionB"
-              :class="['cursor-pointer', 'p-2 rounded', isSelected('B') ? 'bg-blue-200' : '', terkunci[currentIndex] ? 'pointer-events-none opacity-60' : '']"
-              @click="pilihJawaban('B')"
-            >
-              B. {{ currentSoal.optionB }}
-            </div>
-            <div
-              v-if="currentSoal.optionC"
-              :class="['cursor-pointer', 'p-2 rounded', isSelected('C') ? 'bg-blue-200' : '', terkunci[currentIndex] ? 'pointer-events-none opacity-60' : '']"
-              @click="pilihJawaban('C')"
-            >
-              C. {{ currentSoal.optionC }}
-            </div>
-            <div
-              v-if="currentSoal.optionD"
-              :class="['cursor-pointer', 'p-2 rounded', isSelected('D') ? 'bg-blue-200' : '', terkunci[currentIndex] ? 'pointer-events-none opacity-60' : '']"
-              @click="pilihJawaban('D')"
-            >
-              D. {{ currentSoal.optionD }}
-            </div>
-            <div
-              v-if="currentSoal.optionE"
-              :class="['cursor-pointer', 'p-2 rounded', isSelected('E') ? 'bg-blue-200' : '', terkunci[currentIndex] ? 'pointer-events-none opacity-60' : '']"
-              @click="pilihJawaban('E')"
-            >
-              E. {{ currentSoal.optionE }}
+        <div v-if="materi">
+          <h2 class="text-xl font-bold mb-4">Materi: {{ materi.name }}</h2>
+
+          <div v-if="materi.soal && materi.soal.length">
+            <div>
+              <p class="font-medium mb-2">
+                {{ currentIndex + 1 }}. {{ currentSoal.question }}
+              </p>
+              <div class="space-y-2 ml-4">
+                <label
+                  v-if="currentSoal.optionA"
+                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  :class="{ 'bg-blue-100': isSelected('A') }"
+                >
+                  <input
+                    type="radio"
+                    value="A"
+                    v-model="jawabanUser[currentIndex]"
+                    :disabled="terkunci[currentIndex]"
+                    @change="pilihJawaban('A')"
+                  />
+                  <span>A. {{ currentSoal.optionA }}</span>
+                </label>
+
+                <label
+                  v-if="currentSoal.optionB"
+                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  :class="{ 'bg-blue-100': isSelected('B') }"
+                >
+                  <input
+                    type="radio"
+                    value="B"
+                    v-model="jawabanUser[currentIndex]"
+                    :disabled="terkunci[currentIndex]"
+                    @change="pilihJawaban('B')"
+                  />
+                  <span>B. {{ currentSoal.optionB }}</span>
+                </label>
+
+                <label
+                  v-if="currentSoal.optionC"
+                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  :class="{ 'bg-blue-100': isSelected('C') }"
+                >
+                  <input
+                    type="radio"
+                    value="C"
+                    v-model="jawabanUser[currentIndex]"
+                    :disabled="terkunci[currentIndex]"
+                    @change="pilihJawaban('C')"
+                  />
+                  <span>C. {{ currentSoal.optionC }}</span>
+                </label>
+
+                <label
+                  v-if="currentSoal.optionD"
+                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  :class="{ 'bg-blue-100': isSelected('D') }"
+                >
+                  <input
+                    type="radio"
+                    value="D"
+                    v-model="jawabanUser[currentIndex]"
+                    :disabled="terkunci[currentIndex]"
+                    @change="pilihJawaban('D')"
+                  />
+                  <span>D. {{ currentSoal.optionD }}</span>
+                </label>
+
+                <label
+                  v-if="currentSoal.optionE"
+                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  :class="{ 'bg-blue-100': isSelected('E') }"
+                >
+                  <input
+                    type="radio"
+                    value="E"
+                    v-model="jawabanUser[currentIndex]"
+                    :disabled="terkunci[currentIndex]"
+                    @change="pilihJawaban('E')"
+                  />
+                  <span>E. {{ currentSoal.optionE }}</span>
+                </label>
+              </div>
+
+              <div class="mt-4 flex gap-2">
+                <Button @click="prevSoal" :disabled="currentIndex === 0">Sebelumnya</Button>
+                <Button
+                  @click="nextSoal"
+                  :disabled="currentIndex === materi.soal.length - 1"
+                >
+                  Selanjutnya
+                </Button>
+                <Button
+                  @click="lockJawaban"
+                  :disabled="terkunci[currentIndex]"
+                  class="bg-red-500 text-white"
+                >
+                  Kunci Jawaban
+                </Button>
+              </div>
             </div>
           </div>
-
-          <div class="mt-6 flex gap-3">
-            <button @click="lockJawaban" class="bg-green-500 text-white px-4 py-2 rounded">Kunci Jawaban</button>
-            <button @click="prevSoal" :disabled="currentIndex === 0" class="bg-gray-400 text-white px-4 py-2 rounded">Previous</button>
-            <button @click="nextSoal" :disabled="currentIndex === materi.soal.length - 1" class="bg-gray-800 text-white px-4 py-2 rounded">Next</button>
+          <div v-else>
+            <p>Tidak ada soal untuk materi ini.</p>
           </div>
         </div>
         <div v-else>
-          <p>Tidak ada soal untuk materi ini.</p>
+          <p>Loading atau materi tidak ditemukan...</p>
         </div>
       </div>
+
       <div class="navsoal w-[20%]">
         <NavSoal />
       </div>
