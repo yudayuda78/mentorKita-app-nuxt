@@ -78,5 +78,6 @@ model AnswerLatihanUser {
   soalId    Int
   jawaban   String
   benar     Boolean
+  materiSoal String?
   waktu     DateTime       @default(now())
 }

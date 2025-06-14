@@ -1,7 +1,10 @@
 <script setup>
+defineEmits(['submitJawaban'])
 const route = useRoute();
 const latihanStore = useLatihanStore();
 const slug = route.params.slug;
+const auth = useAuthStore()
+const userId = computed(() => auth.user?.id || "");
 
 const materi = ref(null);
 const timerRef = ref(null)
@@ -83,6 +86,33 @@ const soalStatus = computed(() => {
 const goToSoal = (index) => {
   currentIndex.value = index;
 };
+
+const submitJawaban = async() => {
+  const payload = materi.value.soal.map( (soal, index) => {
+    const jawaban = jawabanUser.value[index]
+    const benar = jawaban === soal.correctOption
+
+    return {
+      soalId: soal.id,
+      jawaban : jawaban,
+      benar : benar,
+      userId : userId.value,
+      materiSoal: soal.materiSoal
+    }
+  })
+
+  try {
+    const response = await $fetch('/api/answer-latihan', {
+      method: 'POST',
+      body: { jawaban: payload },
+    })
+
+    alert('Jawaban berhasil disimpan!')
+  } catch (err) {
+    console.error(err)
+    alert('Gagal menyimpan jawaban!')
+  }
+}
 </script>
 
 <template>
@@ -224,6 +254,7 @@ const goToSoal = (index) => {
           :jumlahSoal="materi?.soal?.length || 0"
           :statusList="soalStatus"
           :goToSoal="goToSoal"
+          @submitJawaban="submitJawaban"
         />
       </div>
     </div>

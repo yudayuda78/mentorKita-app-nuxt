@@ -28,7 +28,7 @@ defineProps({
     </div>
 
     <div class="w-60 mt-2">
-      <Button class="w-full">Submit</Button>
+      <Button class="w-full" @click="$emit('submitJawaban')">Submit</Button>
     </div>
   </section>
 </template>
