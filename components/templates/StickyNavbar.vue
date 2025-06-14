@@ -31,7 +31,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <nav class="bg-white shadow-md px-6 md:px-16 py-4 fixed top-0 left-0 right-0 z-50">
+  <nav class="fixed top-0 left-0 right-0 bg-white shadow z-50 px-6 md:px-16 py-4 transition duration-300">
     <div class="flex items-center justify-between px-0 md:px-12">
       <NuxtLink to="/">
         <img src="/mentorkita23.webp" class="h-10" alt="MentorKita Logo" />
@@ -56,7 +56,7 @@ onBeforeUnmount(() => {
 
           <li v-if="!auth.user">
             <NuxtLink to="/login">
-              <Button :colorClass="'bg-[#2966F2] text-white'" class="p-2 px-4 text-sm font-medium">Login</Button>
+              <button class="bg-[#2966F2] text-white px-4 py-2 text-sm rounded font-medium">Login</button>
             </NuxtLink>
           </li>
 
@@ -85,7 +85,7 @@ onBeforeUnmount(() => {
 
       <div v-if="!auth.user">
         <NuxtLink to="/login">
-          <Button :colorClass="'bg-[#2966F2] text-white'" class="w-full text-center p-2 text-sm font-medium">Login</Button>
+          <button class="w-full bg-[#2966F2] text-white p-2 text-sm font-medium rounded">Login</button>
         </NuxtLink>
       </div>
 
@@ -97,7 +97,7 @@ onBeforeUnmount(() => {
           v-show="showDropdown"
           class="bg-white shadow-lg rounded mt-2 p-2"
         >
-          <NuxtLink to="/profil" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</NuxtLink>
+          <NuxtLink to="/profile" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profil</NuxtLink>
           <button @click="handleLogout" class="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100">Logout</button>
         </div>
       </div>
