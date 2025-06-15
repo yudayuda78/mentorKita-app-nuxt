@@ -1,6 +1,6 @@
 export default defineEventHandler( async (event) => {
     const { jawaban } = await readBody(event)
-    console.log(jawaban)
+    
     
     if (!Array.isArray(jawaban)) {
         throw createError({
@@ -17,7 +17,7 @@ export default defineEventHandler( async (event) => {
         benar: j.benar,
         materiSoal: j.materiSoal
     })),
-        skipDuplicates: true, // agar tidak double insert jika sudah ada
+        skipDuplicates: true,
     })
 
     return { success: true, inserted: data.count }
