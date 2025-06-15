@@ -1,5 +1,6 @@
 export default defineEventHandler( async (event) => {
     const { jawaban } = await readBody(event)
+    console.log(jawaban)
     
     if (!Array.isArray(jawaban)) {
         throw createError({

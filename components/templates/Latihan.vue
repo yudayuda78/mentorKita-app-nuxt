@@ -88,9 +88,12 @@ const goToSoal = (index) => {
 };
 
 const submitJawaban = async() => {
+  
+
   const payload = materi.value.soal.map( (soal, index) => {
     const jawaban = jawabanUser.value[index]
     const benar = jawaban === soal.correctOption
+
 
     return {
       soalId: soal.id,
@@ -112,6 +115,8 @@ const submitJawaban = async() => {
     console.error(err)
     alert('Gagal menyimpan jawaban!')
   }
+
+  useScoreLatihan(payload)
 }
 </script>
 

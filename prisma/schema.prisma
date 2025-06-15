@@ -14,6 +14,7 @@ model User{
   password  String
   createAt DateTime @default(now())
   asnwerLatihan AnswerLatihanUser[]
+  score ScoreLatihan[]
 }
 
 model LatihanClass {
@@ -55,6 +56,7 @@ model LatihanSoal {
   materi     LatihanMateri  @relation(fields: [materiId], references: [id])
   materiId   Int
   asnwerSoal AnswerLatihanUser[]
+  score ScoreLatihan[]
 }
 
 enum SoalType {
@@ -80,4 +82,14 @@ model AnswerLatihanUser {
   benar     Boolean
   materiSoal String?
   waktu     DateTime       @default(now())
+}
+
+model ScoreLatihan {
+  id Int @id @default(autoincrement())
+  user      User           @relation(fields: [userId], references: [id])
+  userId    Int
+  soal      LatihanSoal    @relation(fields: [soalId], references: [id])
+  soalId    Int
+  score     Int
+  date    DateTime          @default(now())
 }
