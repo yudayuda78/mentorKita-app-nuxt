@@ -37,6 +37,7 @@ model LatihanMateri {
   course    LatihanCourse @relation(fields: [courseId], references: [id])
   courseId  Int
   slug      String?
+  time      Int?
   soal    LatihanSoal[]
   score ScoreLatihan[]
 }
@@ -93,4 +94,25 @@ model ScoreLatihan {
   materiId    Int
   score     Int
   date    DateTime          @default(now())
+}
+
+model SnbtTryout{
+  id Int @id @default(autoincrement())
+  name String?
+  image String?
+  slug String?
+  isfree Boolean
+  marketing String?
+  startedAt  DateTime // waktu mulai
+  endedAt    DateTime // waktu selesai
+  createdAt  DateTime @default(now())
+  tryoutMateri SnbtTryoutMateri[]
+}
+
+model SnbtTryoutMateri{
+   id Int @id @default(autoincrement())
+   name String?
+   tryout SnbtTryout @relation(fields: [tryoutId], references: [id])
+   tryoutId Int
+   time Int
 }
