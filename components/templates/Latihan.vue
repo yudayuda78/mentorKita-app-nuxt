@@ -34,6 +34,12 @@ onMounted(async () => {
     terkunci.value = Array(materi.value.soal.length).fill(false);
   }
   ragu.value = Array(materi.value.soal.length).fill(false);
+
+   const deadlineKey = `latihanTimerDeadline-${materi.value?.id}`;
+  const existingDeadline = localStorage.getItem(deadlineKey);
+  if (existingDeadline) {
+    isSoalStart.value = false;
+  }
 });
 
 const currentSoal = computed(
@@ -112,7 +118,7 @@ const submitJawaban = async() => {
       body: { jawaban: payload },
     })
 
-    alert('Waktu habis! Jawaban disubmit otomatis.')
+    alert('Jawaban telah disubmit')
     
   } catch (err) {
     console.error(err)
@@ -120,13 +126,20 @@ const submitJawaban = async() => {
   }
 
   useScoreLatihan(payload, materiId)
- 
+  await timerRef.value?.resetTimer()
+  isSoalStart.value = false
+  currentIndex.value = 0
 }
 </script>
 
 <template>
   <Section>
-    <Timer ref="timerRef" @autoSubmit="submitJawaban()"/>
+    <Timer    ref="timerRef"
+    v-if="materi && materi.id"
+  :materiId="materi?.id"
+  :duration="60 * 30"
+  :isStarted="isSoalStart"
+  @autoSubmit="submitJawaban"/>
   </Section>
 
   <Section height="h-auto">
