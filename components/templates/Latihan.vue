@@ -19,6 +19,19 @@ const soalStart = () => {
   timerRef.value?.startTimer()
 };
 
+const loadSavedJawaban = (materiId, jumlahSoal) => {
+  const saved = localStorage.getItem(`latihanJawaban-${materiId}`);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      if (Array.isArray(parsed) && parsed.length === jumlahSoal) {
+        return parsed;
+      }
+    } catch {}
+  }
+  return Array(jumlahSoal).fill("");
+}
+
 onMounted(async () => {
   await latihanStore.latihanFetch();
   const data = latihanStore.latihanData.flatMap((kelas) =>
@@ -28,19 +41,26 @@ onMounted(async () => {
     (item) => item.slug === Number(slug) || item.slug === slug
   );
 
-  // Inisialisasi array jawaban dan kunci
   if (materi.value?.soal) {
-    jawabanUser.value = Array(materi.value.soal.length).fill("");
-    terkunci.value = Array(materi.value.soal.length).fill(false);
+    const jumlahSoal = materi.value.soal.length;
+    jawabanUser.value = loadSavedJawaban(materi.value.id, jumlahSoal);
+    terkunci.value = Array(jumlahSoal).fill(false);
+    ragu.value = Array(jumlahSoal).fill(false);
   }
-  ragu.value = Array(materi.value.soal.length).fill(false);
 
-   const deadlineKey = `latihanTimerDeadline-${materi.value?.id}`;
+  const deadlineKey = `latihanTimerDeadline-${materi.value?.id}`;
   const existingDeadline = localStorage.getItem(deadlineKey);
   if (existingDeadline) {
     isSoalStart.value = false;
   }
 });
+
+// ✅ Simpan jawaban setiap kali berubah
+watch(jawabanUser, (newVal) => {
+  if (materi.value?.id) {
+    localStorage.setItem(`latihanJawaban-${materi.value.id}`, JSON.stringify(newVal));
+  }
+}, { deep: true });
 
 const currentSoal = computed(
   () => materi.value?.soal?.[currentIndex.value] || {}
@@ -74,7 +94,6 @@ const lockJawaban = () => {
 };
 
 const bukaKunci = () => {
-  // Hanya bisa dibuka kalau terkunci
   if (terkunci.value[currentIndex.value]) {
     terkunci.value[currentIndex.value] = false;
     ragu.value[currentIndex.value] = true;
@@ -93,36 +112,35 @@ const goToSoal = (index) => {
   currentIndex.value = index;
 };
 
-const submitJawaban = async() => {
-  
-
-  const payload = materi.value.soal.map( (soal, index) => {
-    const jawaban = jawabanUser.value[index]
-    const benar = jawaban === soal.correctOption
-
-
+const submitJawaban = async () => {
+  const payload = materi.value.soal.map((soal, index) => {
+    const jawaban = jawabanUser.value[index];
+    const benar = jawaban === soal.correctOption;
     return {
       soalId: soal.id,
-      jawaban : jawaban,
-      benar : benar,
-      userId : userId.value,
+      jawaban,
+      benar,
+      userId: userId.value,
       materiSoal: soal.materiSoal,
-    }
-  })
+    };
+  });
 
-  const materiId = materi.value?.id
+  const materiId = materi.value?.id;
 
   try {
     const response = await $fetch('/api/answer-latihan', {
       method: 'POST',
       body: { jawaban: payload },
-    })
+    });
 
-    alert('Jawaban telah disubmit')
-    
+    alert('Jawaban telah disubmit');
+
+    // ✅ Hapus dari localStorage setelah submit
+    localStorage.removeItem(`latihanJawaban-${materiId}`);
+
   } catch (err) {
-    console.error(err)
-    alert('Gagal menyimpan jawaban!')
+    console.error(err);
+    alert('Gagal menyimpan jawaban!');
   }
 
   useScoreLatihan(payload, materiId)
@@ -131,6 +149,7 @@ const submitJawaban = async() => {
   currentIndex.value = 0
 }
 </script>
+
 
 <template>
   <Section>
