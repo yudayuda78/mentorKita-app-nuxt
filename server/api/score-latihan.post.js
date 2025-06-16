@@ -1,21 +1,33 @@
 export default defineEventHandler( async (event) => {
-    const {dataScore} = await readBody(event)
-
-    if(!dataScore){
+    const body = await readBody(event)
+    const { userId, materiId, score } = body
+    if(!userId){
         throw createError({
             statusCode: 400,
-            statusMessage: 'Tidak ada data terkirim',
+            statusMessage: 'User ID tidak ada',
         })
     }
 
-    const { id, userId, soalId, score } = dataScore
+    if(!materiId){
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Materi ID tidak ada',
+        })
+    }
+
+    if(!score){
+        throw createError({
+            statusCode: 400,
+            statusMessage: 'Score tidak ada',
+        })
+    }
 
     const addData = await prisma.ScoreLatihan.create({
         data : {
             userId,
-            soalId,
+            materiId,
             score
-        }, skipDuplicate : true
+        }
     })
 
     return { success: true, inserted: addData }

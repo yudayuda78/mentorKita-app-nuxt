@@ -100,9 +100,11 @@ const submitJawaban = async() => {
       jawaban : jawaban,
       benar : benar,
       userId : userId.value,
-      materiSoal: soal.materiSoal
+      materiSoal: soal.materiSoal,
     }
   })
+
+  const materiId = materi.value?.id
 
   try {
     const response = await $fetch('/api/answer-latihan', {
@@ -116,7 +118,7 @@ const submitJawaban = async() => {
     alert('Gagal menyimpan jawaban!')
   }
 
-  useScoreLatihan(payload)
+  useScoreLatihan(payload, materiId)
 }
 </script>
 
