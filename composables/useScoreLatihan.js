@@ -24,7 +24,7 @@ export const useScoreLatihan = async(answer, materiId) => {
     })
 
     
-    // navigateTo('/evaluasi')
+    navigateTo('/evaluasi')
     } catch (err) {
         console.error('Gagal menyimpan score:', err)
     }

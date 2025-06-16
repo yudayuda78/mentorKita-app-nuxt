@@ -112,19 +112,21 @@ const submitJawaban = async() => {
       body: { jawaban: payload },
     })
 
-    alert('Jawaban berhasil disimpan!')
+    alert('Waktu habis! Jawaban disubmit otomatis.')
+    
   } catch (err) {
     console.error(err)
     alert('Gagal menyimpan jawaban!')
   }
 
   useScoreLatihan(payload, materiId)
+ 
 }
 </script>
 
 <template>
   <Section>
-    <Timer ref="timerRef" />
+    <Timer ref="timerRef" @autoSubmit="submitJawaban()"/>
   </Section>
 
   <Section height="h-auto">

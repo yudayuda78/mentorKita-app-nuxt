@@ -1,5 +1,6 @@
 <script setup>
-const remainingTime = ref(7200) // misalnya 3 jam 20 menit (3 * 3600 + 20 * 60)
+const emit = defineEmits(['autoSubmit'])
+const remainingTime = ref(8) // misalnya 3 jam 20 menit (3 * 3600 + 20 * 60)
 let timer = null
 
 const formatTime = (seconds) => {
@@ -17,6 +18,7 @@ const startTimer = () => {
     } else {
       clearInterval(timer)
       timer = null
+      emit('autoSubmit')
       // Tambahkan aksi jika waktu habis, misalnya auto-submit
     }
   }, 1000)
