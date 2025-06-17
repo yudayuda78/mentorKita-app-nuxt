@@ -1,4 +1,6 @@
 <script setup>
+import { NuxtLink } from '#components'
+
 const route = useRoute()
 const store = useSnbtStore()
 
@@ -35,7 +37,9 @@ onMounted(() => {
               </p>
             </div>
             <div class="ml-4">
+            <NuxtLink :to="`/tryout/snbt/${route.params.slug}/${materi.id}`">
               <Button>Kerjakan</Button>
+            </NuxtLink>
             </div>
           </li>
         </ul>
