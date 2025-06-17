@@ -100,8 +100,9 @@ model SnbtTryout{
   id Int @id @default(autoincrement())
   name String?
   image String?
-  slug String?
-  isfree Boolean
+  slug String? @unique
+  isfree Boolean?
+  isclosed Boolean?
   marketing String?
   startedAt  DateTime // waktu mulai
   endedAt    DateTime // waktu selesai

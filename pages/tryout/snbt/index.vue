@@ -1,11 +1,9 @@
 <script setup>
+const snbtStore = useSnbtStore()
+const snbtData = computed(() => snbtStore.snbtData)
 
-
-const latihanStore = useLatihanStore()
-const latihanData = computed(() => latihanStore.latihanData)
-
-onMounted( async () => {
-  await latihanStore.latihanFetch()
+onMounted(async () => {
+  await snbtStore.snbtFetch()
 })
 </script>
 
@@ -15,32 +13,25 @@ onMounted( async () => {
     
     <main class="flex-grow">
       <Section>
-        <div v-if="latihanData && latihanData.length">
-          <h2 class="text-xl font-bold mb-4">Latihan Soal</h2>
-          <ul>
-            <li v-for="kelas in latihanData" :key="kelas.id" class="mb-4">
-              <details>
-                <summary class="cursor-pointer font-semibold">{{ kelas.name }}</summary>
-                <ul class="ml-4 mt-2">
-                  <li v-for="course in kelas.courses" :key="course.id" class="mb-2">
-                    <details>
-                      <summary class="cursor-pointer">{{ course.name }}</summary>
-                      <ul class="ml-4 mt-1 list-disc">
-                        <li v-for="materi in course.materi" :key="materi.id">
-                        <NuxtLink :to="`/tryout/latihansoal/${materi.slug}`">
-                          {{ materi.name }}
-                          </NuxtLink>
-                        </li>
-                      </ul>
-                    </details>
-                  </li>
-                </ul>
-              </details>
-            </li>
-          </ul>
-        </div>
-        <div v-else>
-          <p>Loading data...</p>
+        <div class="wrapper">
+          <!-- Responsive Grid Start -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div
+              v-for="(item, index) in snbtData"
+              :key="index"
+              class="bg-white shadow-md rounded-2xl p-6 flex  flex-col justify-between hover:shadow-xl transition-shadow duration-300"
+            >
+              <h3 class="text-lg font-semibold mb-2">{{ item.name || 'Try out ' + (index + 1) }}</h3>
+              
+              <p class="text-gray-600 mb-4" v-if="item.isfree===true">Free</p>
+              <p class="text-gray-600 mb-4" v-if="item.isfree===false">Rp 15.000</p>
+
+              <NuxtLink :to="`/tryout/snbt/${item.slug}`">
+              <Button>Daftar Tryout</Button>
+              </NuxtLink>
+            </div>
+          </div>
+          <!-- Responsive Grid End -->
         </div>
       </Section>
     </main>
