@@ -116,4 +116,24 @@ model SnbtTryoutMateri{
    tryout SnbtTryout @relation(fields: [tryoutId], references: [id])
    tryoutId Int
    time Int
+   snbtSoal SnbtSoal[]
+}
+
+model SnbtSoal{
+  id         Int            @id @default(autoincrement())
+  nomorSoal Int?
+  question   String
+  type             SoalType @default(PILIHAN_GANDA)
+  optionA          String?
+  optionB          String?
+  optionC          String?
+  optionD          String?
+  optionE          String?
+  correctOption    AnswerOption?   // untuk pilihan ganda
+  correctEssay     String? 
+  materiSoal       String?
+  snbtMateri     SnbtTryoutMateri  @relation(fields: [snbtMateriId], references: [id])
+  snbtMateriId   Int
+  
+  
 }
