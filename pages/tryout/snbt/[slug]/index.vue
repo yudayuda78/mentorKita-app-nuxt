@@ -6,6 +6,7 @@ const store = useSnbtStore()
 
 onMounted(() => {
   store.snbtSlug(route.params.slug)
+  
 })
 </script>
 

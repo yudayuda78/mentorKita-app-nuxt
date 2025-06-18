@@ -1,8 +1,9 @@
 <script setup>
 defineEmits(['submitJawaban'])
 const route = useRoute();
-const latihanStore = useLatihanStore();
+const snbtStore = useSnbtStore();
 const slug = route.params.slug;
+const id = route.params.slug2
 const auth = useAuthStore()
 const userId = computed(() => auth.user?.id || "");
 
@@ -33,14 +34,26 @@ const loadSavedJawaban = (materiId, jumlahSoal) => {
 }
 
 onMounted(async () => {
-  await latihanStore.latihanFetch();
-  const data = latihanStore.latihanData.flatMap((kelas) =>
-    kelas.courses.flatMap((course) => course.materi)
-  );
-  materi.value = data.find(
-    (item) => item.slug === Number(slug) || item.slug === slug
-  );
+  await snbtStore.snbtSoalFetch(slug, id);
+    const data = snbtStore.snbtSoal; // <- langsung ambil datanya
+  console.log('Data dari fetch:', data);
+  console.log('Soal:', data.snbtSoal)
 
+  materi.value = {
+  id: id,
+  name: 'Tryout SNBT',
+  time: 1800, // atau ambil dari tempat lain jika punya
+  soal: data // karena `data` adalah array soal
+};
+
+  // Inisialisasi array jawaban
+  if (materi.value?.soal) {
+    const jumlahSoal = materi.value.soal.length;
+    jawabanUser.value = loadSavedJawaban(materi.value.id, jumlahSoal);
+    terkunci.value = Array(jumlahSoal).fill(false);
+    ragu.value = Array(jumlahSoal).fill(false);
+  }
+  
   if (materi.value?.soal) {
     const jumlahSoal = materi.value.soal.length;
     jawabanUser.value = loadSavedJawaban(materi.value.id, jumlahSoal);

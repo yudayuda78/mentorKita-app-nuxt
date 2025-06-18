@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     include: {
       tryoutMateri: {
         where: {
-          id: id, // atau pakai name jika belum ada field `slug`
+          id: parseInt(id), // atau pakai name jika belum ada field `slug`
         },
         include: {
           snbtSoal: true
