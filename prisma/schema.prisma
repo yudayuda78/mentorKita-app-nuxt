@@ -15,6 +15,16 @@ model User{
   createAt DateTime @default(now())
   asnwerLatihan AnswerLatihanUser[]
   score ScoreLatihan[]
+  subscriptions Subscription[]
+}
+
+model subscription{
+  id Int @id @default(autoincrement())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  isActive    Boolean  @default(true)
+  startedAt   DateTime @default(now())
+  expiredAt   DateTime
 }
 
 model LatihanClass {
