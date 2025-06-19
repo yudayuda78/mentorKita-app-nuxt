@@ -34,7 +34,10 @@ const handleRegister = async() => {
     >
       Sudah punya akun? <a href="/login" class="text-blue-600 underline">Login di sini</a>
     </p>
-    <div class="hidden md:block bg-amber-200 w-full md:w-[40%] h-[200px] md:h-full"></div>
+<div class="hidden md:flex w-full md:w-[40%] h-[200px] md:h-full border-r border-gray-300 items-center justify-center">
+  <img src="/signup.webp" alt="Belajar" class="max-h-full max-w-full object-contain" />
+</div>
+
 
     <div class="flex items-center justify-center w-full md:w-[60%] min-h-screen md:min-h-full">
       <div class="w-[90%] max-w-[400px] space-y-4 p-6 bg-white rounded-xl shadow-md">
