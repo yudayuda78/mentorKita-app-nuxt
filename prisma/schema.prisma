@@ -16,6 +16,7 @@ model User{
   asnwerLatihan AnswerLatihanUser[]
   score ScoreLatihan[]
   subscriptions Subscription[]
+  enrollmentsSnbt EnrollmentSnbtTryout[]
 }
 
 model Subscription{
@@ -118,6 +119,7 @@ model SnbtTryout{
   endedAt    DateTime // waktu selesai
   createdAt  DateTime @default(now())
   tryoutMateri SnbtTryoutMateri[]
+  enrollmentsSnbt EnrollmentSnbtTryout[]
 }
 
 model SnbtTryoutMateri{
@@ -146,4 +148,15 @@ model SnbtSoal{
   snbtMateriId   Int
   
   
+}
+
+model EnrollmentSnbtTryout {
+  id Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  snbtTryoutId Int
+  snbtTryout SnbtTryout @relation(fields: [snbtTryoutId], references: [id])
+  isPaid Boolean @default(false)
+  isActive Boolean @default(true)
+  createdAt DateTime @default(now())
 }
