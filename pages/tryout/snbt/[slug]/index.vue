@@ -72,6 +72,13 @@ const store = useSnbtStore();
 const useAuth = useAuthStore();
 const userId = computed(() => useAuth.user?.id || "");
 const subscriptionStore = useSubscriptionStore();
+const shareStore = useShareStore()
+
+const snbtId = computed(() => store.snbtDetail?.id || null);
+const isShared = computed(() => shareStore.isShared?.isShared === true)
+
+
+
 
 const expiredAt = ref(null);
 const hasSubscription = ref(false);
@@ -82,7 +89,7 @@ const isExpired = computed(() => {
   return new Date(expiredAt.value) < new Date();
 });
 
-console.log("isExpired:", isExpired.value);
+
 
 onMounted(async () => {
   await store.snbtSlug(route.params.slug);
@@ -96,8 +103,12 @@ onMounted(async () => {
     hasSubscription.value = false;
   }
 
-  console.log("expiredAt:", expiredAt.value);
+  await shareStore.getShared(userId.value,snbtId.value)
+ 
+  
 });
+
+
 
 const promoText = `🔥 *Tryout Online GRATIS – Kuota Terbatas!*
 
@@ -125,15 +136,14 @@ const copyPromo = async () => {
 <template>
   <Navbar />
   <Section>
-    <div v-if="isExpired && store.snbtDetail?.isfree">
+
+    <div v-if="(isExpired && store.snbtDetail?.isfree) && !isShared">
       <p
         class="mt-6 px-4 py-3 bg-green-50 border border-green-300 text-green-800 rounded-lg text-sm shadow-sm"
       >
         📢 <strong>Copy teks berikut ke 5 grup WhatsApp</strong> dan kirim bukti
         share tersebut 📷
       </p>
-
-
 
       <p
   class="mt-4 p-4 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm leading-relaxed space-y-4"
@@ -238,6 +248,8 @@ const copyPromo = async () => {
 
 
     </div>
+
+
     <div
       v-if="isExpired && !store.snbtDetail?.isfree"
       class="text-center text-red-500"
@@ -245,7 +257,10 @@ const copyPromo = async () => {
       {{ store.snbtDetail?.isfree }}bayar dulu
       <input type="file" @input="handleFileInput" />
     </div>
-    <div v-else-if="!isExpired" class="text-center text-gray-500">
+
+
+
+    <div v-else-if="!isExpired || isShared" class="text-center text-gray-500">
       <div class="wrapper py-10 max-w-3xl mx-auto">
         <div v-if="store.loading" class="text-center text-gray-500">
           Loading...
@@ -286,6 +301,8 @@ const copyPromo = async () => {
         <div v-else class="text-center text-gray-500">Data tidak ditemukan</div>
       </div>
     </div>
+
+    
   </Section>
   <Footer />
 </template>

@@ -26,8 +26,30 @@ export const useShareStore = defineStore("share", () => {
         }
     }
 
+    const getShared = async (userId, snbtTryoutId) => {
+        try {
+            const res = await $fetch (`/api/snbt/share?userId=${userId}&snbtTryoutId=${snbtTryoutId}`)
+            console.log(snbtTryoutId)
+            isShared.value = res.data
+            return {
+                status: 'success',
+                message: 'SNBT Tryout berhasil ditemukan',
+                data: isShared.value,
+            }
+        } catch (error) {
+            console.error("Error fetching shared SNBT Tryout:", error)
+            return {
+                status: 'error',
+                message: 'Gagal menemukan SNBT Tryout',
+                data: null,
+            }
+        }
+    }
+
     return {
         isShared,
-        shareSnbt
+        shareSnbt,
+        getShared
     }
+
 }) 
