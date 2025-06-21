@@ -19,21 +19,53 @@ const { handleFileInput: handleFileInput5, files: files5 } = useFileStorage({
   clearOldFiles: false,
 });
 
+
+const allFilesFilled = computed(() => {
+  return (
+    files1.value.length > 0 &&
+    files2.value.length > 0 &&
+    files3.value.length > 0 &&
+    files4.value.length > 0 &&
+    files5.value.length > 0
+  );
+});
+
+const isUploading = ref(false)
+const uploadError = ref(null)
+
 const uploadAll = async () => {
-  const response = await $fetch("/api/files", {
-    method: "POST",
-    body: {
-      files: [
-        ...files1.value,
-        ...files2.value,
-        ...files3.value,
-        ...files4.value,
-        ...files5.value,
-      ],
-    },
-  });
-  alert("Upload berhasil!");
+  isUploading.value = true
+  uploadError.value = null
+
+  try {
+    const files = [
+      ...files1.value,
+      ...files2.value,
+      ...files3.value,
+      ...files4.value,
+      ...files5.value,
+    ];
+
+    console.log('Uploading files:', files)
+
+    const response = await $fetch("/api/file", {
+      method: "POST",
+      body: {
+        files,
+      },
+    });
+
+    console.log('Upload response:', response)
+    alert(`✅ Upload berhasil! ${response.total} file dikirim.`);
+  } catch (err) {
+    console.error('Upload error:', err)
+    uploadError.value = err?.message || "Terjadi kesalahan saat upload."
+    alert("❌ Upload gagal!");
+  } finally {
+    isUploading.value = false
+  }
 };
+
 
 const route = useRoute();
 const store = useSnbtStore();
@@ -178,11 +210,33 @@ const copyPromo = async () => {
       </div>
 
       <button
-        @click="uploadAll"
-        class="bg-green-500 text-white px-4 py-2 rounded mt-4"
-      >
-        ⬆️ Upload Semua Bukti
-      </button>
+  @click="uploadAll"
+  :disabled="!allFilesFilled || isUploading"
+  class="bg-green-500 text-white px-4 py-2 rounded mt-4 disabled:opacity-50"
+>
+  ⬆️ Upload Semua Bukti
+</button>
+
+      <div class="grid grid-cols-2 gap-2 mt-4">
+  <img
+    v-for="(file, i) in [
+      ...files1,
+      ...files2,
+      ...files3,
+      ...files4,
+      ...files5
+    ]"
+    :key="i"
+    :src="file.content"
+    class="w-full h-auto rounded shadow border"
+  />
+</div>
+
+<div v-if="isUploading" class="text-sm text-gray-500 mt-2">⏳ Mengunggah...</div>
+<div v-if="uploadError" class="text-sm text-red-500 mt-2">{{ uploadError }}</div>
+
+
+
     </div>
     <div
       v-if="isExpired && !store.snbtDetail?.isfree"
