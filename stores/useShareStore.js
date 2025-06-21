@@ -3,8 +3,9 @@ import { defineStore } from "pinia"
 export const useShareStore = defineStore("share", () => {
     const isShared = ref()
 
-    const shareSnbt = async (UserIdGet, snbtTryoutId, snbtTryoutName) => {
+    const shareSnbt = async (userId, snbtTryoutId, snbtTryoutName) => {
         try{
+            console.log("Sharing SNBT Tryout:", { userId, snbtTryoutId, snbtTryoutName })
             const res = await $fetch("/api/snbt/share", {
                 method: "POST",
                 body: {userId, snbtTryoutId, snbtTryoutName}
@@ -29,8 +30,7 @@ export const useShareStore = defineStore("share", () => {
     const getShared = async (userId, snbtTryoutId) => {
         try {
             const res = await $fetch (`/api/snbt/share?userId=${userId}&snbtTryoutId=${snbtTryoutId}`)
-            console.log(snbtTryoutId)
-            isShared.value = res.data
+            isShared.value = res?.data ?? null
             return {
                 status: 'success',
                 message: 'SNBT Tryout berhasil ditemukan',

@@ -1,4 +1,6 @@
 <script setup>
+import { useShareStore } from '~/stores/useShareStore';
+
 const { handleFileInput: handleFileInput1, files: files1 } = useFileStorage({
   clearOldFiles: false,
 });
@@ -75,6 +77,7 @@ const subscriptionStore = useSubscriptionStore();
 const shareStore = useShareStore()
 
 const snbtId = computed(() => store.snbtDetail?.id || null);
+const snbtMateri = computed(() => store.snbtDetail?.name || null);
 const isShared = computed(() => shareStore.isShared?.isShared === true)
 
 
@@ -108,6 +111,15 @@ onMounted(async () => {
   
 });
 
+
+const addDataShare = async () => {
+  shareStore.shareSnbt(userId.value, snbtId.value, snbtMateri.value)
+}
+
+const handleUpload = () => {
+  uploadAll();
+  addDataShare();
+}
 
 
 const promoText = `🔥 *Tryout Online GRATIS – Kuota Terbatas!*
@@ -220,7 +232,7 @@ const copyPromo = async () => {
       </div>
 
       <button
-  @click="uploadAll"
+  @click="handleUpload"
   :disabled="!allFilesFilled || isUploading"
   class="bg-green-500 text-white px-4 py-2 rounded mt-4 disabled:opacity-50"
 >
