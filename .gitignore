@@ -28,3 +28,6 @@ logs
 .jpg
 .png
 .jpeg
+*.jpeg
+*.png
+*.jpg
