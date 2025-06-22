@@ -157,7 +157,7 @@ const copyPromo = async () => {
         share tersebut 📷
       </p>
 
-      <p
+      <div
   class="mt-4 p-4 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm leading-relaxed space-y-4"
 >
   <div>
@@ -181,7 +181,8 @@ const copyPromo = async () => {
       📋 Copy Teks
     </button>
   </div>
-</p>
+</div>
+
 
 
       <div class="space-y-4 mt-4">
@@ -266,8 +267,18 @@ const copyPromo = async () => {
       v-if="isExpired && !store.snbtDetail?.isfree"
       class="text-center text-red-500"
     >
-      {{ store.snbtDetail?.isfree }}bayar dulu
-      <input type="file" @input="handleFileInput" />
+     <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-md max-w-xl mx-auto">
+    <p class="font-semibold text-lg mb-2">💰 Akses Tryout Premium</p>
+    <p class="text-sm mb-2">Silakan transfer ke salah satu rekening berikut:</p>
+    <ul class="text-sm text-left list-disc list-inside mb-4">
+      <li><strong>BCA:</strong> 1234567890 a.n. MentorKita Digital</li>
+      <li><strong>BNI:</strong> 9876543210 a.n. MentorKita Digital</li>
+      <li><strong>Mandiri:</strong> 1112223334 a.n. MentorKita Digital</li>
+    </ul>
+    <p class="text-sm mb-2">Atau scan QRIS berikut untuk pembayaran instan:</p>
+    
+    <p class="text-sm text-gray-500">Setelah transfer, silakan hubungi admin untuk aktivasi.</p>
+  </div>
     </div>
 
 

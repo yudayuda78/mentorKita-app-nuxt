@@ -19,6 +19,7 @@ model User{
   enrollmentsSnbt EnrollmentSnbtTryout[]
   paymentsSnbt PayementSnbtTryout[]
   shareSnbt ShareSnbt[]
+  clickSnbt ClickSnbtTryout[]
 }
 
 model Subscription{
@@ -124,6 +125,7 @@ model SnbtTryout{
   enrollmentsSnbt EnrollmentSnbtTryout[]
   paymentsSnbt PayementSnbtTryout[]
   shareSnbt ShareSnbt[]
+  clickSnbt ClickSnbtTryout[]
 }
 
 model SnbtTryoutMateri{
@@ -185,4 +187,14 @@ model ShareSnbt{
   snbtTryoutId Int
   isShared Boolean @default(true)
   sharedAt DateTime @default(now())
+}
+
+model ClickSnbtTryout{
+  id Int @id @default(autoincrement())
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+  snbtTryoutId Int
+  snbtTryout SnbtTryout @relation(fields: [snbtTryoutId], references: [id])
+  snbtMateri String
+  clickedAt DateTime @default(now())
 }
