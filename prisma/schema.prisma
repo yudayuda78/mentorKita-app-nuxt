@@ -196,5 +196,6 @@ model ClickSnbtTryout{
   snbtTryoutId Int
   snbtTryout SnbtTryout @relation(fields: [snbtTryoutId], references: [id])
   snbtMateri String
+  isPaid Boolean @default(false)
   clickedAt DateTime @default(now())
 }

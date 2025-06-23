@@ -1,10 +1,18 @@
 <script setup>
 const snbtStore = useSnbtStore()
 const snbtData = computed(() => snbtStore.snbtData)
+const analyticsStore = useAnalyticsStore()
+const useAuth = useAuthStore();
+const userId = computed(() => useAuth.user?.id || "");
+
 
 onMounted(async () => {
   await snbtStore.snbtFetch()
 })
+
+const analyticsSnbt = async (userId, snbtTryoutId, snbtTryoutName) => {
+  await analyticsStore.analyticSnbt(userId, snbtTryoutId, snbtTryoutName)
+}
 </script>
 
 <template>
@@ -26,8 +34,8 @@ onMounted(async () => {
               <p class="text-gray-600 mb-4" v-if="item.isfree===true">Free</p>
               <p class="text-gray-600 mb-4" v-if="item.isfree===false">Rp 15.000</p>
 
-              <NuxtLink :to="`/tryout/snbt/${item.slug}`">
-              <Button>Daftar Tryout</Button>
+              <NuxtLink :to="`/tryout/snbt/${item.slug}`" @click="analyticsSnbt(userId, item.id, item.name)" class="mt-auto">
+                <Button class="w-full">Kerjakan</Button>
               </NuxtLink>
             </div>
           </div>
