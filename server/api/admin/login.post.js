@@ -31,7 +31,7 @@ export default defineEventHandler(async(event) => {
 
     return {
         token,
-        user: {
+        admin: {
             id: user.id,
             username: user.username
         }
