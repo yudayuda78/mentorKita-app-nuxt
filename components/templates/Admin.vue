@@ -1,4 +1,12 @@
-<script setup></script>
+<script setup>
+
+const adminStore = useAdminStore()
+
+const handleLogout = async () => {
+  await adminStore.logout()
+  await navigateTo('/mentorkita-admin/login')
+}
+</script>
 
 <template>
   <div class="flex min-h-screen">
@@ -25,7 +33,7 @@
         <h1 class="text-xl font-semibold">Dashboard</h1>
         <div class="flex items-center space-x-4">
           <span class="text-gray-600">Admin</span>
-          <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600">Logout</button>
+          <button class="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600" @click="handleLogout">Logout</button>
         </div>
       </header>
 
