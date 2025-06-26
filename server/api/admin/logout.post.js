@@ -2,7 +2,7 @@ import { deleteCookie } from 'h3'
 
 export default defineEventHandler((event) => {
   deleteCookie(event, 'token', {
-    path: '/mentorkita-admin',
+    path: '/',
     httpOnly: true,
     sameSite: 'strict',
   })
