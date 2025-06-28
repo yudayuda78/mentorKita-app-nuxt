@@ -20,6 +20,21 @@ model User{
   paymentsSnbt PayementSnbtTryout[]
   shareSnbt ShareSnbt[]
   clickSnbt ClickSnbtTryout[]
+  userProfile UserProfile?
+}
+
+model UserProfile {
+  id              Int      @id @default(autoincrement())
+  userId          Int      @unique
+  fullName        String
+  phoneNumber     String
+  birthDate       DateTime
+  gender          String
+  schoolOrigin    String
+  targetUniversity String
+  targetMajor     String
+
+  user            User     @relation(fields: [userId], references: [id])
 }
 
 model Admin {
