@@ -1,3 +1,42 @@
+<script setup>
+
+
+const auth = useAuthStore()
+
+const profile = ref({
+  username: '',
+  email: '',
+  fullName: '',
+  phoneNumber: '',
+  birthDate: '',
+  gender: '',
+  schoolOrigin: '',
+  targetUniversity: '',
+  targetMajor: ''
+})
+
+onMounted(async () => {
+  const { data } = await useFetch('/api/profile/me', {
+    credentials: 'include'
+  })
+  if (data.value) profile.value = { ...profile.value, ...data.value }
+})
+
+const updateProfile = async () => {
+  try {
+    await $fetch('/api/profile/update', {
+      method: 'POST',
+      body: profile.value,
+      credentials: 'include'
+    })
+    alert('Profil berhasil diperbarui!')
+  } catch (e) {
+    console.error(e)
+    alert('Gagal memperbarui profil')
+  }
+}
+</script>
+
 <template>
   <Navbar />
 
@@ -10,6 +49,7 @@
         <div class="md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
           <input
+            v-model="profile.username"
             type="text"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Contoh: ariefyuda"
@@ -20,6 +60,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>
           <input
+            v-model="profile.fullName"
             type="text"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Nama Lengkap"
@@ -30,6 +71,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
           <input
+            v-model="profile.email"
             type="email"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="email@example.com"
@@ -40,6 +82,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nomor HP</label>
           <input
+            v-model="profile.phoneNumber"
             type="tel"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="08xxxxxxxxxx"
@@ -50,6 +93,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Lahir</label>
           <input
+            v-model="profile.birthDate"
             type="date"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
           />
@@ -60,11 +104,21 @@
           <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Kelamin</label>
           <div class="flex gap-4 mt-2">
             <label class="inline-flex items-center">
-              <input type="radio" name="gender" value="Laki-laki" class="form-radio text-blue-600" />
+              <input
+                type="radio"
+                value="Laki-laki"
+                v-model="profile.gender"
+                class="form-radio text-blue-600"
+              />
               <span class="ml-2">Laki-laki</span>
             </label>
             <label class="inline-flex items-center">
-              <input type="radio" name="gender" value="Perempuan" class="form-radio text-blue-600" />
+              <input
+                type="radio"
+                value="Perempuan"
+                v-model="profile.gender"
+                class="form-radio text-blue-600"
+              />
               <span class="ml-2">Perempuan</span>
             </label>
           </div>
@@ -74,6 +128,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Asal Sekolah / Universitas</label>
           <input
+            v-model="profile.schoolOrigin"
             type="text"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Contoh: SMA 1 Jakarta / Universitas A"
@@ -84,6 +139,7 @@
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Universitas Tujuan</label>
           <input
+            v-model="profile.targetUniversity"
             type="text"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Contoh: Universitas Indonesia"
@@ -94,6 +150,7 @@
         <div class="md:col-span-2">
           <label class="block text-sm font-medium text-gray-700 mb-1">Jurusan Tujuan</label>
           <input
+            v-model="profile.targetMajor"
             type="text"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Contoh: Teknik Informatika"
@@ -103,6 +160,7 @@
 
       <div class="text-center">
         <button
+          @click="updateProfile"
           class="mt-6 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
         >
           Simpan Profil
