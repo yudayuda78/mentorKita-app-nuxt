@@ -47,11 +47,18 @@ export default defineEventHandler(async (event) => {
   }
 
   return {
-    id: user.id,
-    username: user.username,
-    email: user.email,
-    ...user.userProfile
-  }
+  id: user.id,
+  username: user.username,
+  email: user.email,
+  fullName: user.userProfile?.fullName || '',
+  phoneNumber: user.userProfile?.phoneNumber || '',
+  birthDate: user.userProfile?.birthDate || '',
+  gender: user.userProfile?.gender || '',
+  schoolOrigin: user.userProfile?.schoolOrigin || '',
+  targetUniversity: user.userProfile?.targetUniversity || '',
+  targetMajor: user.userProfile?.targetMajor || ''
+}
+
 
 
 })

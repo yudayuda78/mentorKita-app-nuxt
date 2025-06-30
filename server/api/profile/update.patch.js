@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken'
 
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
-    const {username, email, fullname, phoneNumber, birthDate, gender, schoolOrigin, targetUniversity, targetMajor} = body
+    const {username, email, fullName, phoneNumber, birthDate, gender, schoolOrigin, targetUniversity, targetMajor} = body
 
 
     const token = getCookie(event, 'token')
@@ -53,7 +53,7 @@ if (username !== currentUser.username) {
   }
 }
 
-// Cek email jika berubah dan dipakai user lain
+
 if (email !== currentUser.email) {
   const existingEmail = await prisma.user.findUnique({ where: { email } })
   if (existingEmail && existingEmail.id !== currentUser.id) {
@@ -75,10 +75,12 @@ if (email !== currentUser.email) {
         }
     })
 
+
+
     const updatedProfile = await prisma.userProfile.upsert({
   where: { userId: currentUser.id },
   update: {
-    fullName: fullname,
+    fullName: fullName,
     phoneNumber,
     birthDate: new Date(birthDate),
     gender,
@@ -88,7 +90,7 @@ if (email !== currentUser.email) {
   },
   create: {
     userId: currentUser.id,
-    fullName: fullname,
+    fullName: fullName,
     phoneNumber,
     birthDate: new Date(birthDate),
     gender,

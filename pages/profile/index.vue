@@ -1,6 +1,5 @@
 <script setup>
 
-
 const auth = useAuthStore()
 
 const profile = ref({
@@ -15,27 +14,40 @@ const profile = ref({
   targetMajor: ''
 })
 
+const loading = ref(false)
+
 onMounted(async () => {
-  const { data } = await useFetch('/api/profile/me', {
-    credentials: 'include'
-  })
-  if (data.value) profile.value = { ...profile.value, ...data.value }
+  const data = await auth.getProfile()
+  if (data) {
+    profile.value = {
+      username: data.username || '',
+      email: data.email || '',
+      fullName: data.fullName || '',
+      phoneNumber: data.phoneNumber || '',
+      birthDate: data.birthDate ? new Date(data.birthDate).toISOString().slice(0, 10) : '',
+      gender: data.gender || '',
+      schoolOrigin: data.schoolOrigin || '',
+      targetUniversity: data.targetUniversity || '',
+      targetMajor: data.targetMajor || ''
+    }
+  }
 })
 
+
+
 const updateProfile = async () => {
-  try {
-    await $fetch('/api/profile/update', {
-      method: 'POST',
-      body: profile.value,
-      credentials: 'include'
-    })
+  loading.value = true
+  const success = await auth.updateProfile(profile.value)
+  loading.value = false
+
+  if (success) {
     alert('Profil berhasil diperbarui!')
-  } catch (e) {
-    console.error(e)
-    alert('Gagal memperbarui profil')
+  } else {
+    alert(auth.error || 'Terjadi kesalahan saat memperbarui profil.')
   }
 }
 </script>
+
 
 <template>
   <Navbar />
@@ -55,7 +67,7 @@ const updateProfile = async () => {
             placeholder="Contoh: ariefyuda"
           />
         </div>
-
+      
         <!-- Nama Lengkap -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1">Nama Lengkap</label>

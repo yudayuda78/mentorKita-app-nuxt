@@ -55,25 +55,30 @@ export const useAuthStore = defineStore('auth',  () => {
     }
 
     const updateProfile = async (profileData) => {
-        try{
-            const response = await $fetch('/api/profile/update', {
-                method: 'POST',
-                body: profileData
-            })
+        try {
+            console.log('Mengirim ke backend:', profileData)
+             const { user, userProfile } = await $fetch('/api/profile/update', {
+            method: 'PATCH', 
+            body: profileData
+        })
 
-            user.value = response.user
-            return true
+        user.value = {
+            ...user,
+            ...userProfile
+        }
+
+        return true
         } catch (err) {
-            error.value = err.data?.message || err.message || 'Gagal memperbarui profil'
+             error.value = err.data?.message || err.message || 'Gagal memperbarui profil'
             return false
         }
     }
 
     const getProfile = async () => {
         try {
-            const response = await $fetch('/api/profile/me')
-            user.value = response
-            return response
+            const profile = await $fetch('/api/profile/me')
+            user.value = profile
+            return profile
         } catch (err) {
             error.value = err.data?.message || err.message || 'Gagal mengambil profil'
             return null
