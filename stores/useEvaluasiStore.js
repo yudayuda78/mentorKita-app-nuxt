@@ -13,6 +13,9 @@ export const useEvaluasiStore = defineStore('evaluasi', () => {
     total.value = totalAnswer
 }
 
+
+
+
     return {
         score,
   benar,

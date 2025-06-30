@@ -1,6 +1,36 @@
+import jwt from 'jsonwebtoken'
+
 export default defineEventHandler(async (event) => {
     const body = await readBody(event)
     const {username, email, fullname, phoneNumber, birthDate, gender, schoolOrigin, targetUniversity, targetMajor} = body
+
+
+    const token = getCookie(event, 'token')
+    if(!token) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Tidak ada token'
+        })
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    if(!decoded) {
+        throw createError({
+            statusCode: 401,
+            statusMessage: 'Token tidak valid'
+        })
+    }
+
+    const currentUser = await prisma.user.findUnique({
+        where: { id: decoded.id },
+    })
+
+    if(!currentUser) {
+        throw createError({
+            statusCode: 404,
+            statusMessage: 'Pengguna tidak ditemukan'
+        })
+    }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
@@ -12,43 +42,67 @@ export default defineEventHandler(async (event) => {
     }
 
 
-    const existingUsername = await prisma.user.findUnique({
-        where: { username }
+  // Cek username jika berubah dan dipakai user lain
+if (username !== currentUser.username) {
+  const existingUsername = await prisma.user.findUnique({ where: { username } })
+  if (existingUsername && existingUsername.id !== currentUser.id) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Username sudah terdaftar'
     })
+  }
+}
 
-    if(existingUsername) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Username sudah terdaftar'
-        })
-    }
-
-    const existingEmail = await prisma.user.findUnique({
-        where: { email }
+// Cek email jika berubah dan dipakai user lain
+if (email !== currentUser.email) {
+  const existingEmail = await prisma.user.findUnique({ where: { email } })
+  if (existingEmail && existingEmail.id !== currentUser.id) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: 'Email sudah terdaftar'
     })
+  }
+}
 
 
-    if (existingEmail) {
-        throw createError({
-            statusCode: 400,
-            statusMessage: 'Email sudah terdaftar'
-        })
-    }
     
 
-
-    return{
+    const updatedUser = await prisma.user.update({
+        where: { id: currentUser.id },
         data: {
             username,
             email,
-            fullname,
-            phoneNumber,
-            birthDate,
-            gender,
-            schoolOrigin,
-            targetUniversity,
-            targetMajor
         }
+    })
+
+    const updatedProfile = await prisma.userProfile.upsert({
+  where: { userId: currentUser.id },
+  update: {
+    fullName: fullname,
+    phoneNumber,
+    birthDate: new Date(birthDate),
+    gender,
+    schoolOrigin,
+    targetUniversity,
+    targetMajor
+  },
+  create: {
+    userId: currentUser.id,
+    fullName: fullname,
+    phoneNumber,
+    birthDate: new Date(birthDate),
+    gender,
+    schoolOrigin,
+    targetUniversity,
+    targetMajor
+  }
+})
+
+
+    return {
+        message: 'Profil berhasil diperbarui',
+        user: updatedUser,
+        userProfile: updatedProfile
     }
 
 })
