@@ -33,4 +33,9 @@ export default defineNuxtConfig({
   fileStorage: {
         mount: '/home/$USR/development/nuxt-file-storage/server/files',
   },
+   runtimeConfig: {
+    public: {
+      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+    }
+  }
 })

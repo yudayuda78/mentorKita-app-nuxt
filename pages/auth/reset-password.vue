@@ -35,12 +35,17 @@ const reset = async () => {
 </script>
 
 <template>
-  <div>
-    <h2>Reset Password</h2>
-    <input v-model="password" type="password" placeholder="Password baru" />
-    <input v-model="confirmPassword" type="password" placeholder="Konfirmasi password" />
-    <button @click="reset">Reset</button>
-    <p v-if="message">{{ message }}</p>
-    <p v-if="error" style="color: red">{{ error }}</p>
-  </div>
+  <Navbar />
+  <Section>
+    <div class="max-w-md w-full bg-white p-8 rounded-lg shadow">
+      <h2 class="text-xl font-bold mb-6">Reset Password</h2>
+      <input v-model="password" type="password" placeholder="Password baru" class="border p-2 mb-4 w-full" />
+        <input v-model="confirmPassword" type="password" placeholder="Konfirmasi password" class="border p-2 mb-4 w-full" />
+        <button @click="reset" class="bg-blue-500 text-white p-2 rounded">Reset</button>
+        <p v-if="message" class="text-green-500 mt-4">{{ message }}</p>
+        <p v-if="error" class="text-red-500 mt-4">{{ error }}</p>
+      </div>
+    </Section>
+    <Footer />
+
 </template>
