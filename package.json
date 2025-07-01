@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "generate:env": "node scripts/generate-env.js"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.1",
