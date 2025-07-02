@@ -12,6 +12,7 @@ onMounted(async () => {
 
 const analyticsSnbt = async (userId, snbtTryoutId, snbtTryoutName) => {
   await analyticsStore.analyticSnbt(userId, snbtTryoutId, snbtTryoutName)
+  await snbtStore.payment(userId, snbtTryoutId, snbtTryoutName)
 }
 </script>
 

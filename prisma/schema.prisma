@@ -17,7 +17,7 @@ model User{
   score ScoreLatihan[]
   subscriptions Subscription[]
   enrollmentsSnbt EnrollmentSnbtTryout[]
-  paymentsSnbt PayementSnbtTryout[]
+  paymentsSnbt PaymentSnbtTryout[]
   shareSnbt ShareSnbt[]
   clickSnbt ClickSnbtTryout[]
   userProfile UserProfile?
@@ -145,7 +145,7 @@ model SnbtTryout{
   createdAt  DateTime @default(now())
   tryoutMateri SnbtTryoutMateri[]
   enrollmentsSnbt EnrollmentSnbtTryout[]
-  paymentsSnbt PayementSnbtTryout[]
+  paymentsSnbt PaymentSnbtTryout[]
   shareSnbt ShareSnbt[]
   clickSnbt ClickSnbtTryout[]
 }
@@ -189,15 +189,14 @@ model EnrollmentSnbtTryout {
   createdAt DateTime @default(now())
 }
 
-model PayementSnbtTryout{
+model PaymentSnbtTryout{
   id Int @id @default(autoincrement())
   user User @relation(fields: [userId], references: [id])
   userId Int
   snbtTryout SnbtTryout @relation(fields: [snbtTryoutId], references: [id])
   snbtTryoutId Int
-  amount Int
-  status String // e.g., "pending", "completed", "failed"
-  paidAt DateTime? @default(now())
+  snbtMateri String
+  isPaid Boolean @default(false)
   createdAt DateTime @default(now())
 }
 

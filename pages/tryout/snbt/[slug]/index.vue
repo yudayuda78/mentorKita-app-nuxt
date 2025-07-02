@@ -93,21 +93,22 @@ const isExpired = computed(() => {
 });
 
 
-
+const isLoading = ref(true)
 onMounted(async () => {
-  await store.snbtSlug(route.params.slug);
-  await subscriptionStore.getSubscriptionDetails(userId.value);
-  const detail = subscriptionStore.subscriptionDetail;
+  try {
+    await store.snbtSlug(route.params.slug)
+    await subscriptionStore.getSubscriptionDetails(userId.value)
 
-  if (detail && detail.expiredAt) {
-    hasSubscription.value = true;
-    expiredAt.value = detail.expiredAt;
-  } else {
-    hasSubscription.value = false;
+    const detail = subscriptionStore.subscriptionDetail
+    hasSubscription.value = !!detail
+    expiredAt.value = detail?.expiredAt ?? null
+
+    await shareStore.getShared(userId.value, snbtId.value)
+  } catch (e) {
+    console.error("Error saat mengambil data:", e)
+  } finally {
+    isLoading.value = false // ✅ hanya setelah semua data siap
   }
-
-  await shareStore.getShared(userId.value,snbtId.value)
- 
   
 });
 
@@ -145,21 +146,31 @@ const copyPromo = async () => {
 };
 </script>
 
+
+
 <template>
   <Navbar />
   <Section>
+    
+    <div v-if="isLoading" class="text-center py-10 text-gray-500">
+      ⏳ Memuat data tryout...
+    </div>
 
-    <div v-if="(isExpired && store.snbtDetail?.isfree) && !isShared">
-      <p
-        class="mt-6 px-4 py-3 bg-green-50 border border-green-300 text-green-800 rounded-lg text-sm shadow-sm"
-      >
-        📢 <strong>Copy teks berikut ke 5 grup WhatsApp</strong> dan kirim bukti
-        share tersebut 📷
-      </p>
+    <template v-else>
+      <div v-if="(isExpired && store.snbtDetail?.isfree) && !isShared">
+        <p
+          class="mt-6 px-4 py-3 bg-green-50 border border-green-300 text-green-800 rounded-lg text-sm shadow-sm"
+        >
+          📢 <strong>Copy teks berikut ke 5 grup WhatsApp</strong> dan kirim bukti
+          share tersebut 📷
+        </p>
 
       <div
   class="mt-4 p-4 border border-gray-300 rounded-lg bg-white text-gray-700 text-sm leading-relaxed space-y-4"
 >
+
+  
+
   <div>
     <strong class="text-red-500">🔥 Tryout Online GRATIS – Kuota Terbatas!</strong><br />
     Siapkan dirimu dengan latihan soal yang <em>real dan menantang</em>,
@@ -324,6 +335,7 @@ const copyPromo = async () => {
         <div v-else class="text-center text-gray-500">Data tidak ditemukan</div>
       </div>
     </div>
+    </template>
 
     
   </Section>

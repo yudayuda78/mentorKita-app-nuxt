@@ -43,6 +43,17 @@ export const useSnbtStore = defineStore('snbt', () =>{
     } 
     }
 
+    const payment = async (userId, snbtTryoutId, snbtTryoutName) => {
+      try{
+            await $fetch("/api/tryout/payment", {
+                method: "POST",
+                body: { userId, snbtTryoutId, snbtTryoutName},
+            })
+        }catch (error) {
+            console.error("Error in analyticSnbt:", error)
+        }
+    }
+
     return{
         snbtData,
     snbtDetail,
@@ -51,6 +62,7 @@ export const useSnbtStore = defineStore('snbt', () =>{
     error,
     snbtFetch,
     snbtSoalFetch,
-    snbtSlug
+    snbtSlug,
+    payment
     }
 })
