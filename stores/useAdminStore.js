@@ -8,7 +8,8 @@ export const useAdminStore = defineStore("admin", () => {
     try {
       const response = await $fetch("/api/admin/login", {
         method: "POST",
-        body: { username, password }
+        body: { username, password },
+        credentials: 'include'
       })
 
       admin.value = response.admin // ✅ ini aman

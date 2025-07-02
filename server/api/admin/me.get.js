@@ -3,7 +3,7 @@ import { getCookie } from 'h3'
 
 
 export default defineEventHandler(async (event) => {
-    const token = getCookie(event, 'token')
+    const token = getCookie(event, 'admin_token')
 
     if (!token) {
         return {
@@ -13,10 +13,10 @@ export default defineEventHandler(async (event) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) 
-    const user = await prisma.admin.findUnique({
+    const admin = await prisma.admin.findUnique({
         where: { id: decoded.id },
         select: { id: true, username: true }
     })
 
-    return { user }
+    return { admin }
 })

@@ -4,7 +4,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   try {
     const { data } = await useFetch('/api/admin/me', {
       credentials: 'include',
-      headers: useRequestHeaders(['cookie']),
     })
 
     if (!data.value?.admin) {
