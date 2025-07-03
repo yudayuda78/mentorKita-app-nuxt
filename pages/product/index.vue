@@ -1,14 +1,33 @@
-<script setup></script>
+<script setup>
+const productStore = useProductStore()
+
+onMounted(() => {
+  productStore.fetchProducts()
+})
+</script>
 
 <template>
-    <Navbar></Navbar>
-    <Section >
-        <Card
-            title="Paket Desain Logo Premium"
-  image="https://source.unsplash.com/400x300/?design"
-  price="150000"
-  description="Dapatkan logo profesional dengan revisi tak terbatas hingga cocok dengan brand Anda.">
+  <Navbar />
 
-        </Card></Section>
-    <Footer></Footer>
+  <Section>
+    <div v-if="productStore.loading">Memuat produk...</div>
+    <div v-if="productStore.error" class="text-red-500">{{ productStore.error }}</div>
+
+    <div v-if="!productStore.loading && productStore.products.length" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <Card
+        v-for="product in productStore.products"
+        :key="product.id"
+        :title="product.name"
+        :image="product.image"
+        :price="`${product.price.toLocaleString('id-ID')}`"
+        :description="product.description"
+      />
+    </div>
+
+    <div v-if="!productStore.loading && productStore.products.length === 0">
+      Tidak ada produk tersedia.
+    </div>
+  </Section>
+
+  <Footer />
 </template>
