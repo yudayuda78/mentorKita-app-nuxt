@@ -1,4 +1,6 @@
 <script setup>
+import { useProductStore } from '#imports'
+
 
 
 const productStore = useProductStore()
@@ -6,8 +8,11 @@ const showModal = ref(false)
 const selectedProduct = ref(null)
 const selectedMethod = ref('')
 const copiedBank = ref('')
+const useAuth = useAuthStore();
+const userId = computed(() => useAuth.user?.id || "");
 
-const openModal = (product) => {
+const openModal = async (product, userId, productId, productName) => {
+  await productStore.payment(userId, productId, productName)
   selectedProduct.value = product
   showModal.value = true
   selectedMethod.value = ''
@@ -49,7 +54,7 @@ const copyToClipboard = (text, bank) => {
         :image="product.image"
         :price="`${product.price.toLocaleString('id-ID')}`"
         :description="product.description"
-        @buy="openModal(product)"
+        @buy="openModal(product, userId, product.id, product.name)"
       />
     </div>
   </Section>
