@@ -110,6 +110,8 @@ const copyToClipboard = (text, bank) => {
         <p>Atas Nama: MentorKita</p>
       </div>
 
+      
+
       <div v-if="selectedMethod === 'bni'">
         <p><strong>Bank BNI</strong></p>
         <p>No Rekening: <span class="font-semibold">1234567890</span>
@@ -133,6 +135,20 @@ const copyToClipboard = (text, bank) => {
         />
         <p class="text-sm text-gray-500">Scan QRIS untuk melakukan pembayaran.</p>
       </div>
+
+      <!-- Konfirmasi WhatsApp (hanya tampil jika metode dipilih) -->
+<div v-if="selectedMethod !== ''" class="mt-6 text-center">
+  <p class="mb-2 text-gray-700">Setelah melakukan pembayaran, konfirmasi melalui WhatsApp:</p>
+  <a
+    :href="`https://wa.me/6281234567890?text=Halo%20MentorKita%2C%20saya%20sudah%20melakukan%20pembayaran%20untuk%20produk%20${selectedProduct?.name}`"
+    target="_blank"
+    class="inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow transition"
+  >
+    Konfirmasi via WhatsApp
+  </a>
+</div>
+
+      
 
       <div v-if="selectedMethod === ''" class="text-sm text-gray-500 italic">
         Pilih metode pembayaran terlebih dahulu.
