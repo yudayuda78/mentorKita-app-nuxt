@@ -11,13 +11,15 @@
     "generate:env": "node scripts/generate-env.js"
   },
   "dependencies": {
+    "@auth/core": "^0.40.0",
     "@pinia/nuxt": "^0.11.1",
     "@prisma/nuxt": "^0.3.0",
+    "@sidebase/nuxt-auth": "^0.6.7",
     "@tailwindcss/vite": "^4.1.8",
     "bcrypt": "^6.0.0",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "nodemailer": "^7.0.4",
+    "nodemailer": "^6.10.1",
     "nuxt": "^3.17.4",
     "vue": "^3.5.15",
     "vue-router": "^4.5.1"
