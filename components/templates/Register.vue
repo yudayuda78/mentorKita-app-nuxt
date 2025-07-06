@@ -12,6 +12,8 @@ const passwordConfirmation = ref('')
 
 const error = ref('')
 
+
+
 const handleRegister = async() => {
   if (password.value !== passwordConfirmation.value) {
     error.value = 'Password dan konfirmasi password tidak cocok'
@@ -24,6 +26,10 @@ const handleRegister = async() => {
   if (!auth.error) {
     await navigateTo('/login')
   }
+}
+
+const loginWithGoogle = () => {
+  window.location.href = '/api/auth/google'
 }
 </script>
 
@@ -105,7 +111,7 @@ const handleRegister = async() => {
           Register
         </button>
 
-        <button class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md">
+        <button  @click="loginWithGoogle" class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md">
           Daftar Menggunakan Google
         </button>
 
