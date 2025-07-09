@@ -142,7 +142,7 @@ const submitJawaban = async () => {
   const materiId = materi.value?.id;
 
   try {
-    const response = await $fetch('/api/answer-latihan', {
+    const response = await $fetch('/api/snbt/answer', {
       method: 'POST',
       body: { jawaban: payload },
     });
