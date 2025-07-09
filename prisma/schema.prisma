@@ -165,12 +165,18 @@ model SnbtSoal{
   id         Int            @id @default(autoincrement())
   nomorSoal Int?
   question   String
+  questionImage   String?
   type             SoalType @default(PILIHAN_GANDA)
   optionA          String?
+  optionAImage    String? 
   optionB          String?
+  optionBImage    String? 
   optionC          String?
+  optionCImage    String? 
   optionD          String?
+  optionDImage    String? 
   optionE          String?
+  optionEImage    String? 
   correctOption    AnswerOption?   // untuk pilihan ganda
   correctEssay     String? 
   materiSoal       String?
