@@ -7,6 +7,7 @@ const id = route.params.slug2
 const auth = useAuthStore()
 const userId = computed(() => auth.user?.id || "");
 
+
 const materi = ref(null);
 const timerRef = ref(null)
 const isSoalStart = ref(false);
@@ -34,17 +35,17 @@ const loadSavedJawaban = (materiId, jumlahSoal) => {
 }
 
 onMounted(async () => {
-  await snbtStore.snbtSoalFetch(slug, id);
-    const data = snbtStore.snbtSoal; // <- langsung ambil datanya
-  console.log('Data dari fetch:', data);
-  console.log('Soal:', data.snbtSoal)
+  await snbtStore.snbtSoalFetch(slug, id)
+  const res = await snbtStore.getMateriById(id)
+  const data = snbtStore.snbtSoal; // <- langsung ambil datanya
+
 
   materi.value = {
-  id: id,
-  name: 'Tryout SNBT',
-  time: 1800, // atau ambil dari tempat lain jika punya
-  soal: data // karena `data` adalah array soal
-};
+    id: id,
+    name: res.name,
+    time: res.time, // atau ambil dari tempat lain jika punya
+    soal: data // karena `data` adalah array soal
+  };
 
   // Inisialisasi array jawaban
   if (materi.value?.soal) {
@@ -169,11 +170,11 @@ const submitJawaban = async () => {
     <Timer    ref="timerRef"
     v-if="materi && materi.id"
   :materiId="materi?.id"
-  :duration="60 * 30"
+  :duration="60 * materi.time"
   :isStarted="isSoalStart"
   @autoSubmit="submitJawaban"/>
   </Section>
-
+  
   <Section height="h-auto">
     <div v-if="!isSoalStart">
       <Button @click="soalStart">Mulai Kerjakan</Button>

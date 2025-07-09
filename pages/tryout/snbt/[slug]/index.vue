@@ -318,7 +318,7 @@ const copyPromo = async () => {
               <div>
                 <p class="font-semibold text-lg">{{ materi.name }}</p>
                 <p class="text-sm text-gray-500">
-                  {{ Math.floor(materi.time / 60) }} menit
+                  {{ Math.floor(materi.time) }} menit
                 </p>
               </div>
               <div class="ml-4">

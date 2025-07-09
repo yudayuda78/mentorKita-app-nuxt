@@ -54,6 +54,17 @@ export const useSnbtStore = defineStore('snbt', () =>{
         }
     }
 
+const getMateriById = async (id) => {
+  try {
+    const response = await $fetch(`/api/snbt/materi/${id}`, {
+      method: "GET",
+    })
+    return response.data
+  } catch (error) {
+    console.error("Gagal mengambil materi:", error)
+  }
+}
+
     return{
         snbtData,
     snbtDetail,
@@ -63,6 +74,7 @@ export const useSnbtStore = defineStore('snbt', () =>{
     snbtFetch,
     snbtSoalFetch,
     snbtSlug,
-    payment
+    payment,
+    getMateriById
     }
 })

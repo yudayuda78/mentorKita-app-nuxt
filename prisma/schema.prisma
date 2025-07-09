@@ -23,6 +23,7 @@ model User{
   shareSnbt ShareSnbt[]
   clickSnbt ClickSnbtTryout[]
   userProfile UserProfile?
+  answerSbnt AnswerSnbtUser[]
 }
 
 model UserProfile {
@@ -124,6 +125,18 @@ model AnswerLatihanUser {
   waktu     DateTime       @default(now())
 }
 
+model AnswerSnbtUser{
+  id        Int            @id @default(autoincrement())
+  user      User           @relation(fields: [userId], references: [id])
+  userId    Int
+  soal      SnbtSoal   @relation(fields: [soalId], references: [id])
+  soalId    Int
+  jawaban   String
+  benar     Boolean
+  materiSoal String?
+  waktu     DateTime       @default(now())
+}
+
 model ScoreLatihan {
   id Int @id @default(autoincrement())
   user      User           @relation(fields: [userId], references: [id])
@@ -182,7 +195,7 @@ model SnbtSoal{
   materiSoal       String?
   snbtMateri     SnbtTryoutMateri  @relation(fields: [snbtMateriId], references: [id])
   snbtMateriId   Int
-  
+  answerSoal AnswerSnbtUser[]
   
 }
 
