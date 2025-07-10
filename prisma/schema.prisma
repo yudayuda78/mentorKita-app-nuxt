@@ -193,6 +193,7 @@ model SnbtSoal{
   correctOption    AnswerOption?   // untuk pilihan ganda
   correctEssay     String? 
   materiSoal       String?
+  difficulty      Float?
   snbtMateri     SnbtTryoutMateri  @relation(fields: [snbtMateriId], references: [id])
   snbtMateriId   Int
   answerSoal AnswerSnbtUser[]
