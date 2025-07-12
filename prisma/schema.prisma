@@ -16,6 +16,7 @@ model User{
   createAt DateTime @default(now())
   asnwerLatihan AnswerLatihanUser[]
   score ScoreLatihan[]
+  scoreSnbt ScoreSnbt[]
   subscriptions Subscription[]
   enrollmentsSnbt EnrollmentSnbtTryout[]
   paymentsSnbt PaymentSnbtTryout[]
@@ -147,6 +148,18 @@ model ScoreLatihan {
   date    DateTime          @default(now())
 }
 
+model ScoreSnbt {
+  id Int @id @default(autoincrement())
+  user      User           @relation(fields: [userId], references: [id])
+  userId    Int
+  materi      SnbtTryoutMateri    @relation(fields: [materiId], references: [id])
+  materiId    Int
+  score     Int
+  date    DateTime          @default(now())
+
+  @@unique([userId, materiId], name: "userId_materiId")
+}
+
 model SnbtTryout{
   id Int @id @default(autoincrement())
   name String?
@@ -172,6 +185,7 @@ model SnbtTryoutMateri{
    tryoutId Int
    time Int
    snbtSoal SnbtSoal[]
+   score ScoreSnbt[]
 }
 
 model SnbtSoal{
@@ -194,6 +208,8 @@ model SnbtSoal{
   correctEssay     String? 
   materiSoal       String?
   difficulty      Float?     @default(0.5)
+  discrimination Float? // a
+  guessing    Float?
   snbtMateri     SnbtTryoutMateri  @relation(fields: [snbtMateriId], references: [id])
   snbtMateriId   Int
   answerSoal AnswerSnbtUser[]

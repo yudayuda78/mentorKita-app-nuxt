@@ -12,11 +12,12 @@ export async function updateSoalDifficulty() {
 
     if (total === 0) continue
 
-    const difficulty = parseFloat((1 - benar / total).toFixed(2))
+    const difficulty = parseFloat((1 - benar / total).toFixed(2)) // b
+    const discrimination = 1.0 // a, bisa dibuat lebih dinamis nanti
 
     await prisma.snbtSoal.update({
       where: { id: soal.id },
-      data: { difficulty },
+      data: { difficulty, discrimination },
     })
   }
 }
@@ -30,13 +31,25 @@ export async function calculateIRTScore(userId, materiId) {
     include: { soal: true },
   })
 
+  const theta = 0.0
   let score = 0
+
   for (const j of jawaban) {
+    const soal = j.soal
+    const a = soal.discrimination ?? 1.0
+    const b = soal.difficulty ?? 0.5
+
+    const p = 1 / (1 + Math.exp(-a * (theta - b)))
+
     if (j.benar) {
-      const bobot = j.soal.difficulty ?? 0.5
-      score += bobot
+      score += p
     }
   }
 
-  return parseFloat(score.toFixed(2))
+  // 🎯 Normalisasi ke skala 200 - 900
+  const minRaw = 0
+  const maxRaw = jawaban.length // maksimal skor mentah (jika semua benar)
+  const normScore = 200 + ((score - minRaw) / (maxRaw - minRaw)) * 700
+
+  return parseFloat(normScore.toFixed(2))
 }
