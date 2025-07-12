@@ -1,4 +1,6 @@
-<script setup></script>
+<script setup>
+// Tidak perlu mengubah apa pun di sini jika tidak ada logika JavaScript
+</script>
 
 <template>
   <Navbar />
@@ -11,6 +13,11 @@
     <div class="space-y-10">
       <!-- Artikel 1 -->
       <article>
+        <img
+          src=""
+          alt="Thumbnail SNBT 2026"
+          class="w-full h-48 object-cover rounded-lg mb-3"
+        />
         <p class="text-sm text-gray-500">12 Juli 2025</p>
         <h3 class="text-2xl font-semibold mt-1">Mengenal SNBT 2026</h3>
         <p class="text-gray-700 mt-2">
@@ -20,6 +27,11 @@
 
       <!-- Artikel 2 -->
       <article>
+        <img
+          src=""
+          alt="Thumbnail Tips Belajar"
+          class="w-full h-48 object-cover rounded-lg mb-3"
+        />
         <p class="text-sm text-gray-500">10 Juli 2025</p>
         <h3 class="text-2xl font-semibold mt-1">Tips Belajar Efektif untuk UTBK</h3>
         <p class="text-gray-700 mt-2">
@@ -29,6 +41,11 @@
 
       <!-- Artikel 3 -->
       <article>
+        <img
+          src=""
+          alt="Thumbnail Penalaran Umum"
+          class="w-full h-48 object-cover rounded-lg mb-3"
+        />
         <p class="text-sm text-gray-500">8 Juli 2025</p>
         <h3 class="text-2xl font-semibold mt-1">Strategi Menjawab Soal Penalaran Umum</h3>
         <p class="text-gray-700 mt-2">
