@@ -209,7 +209,7 @@ model SnbtSoal{
   materiSoal       String?
   difficulty      Float?     @default(0.5)
   discrimination Float? // a
-  guessing    Float?
+  guessing    Float @default(0.2)
   snbtMateri     SnbtTryoutMateri  @relation(fields: [snbtMateriId], references: [id])
   snbtMateriId   Int
   answerSoal AnswerSnbtUser[]

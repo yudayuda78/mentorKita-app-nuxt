@@ -1,7 +1,9 @@
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
-  const { userId, materiId } = body
+ const { userId: rawUserId, materiId: rawMateriId } = await readBody(event)
+  const userId = Number(rawUserId)
+const materiId = Number(rawMateriId)
 
   if (!userId || !materiId) {
     throw createError({
@@ -11,6 +13,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const rawScore = await calculateIRTScore(userId, materiId)
+  
 
   // Amankan jika NaN
   const score = isNaN(rawScore) ? 200 : Math.round(rawScore)
@@ -30,5 +33,6 @@ export default defineEventHandler(async (event) => {
     },
   })
 
+   await updateSoalDifficulty(materiId)
   return { success: true, score: saved }
 })

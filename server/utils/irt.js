@@ -23,12 +23,16 @@ export async function updateSoalDifficulty() {
 }
 
 export async function calculateIRTScore(userId, materiId) {
-  const jawaban = await prisma.answerSnbtUser.findMany({
+    const jawaban = await prisma.answerSnbtUser.findMany({
     where: {
-      userId,
-      soal: { snbtMateriId: materiId },
+      userId: Number(userId),
+      soal: {
+        snbtMateriId: Number(materiId),
+      },
     },
-    include: { soal: true },
+    include: {
+      soal: true,
+    },
   })
 
   const theta = 0.0
@@ -38,8 +42,9 @@ export async function calculateIRTScore(userId, materiId) {
     const soal = j.soal
     const a = soal.discrimination ?? 1.0
     const b = soal.difficulty ?? 0.5
+    const c = soal.guessing ?? 0.2
 
-    const p = 1 / (1 + Math.exp(-a * (theta - b)))
+    const p = c + ((1 - c) / (1 + Math.exp(-a * (theta - b))))
 
     if (j.benar) {
       score += p

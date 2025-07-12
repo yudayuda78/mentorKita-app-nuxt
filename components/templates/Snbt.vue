@@ -142,11 +142,18 @@ const submitJawaban = async () => {
   const materiId = materi.value?.id;
 
   try {
-    const response = await $fetch('/api/snbt/answer', {
+    await $fetch('/api/snbt/answer', {
       method: 'POST',
       body: { jawaban: payload },
     });
 
+    const res = await $fetch('/api/snbt/submit-score', {
+      method: 'POST',
+      body: {
+        userId: userId.value,
+        materiId: materiId,
+      },
+    });
     alert('Jawaban telah disubmit');
 
     // ✅ Hapus dari localStorage setelah submit
@@ -157,7 +164,7 @@ const submitJawaban = async () => {
     alert('Gagal menyimpan jawaban!');
   }
 
-  useScoreLatihan(payload, materiId)
+  
   await timerRef.value?.resetTimer()
   isSoalStart.value = false
   currentIndex.value = 0
