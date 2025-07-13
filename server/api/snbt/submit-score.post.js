@@ -1,9 +1,23 @@
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
- const { userId: rawUserId, materiId: rawMateriId } = await readBody(event)
+ const { userId: rawUserId, materiId: rawMateriId, slug: rawSlug } = await readBody(event)
   const userId = Number(rawUserId)
 const materiId = Number(rawMateriId)
+const tryoutIdr = await prisma.snbtTryout.findUnique({
+  where:{
+    slug : rawSlug
+  }
+})
+
+if (!tryoutIdr) {
+  throw createError({
+    statusCode: 404,
+    message: "Tryout tidak ditemukan dari slug",
+  })
+}
+
+const tryoutId = tryoutIdr.id
 
   if (!userId || !materiId) {
     throw createError({
@@ -23,12 +37,14 @@ const materiId = Number(rawMateriId)
       userId_materiId: {
         userId,
         materiId,
+       
       },
     },
     update: { score },
     create: {
       userId,
       materiId,
+      snbtTryoutId: tryoutId,
       score,
     },
   })

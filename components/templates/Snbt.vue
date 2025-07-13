@@ -152,6 +152,7 @@ const submitJawaban = async () => {
       body: {
         userId: userId.value,
         materiId: materiId,
+        slug: slug
       },
     });
     alert('Jawaban telah disubmit');

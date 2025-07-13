@@ -152,8 +152,8 @@ model ScoreSnbt {
   id Int @id @default(autoincrement())
   user      User           @relation(fields: [userId], references: [id])
   userId    Int
-  tryout    SnbtTryout @relation(fields: [tryoutId], references:[id])
-  tryoutId Int 
+  tryout    SnbtTryout @relation(fields: [snbtTryoutId], references:[id])
+  snbtTryoutId Int 
   materi      SnbtTryoutMateri    @relation(fields: [materiId], references: [id])
   materiId    Int
   score     Int
