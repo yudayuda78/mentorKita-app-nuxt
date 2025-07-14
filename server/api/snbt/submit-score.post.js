@@ -1,6 +1,6 @@
 
 export default defineEventHandler(async (event) => {
-  const body = await readBody(event)
+ 
  const { userId: rawUserId, materiId: rawMateriId, slug: rawSlug } = await readBody(event)
   const userId = Number(rawUserId)
 const materiId = Number(rawMateriId)
@@ -41,29 +41,33 @@ const materiType = tryoutMateri.type
     })
   }
 
-  const rawScore = await calculateIRTScore(userId, materiId)
-  
-
-  // Amankan jika NaN
-  const score = isNaN(rawScore) ? 200 : Math.round(rawScore)
+let { score, rawScore, theta } = await calculateIRTScore(userId, materiId)
+if (isNaN(score)) score = 200
 
   const saved = await prisma.scoreSnbt.upsert({
-    where: {
-      userId_materiId: {
-        userId,
-        materiId,
-       
-      },
-    },
-    update: { score },
-    create: {
+  where: {
+    userId_materiId: {
       userId,
       materiId,
-      snbtTryoutId: tryoutId,
-      type: materiType,
-      score,
     },
-  })
+  },
+  update: {
+    score,
+    rawScore,
+    theta,
+    type: materiType,
+  },
+  create: {
+    userId,
+    snbtTryoutId: tryoutId,
+    materiId,
+    score,
+    rawScore,
+    theta,
+    type: materiType,
+  },
+});
+
 
    await updateSoalDifficulty(materiId)
   return { success: true, score: saved }
