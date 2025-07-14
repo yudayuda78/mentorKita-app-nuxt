@@ -13,6 +13,7 @@ model User{
   email     String @unique
   password  String
   provider String? 
+  thetaGlobal Float?
   createAt DateTime @default(now())
   asnwerLatihan AnswerLatihanUser[]
   score ScoreLatihan[]
@@ -163,6 +164,8 @@ model ScoreSnbt {
   materiId    Int
   type      String?
   score     Int
+  rawScore Float?
+  theta    Float?
   date    DateTime          @default(now())
 
   @@unique([userId, materiId], name: "userId_materiId")
