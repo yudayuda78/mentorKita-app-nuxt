@@ -1,6 +1,6 @@
 export default defineEventHandler(async (event) => {
       const query = getQuery(event)
-  const user = await getUserFromEvent(event) // ← ambil user dari cookie/JWT
+  const user = await getUserFromToken(event) // ← ambil user dari cookie/JWT
   const userId = user.id
   const snbtTryoutId = parseInt(query.snbtTryoutId)
     const getShared = await prisma.shareSnbt.findFirst({

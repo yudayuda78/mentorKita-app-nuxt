@@ -19,6 +19,21 @@ if (!tryoutIdr) {
 
 const tryoutId = tryoutIdr.id
 
+const tryoutMateri = await prisma.snbtTryoutMateri.findUnique({
+  where: {
+    id: materiId
+  }
+})
+
+if(!tryoutMateri){
+  throw createError({
+    statusCode: 404,
+    message: "Tryout Materi tidak ditemukan"
+  })
+}
+
+const materiType = tryoutMateri.type
+
   if (!userId || !materiId) {
     throw createError({
       statusCode: 400,
@@ -45,6 +60,7 @@ const tryoutId = tryoutIdr.id
       userId,
       materiId,
       snbtTryoutId: tryoutId,
+      type: materiType,
       score,
     },
   })
