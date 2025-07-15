@@ -72,3 +72,76 @@ export async function calculateIRTScore(userId, materiId) {
   };
 }
 
+export async function averageglobaltheta(userId){
+  const allGlobalTheta = await prisma.scoreSnbt.findMany({
+    where: {
+      userId : userId
+    },
+    select: {
+      theta: true
+    }
+  })
+
+  const thetaValue = allGlobalTheta.map(item => item.theta)
+  const averageTheta = thetaValue.length ? thetaValue.reduce((sum, val) => sum + val, 0) : 0
+
+  const update = await prisma.user.update({
+    where: {id: userId},
+    data : {thetaGlobal: averageTheta}
+  })
+}
+
+export async function finalScore(userId, tryoutId){
+  const tryoutTPS = await prisma.scoreSnbt.findMany({
+    where : {
+      userId,
+      snbtTryoutId: tryoutId,
+      type : 'TES_PORTENSI_SKOLASTIK'
+    },
+    select:{
+      score: true
+    }
+  })
+
+  const tryoutLiterasi = await prisma.scoreSnbt.findMany({
+    where : {
+      userId,
+      snbtTryoutId: tryoutId,
+      type : 'TES_LITERASI'
+    },
+    select:{
+      score: true
+    }
+  })
+
+  const tryoutTPSValue = tryoutTPS.map(item => item.score)
+  const tryoutLiterasiValue = tryoutLiterasi.map(item => item.score)
+
+  const averageTPS = tryoutTPSValue.length ? tryoutTPSValue.reduce((sum, val) => sum + val, 0) / tryoutTPSValue.length : 0
+  const averageLiterasi = tryoutLiterasiValue.length ? tryoutLiterasiValue.reduce((sum, val) => sum + val, 0) / tryoutLiterasiValue.length : 0
+  const final = (averageTPS * 0.6) + (averageLiterasi * 0.4)
+
+
+  if (tryoutTPSValue.length === 4 && tryoutLiterasiValue.length === 3) {
+    await prisma.snbtFinalScore.upsert({
+      where: {
+        userId_snbtTryoutId: {
+          userId,
+          snbtTryoutId: tryoutId,
+        },
+      },
+      update: {
+        score: final,
+      },
+      create: {
+        userId,
+        snbtTryoutId: tryoutId,
+        score: final,
+      },
+    })
+  }
+  
+
+
+}
+

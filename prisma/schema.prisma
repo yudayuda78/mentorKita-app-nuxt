@@ -26,6 +26,7 @@ model User{
   clickSnbt ClickSnbtTryout[]
   userProfile UserProfile?
   answerSbnt AnswerSnbtUser[]
+  finalScoreSnbt SnbtFinalScore[]
 }
 
 model UserProfile {
@@ -171,6 +172,17 @@ model ScoreSnbt {
   @@unique([userId, materiId], name: "userId_materiId")
 }
 
+model SnbtFinalScore{
+  id Int @id @default(autoincrement())
+  user      User           @relation(fields: [userId], references: [id])
+  userId    Int
+  tryout SnbtTryout @relation(fields: [snbtTryoutId], references: [id])
+  snbtTryoutId Int
+  score Int
+
+  @@unique([userId, snbtTryoutId])
+}
+
 model SnbtTryout{
   id Int @id @default(autoincrement())
   name String?
@@ -188,7 +200,10 @@ model SnbtTryout{
   shareSnbt ShareSnbt[]
   clickSnbt ClickSnbtTryout[]
   scoreSnbt ScoreSnbt[]
+  finalScoreSnbt SnbtFinalScore[]
 }
+
+
 
 model SnbtTryoutMateri{
    id Int @id @default(autoincrement())

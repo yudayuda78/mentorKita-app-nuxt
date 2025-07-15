@@ -70,5 +70,7 @@ if (isNaN(score)) score = 200
 
 
    await updateSoalDifficulty(materiId)
+   await averageglobaltheta(userId)
+   await finalScore(userId, tryoutId)
   return { success: true, score: saved }
 })
