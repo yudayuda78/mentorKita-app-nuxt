@@ -13,7 +13,7 @@ const rawRankings = [
   { name: 'Hannah', score: 76, school: 'SMA 1 Palembang' },
 ]
 
-// Tambahkan rank global
+// Ranking global
 const rankings = ref(
   rawRankings
     .sort((a, b) => b.score - a.score)
@@ -24,7 +24,14 @@ const searchQuery = ref('')
 const currentPage = ref(1)
 const itemsPerPage = 5
 
-// Filter (berdasarkan nama atau sekolah)
+// Jumlah tryout & rata-rata
+const totalTryouts = computed(() => rankings.value.length)
+const averageScore = computed(() => {
+  const total = rankings.value.reduce((sum, item) => sum + item.score, 0)
+  return (total / rankings.value.length).toFixed(2)
+})
+
+// Filter
 const filteredRankings = computed(() =>
   rankings.value.filter(item =>
     item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
@@ -49,48 +56,69 @@ function goToPage(page) {
 <template>
   <Navbar />
 
-  <section class="p-4 max-w-5xl mx-auto">
-    <h1 class="text-2xl font-bold mb-4">Ranking & Score</h1>
+  <section class="p-6 max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold mb-4 text-blue-700">Ranking & Score</h1>
+
+    <!-- Info Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div class="bg-blue-100 text-blue-900 p-4 rounded-xl shadow">
+        <p class="text-sm font-semibold">Jumlah Tryout Diikuti</p>
+        <p class="text-2xl font-bold">{{ totalTryouts }}</p>
+      </div>
+      <div class="bg-green-100 text-green-900 p-4 rounded-xl shadow">
+        <p class="text-sm font-semibold">Nilai Rata-rata Semua Tryout</p>
+        <p class="text-2xl font-bold">{{ averageScore }}</p>
+      </div>
+    </div>
 
     <!-- Search -->
     <input
       v-model="searchQuery"
       type="text"
-      placeholder="Search by name or school..."
-      class="border px-4 py-2 rounded w-full mb-4"
+      placeholder="Cari berdasarkan nama atau sekolah..."
+      class="border px-4 py-2 rounded-lg w-full mb-4 shadow"
     />
 
     <!-- Table -->
-    <table class="w-full table-auto border-collapse border">
-      <thead>
-        <tr class="bg-gray-100">
-          <th class="border px-4 py-2 text-left">Rank</th>
-          <th class="border px-4 py-2 text-left">Name</th>
-          <th class="border px-4 py-2 text-left">Asal Sekolah</th>
-          <th class="border px-4 py-2 text-left">Score</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in paginatedRankings" :key="item.name">
-          <td class="border px-4 py-2">{{ item.rank }}</td>
-          <td class="border px-4 py-2">{{ item.name }}</td>
-          <td class="border px-4 py-2">{{ item.school }}</td>
-          <td class="border px-4 py-2">{{ item.score }}</td>
-        </tr>
-        <tr v-if="!paginatedRankings.length">
-          <td colspan="4" class="text-center p-4">No results found.</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="overflow-x-auto rounded-xl shadow">
+      <table class="w-full text-left border border-gray-200">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-3 border">Rank</th>
+            <th class="px-4 py-3 border">Nama</th>
+            <th class="px-4 py-3 border">Asal Sekolah</th>
+            <th class="px-4 py-3 border">Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="item in paginatedRankings"
+            :key="item.name"
+            class="hover:bg-gray-50 transition"
+          >
+            <td class="px-4 py-2 border">{{ item.rank }}</td>
+            <td class="px-4 py-2 border">{{ item.name }}</td>
+            <td class="px-4 py-2 border">{{ item.school }}</td>
+            <td class="px-4 py-2 border">{{ item.score }}</td>
+          </tr>
+          <tr v-if="!paginatedRankings.length">
+            <td colspan="4" class="text-center p-4">Tidak ada hasil.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
     <!-- Pagination -->
-    <div class="flex justify-center mt-4 gap-2">
+    <div class="flex justify-center mt-6 gap-2">
       <button
         v-for="page in totalPages"
         :key="page"
         @click="goToPage(page)"
-        class="px-3 py-1 border rounded"
-        :class="page === currentPage ? 'bg-blue-500 text-white' : 'bg-white'"
+        class="px-4 py-2 border rounded-full transition"
+        :class="{
+          'bg-blue-600 text-white': page === currentPage,
+          'bg-white text-blue-600 hover:bg-blue-100': page !== currentPage
+        }"
       >
         {{ page }}
       </button>
