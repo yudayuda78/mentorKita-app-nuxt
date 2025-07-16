@@ -27,6 +27,7 @@ model User{
   userProfile UserProfile?
   answerSbnt AnswerSnbtUser[]
   finalScoreSnbt SnbtFinalScore[]
+  user AverageScoreTryout[]
 }
 
 model UserProfile {
@@ -181,6 +182,13 @@ model SnbtFinalScore{
   score Int
 
   @@unique([userId, snbtTryoutId])
+}
+
+model AverageScoreTryout{
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  score Int
 }
 
 model SnbtTryout{
