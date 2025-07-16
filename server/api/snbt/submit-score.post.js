@@ -1,3 +1,4 @@
+import { averageScore } from "~/server/utils/irt"
 
 export default defineEventHandler(async (event) => {
  
@@ -72,5 +73,6 @@ if (isNaN(score)) score = 200
    await updateSoalDifficulty(materiId)
    await averageglobaltheta(userId)
    await finalScore(userId, tryoutId)
+   await averageScore(userId)
   return { success: true, score: saved }
 })

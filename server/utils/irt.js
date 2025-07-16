@@ -145,3 +145,31 @@ export async function finalScore(userId, tryoutId){
 
 }
 
+
+export async function averageScore(userId) {
+  
+  const allScore = await prisma.snbtFinalScore.findMany({
+    where:{
+      userId : userId
+    }
+  })
+
+  const allScoreValue = allScore.map(item => item.score)
+  if (allScoreValue.length === 0) return 0
+  const total = allScoreValue.reduce((current, val) => current + val, 0)
+  const average = Math.round((total / allScoreValue.length) * 100) / 100
+
+  const save = await prisma.averageScoreTryout.upsert({
+    where:{
+      userId: userId
+    },
+    update: {
+      score : average
+    },
+    create: {
+      userId: userId,
+      score: average
+    }
+  })
+
+}
