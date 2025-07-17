@@ -1,5 +1,12 @@
 <script setup>
-import { ref, computed } from 'vue'
+
+const score = useScoreStore()
+
+onMounted(async() => {
+  const allScore = await score.fetchAllScore()
+  
+  
+})
 
 // Data asli
 const rawRankings = [
