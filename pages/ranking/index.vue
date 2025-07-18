@@ -2,30 +2,21 @@
 
 const score = useScoreStore()
 
+
 onMounted(async() => {
-  const allScore = await score.fetchAllScore()
-  
+  const fetchAllScore = await score.fetchAllScore()
+
   
 })
 
-// Data asli
-const rawRankings = [
-  { name: 'Alice', score: 95, school: 'SMA 1 Jakarta' },
-  { name: 'Bob', score: 90, school: 'SMA 2 Bandung' },
-  { name: 'Charlie', score: 88, school: 'SMA 3 Surabaya' },
-  { name: 'Diana', score: 85, school: 'SMA 1 Yogyakarta' },
-  { name: 'Evan', score: 82, school: 'SMA 5 Medan' },
-  { name: 'Fiona', score: 80, school: 'SMA 4 Bali' },
-  { name: 'George', score: 78, school: 'SMA 2 Semarang' },
-  { name: 'Hannah', score: 76, school: 'SMA 1 Palembang' },
-]
+
 
 // Ranking global
-const rankings = ref(
-  rawRankings
+const rankings = computed(() => {
+  return [...score.allScore]
     .sort((a, b) => b.score - a.score)
     .map((item, index) => ({ ...item, rank: index + 1 }))
-)
+})
 
 const searchQuery = ref('')
 const currentPage = ref(1)
