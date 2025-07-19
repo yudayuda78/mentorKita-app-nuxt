@@ -69,6 +69,17 @@ function goToPage(page) {
       </div>
     </div>
 
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Filter berdasarkan sekolah:</label>
+        <select class="w-full border px-4 py-2 rounded-lg shadow">
+      <option value="">Semua Sekolah</option>
+      <option value="SMA 1 Jakarta">SMA 1 Jakarta</option>
+      <option value="SMA 2 Bandung">SMA 2 Bandung</option>
+      <option value="SMA 3 Surabaya">SMA 3 Surabaya</option>
+      </select>
+    </div>
+    
+
     <!-- Search -->
     <input
       v-model="searchQuery"
