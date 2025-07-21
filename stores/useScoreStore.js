@@ -22,10 +22,15 @@ export const useScoreStore = defineStore('score', () => {
     }
   }
 
+   const setAllScore = (data) => {
+    allScore.value = data
+  }
+
     return {
         allScore,
         error,
         loading,
-        fetchAllScore
+        fetchAllScore,
+        setAllScore
     }
 })

@@ -6,6 +6,10 @@ const score = useScoreStore()
 onMounted(async() => {
   const fetchAllScore = await score.fetchAllScore()
 
+  const response = await $fetch('/api/ranking/filter-dropdown')
+  if (response.success) {
+    tryoutOptions.value = response.data
+  }
   
 })
 
@@ -30,10 +34,15 @@ const averageScore = computed(() => {
 })
 
 // Filter
+
+const tryoutOptions = ref([]) 
+const selectedTryout = ref('')
+
 const filteredRankings = computed(() =>
   rankings.value.filter(item =>
-    item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-    item.school.toLowerCase().includes(searchQuery.value.toLowerCase())
+    (item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+     item.school.toLowerCase().includes(searchQuery.value.toLowerCase())) &&
+    (selectedTryout.value === '' || item.slug === selectedTryout.value)
   )
 )
 
@@ -49,6 +58,30 @@ const paginatedRankings = computed(() => {
 function goToPage(page) {
   currentPage.value = page
 }
+
+watch(selectedTryout, async (newVal) => {
+  currentPage.value = 1 // reset ke halaman pertama
+
+  if (newVal === '') {
+    await score.fetchAllScore()
+  } else {
+    try {
+      const response = await $fetch('/api/ranking/filter-tryout', {
+        method: 'POST',
+        body: { tryoutSlug: newVal }
+      })
+
+      if (response.success && Array.isArray(response.data)) {
+        score.setAllScore(response.data)
+      } else {
+        score.setAllScore([]) // kosongkan jika gagal
+      }
+    } catch (err) {
+      console.error('Gagal memfilter ranking:', err)
+    }
+  }
+})
+
 </script>
 
 <template>
@@ -69,15 +102,19 @@ function goToPage(page) {
       </div>
     </div>
 
-    <div class="mb-4">
-      <label class="block text-sm font-medium text-gray-700 mb-1">Filter berdasarkan sekolah:</label>
-        <select class="w-full border px-4 py-2 rounded-lg shadow">
-      <option value="">Semua Sekolah</option>
-      <option value="SMA 1 Jakarta">SMA 1 Jakarta</option>
-      <option value="SMA 2 Bandung">SMA 2 Bandung</option>
-      <option value="SMA 3 Surabaya">SMA 3 Surabaya</option>
-      </select>
-    </div>
+<div class="mb-4">
+  <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tryout:</label>
+  <select
+    v-model="selectedTryout"
+    class="w-full border px-4 py-2 rounded-lg shadow"
+  >
+    <option value="">Semua Tryout</option>
+    <option v-for="option in tryoutOptions" :key="option.slug" :value="option.slug">
+      {{ option.name }}
+    </option>
+  </select>
+</div>
+
     
 
     <!-- Search -->
