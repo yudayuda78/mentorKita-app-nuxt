@@ -26,6 +26,11 @@ const handleLogin = async () => {
 
   await router.push('/')
 }
+
+
+const loginWithGoogle = () => {
+  window.location.href = '/api/auth/google'
+}
 </script>
 
 <template>
@@ -95,6 +100,7 @@ const handleLogin = async () => {
         <button
           type="button"
           class="w-full bg-red-500 hover:bg-red-600 text-white py-2 rounded-md font-semibold"
+          @click="loginWithGoogle"
         >
           Daftar Menggunakan Google
         </button>
