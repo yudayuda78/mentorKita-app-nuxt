@@ -1,6 +1,6 @@
 <script setup>
 const snbtStore = useSnbtStore()
-const snbtData = computed(() => snbtStore.snbtData)
+const snbtData = computed(() => Array.isArray(snbtStore.snbtData) ? snbtStore.snbtData.slice().reverse() : [])
 const analyticsStore = useAnalyticsStore()
 const useAuth = useAuthStore();
 const userId = computed(() => useAuth.user?.id || "");

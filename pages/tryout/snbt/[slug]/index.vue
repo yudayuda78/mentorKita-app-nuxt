@@ -311,7 +311,7 @@ const copyPromo = async () => {
 
           <ul class="space-y-4">
             <li
-              v-for="materi in store.snbtDetail.tryoutMateri"
+              v-for="materi in store.snbtDetail.tryoutMateri.slice().reverse() || []"
               :key="materi.id"
               class="p-4 border rounded-lg flex items-center justify-between"
             >
