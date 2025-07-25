@@ -52,8 +52,9 @@ const updateProfile = async () => {
 <template>
   <Navbar />
 
-  <Section height="min-h-screen" color="bg-gray-50">
-    <div class="m-auto w-full max-w-2xl bg-white p-8 rounded-xl shadow-lg space-y-6">
+  <Section height="min-h-screen" color="bg-gray-50" class="container mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="mx-auto w-full max-w-[95%] sm:max-w-[600px] md:max-w-[700px] lg:max-w-[800px] xl:max-w-[850px] bg-white px-5 py-8 sm:px-8 sm:py-10 rounded-2xl shadow space-y-6">
+
       <h2 class="text-2xl font-bold text-gray-700 text-center">Profil Saya</h2>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -64,7 +65,7 @@ const updateProfile = async () => {
             v-model="profile.username"
             type="text"
             class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            placeholder="Contoh: ariefyuda"
+            placeholder="Contoh: user123"
           />
         </div>
       
