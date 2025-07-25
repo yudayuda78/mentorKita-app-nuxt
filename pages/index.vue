@@ -17,7 +17,7 @@ onUnmounted(() => {
 <template>
   <Navbar />
   
-    <StickyNavbar v-if="showStickyNavbar" />
+  <StickyNavbar v-if="showStickyNavbar" />
   <LandingPageContent />
   <Footer />
 </template>

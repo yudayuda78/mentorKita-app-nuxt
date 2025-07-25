@@ -1,12 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   typescript: { strict: false },
-  modules: ["@prisma/nuxt", "@pinia/nuxt", 'nuxt-file-storage'],
+  modules: ["@prisma/nuxt", "@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss'],
   components: [
     '~/components',  // seluruh components
     '~/components/ui', // juga pastikan ini kalau kamu override array
@@ -14,9 +13,9 @@ export default defineNuxtConfig({
   ],
   css: ['~/assets/css/main.css'],
   vite: {
-    plugins: [
-      tailwindcss(),
-    ],
+    server: {
+      allowedHosts: ['cae914927b7c.ngrok-free.app']
+    }
   },
   app: {
     head: {
@@ -35,7 +34,8 @@ export default defineNuxtConfig({
   },
    runtimeConfig: {
     public: {
-      baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+      baseUrl: 'https://cae914927b7c.ngrok-free.app'
+      // baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }
   },
 
