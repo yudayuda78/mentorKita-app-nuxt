@@ -53,17 +53,15 @@ const loginWithGoogle = () => {
 
 <template>
   <div class="flex h-screen flex-col md:flex-row relative">
-     <p
+     <!-- <p
       class="text-sm text-right text-gray-600 md:absolute md:top-4 md:right-4 md:text-base md:block hidden"
     >
       Sudah punya akun? <a href="/login" class="text-blue-600 no-underline">Login di sini</a>
-    </p>
-<div class="hidden md:flex w-full md:w-[40%] h-[200px] md:h-full border-r border-gray-300 items-center justify-center">
-  <img src="/signup.webp" alt="Belajar" class="max-h-full max-w-full object-contain" />
-</div>
+    </p> -->
 
 
-    <div class="flex items-center justify-center w-full md:w-[60%] min-h-screen md:min-h-full">
+
+    <div class="flex items-center justify-center w-full md:w-[60%] min-h-screen md:min-h-full md:mx-auto">
       <div class="w-[90%] max-w-[400px] space-y-4 p-6 bg-white rounded-xl shadow-md">
          <img src="/mentorkitacircle.webp" class="h-10 mx-auto" alt="MentorKita Logo" />
         <h2 class="text-2xl font-bold text-center text-blue-600">Register</h2>
@@ -188,7 +186,7 @@ const loginWithGoogle = () => {
           <NuxtLink to="/kebijakan-privasi" class="text-blue-600 no-underline hover:no-underline">Kebijakan Privasi</NuxtLink>.
         </p>
 
-         <p class="text-sm text-center text-gray-600 md:hidden">
+         <p class="text-sm text-center text-gray-600 ">
           Sudah punya akun? <a href="/login" class="text-blue-600 no-underline hover:no-underline">Login di sini</a>
         </p>
       </div>
