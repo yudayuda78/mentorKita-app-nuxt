@@ -13,8 +13,8 @@ defineOptions({ inheritAttrs: false })
 </script>
 
 <template>
-  <section :class="[' px-28 py-4', height, color]" v-bind="$attrs">
-    <div class=" flex h-[100%]">
+  <section :class="['px-4 sm:px-8 md:px-16 lg:px-28 py-4', height, color]" v-bind="$attrs">
+    <div class="flex flex-col w-full max-w-screen-xl mx-auto gap-8">
       <slot />
     </div>
   </section>

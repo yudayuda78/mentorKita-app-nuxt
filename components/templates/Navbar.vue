@@ -34,7 +34,7 @@ onBeforeUnmount(() => {
 
 <template>
   <nav class="bg-white shadow-md px-6 md:px-16 py-4">
-    <div class="flex items-center justify-between px-0 md:px-12">
+    <div class="flex items-center justify-between px-4 md:px-12">
       <NuxtLink to="/">
         <img src="/mentorkita23.webp" class="h-10" alt="MentorKita Logo" />
       </NuxtLink>
