@@ -14,7 +14,7 @@ onMounted( async () => {
     <Navbar />
     
     <main class="flex-grow">
-      <Section>
+      <Section height="min-h-[90vh] pb-16">
         <div v-if="latihanData && latihanData.length">
           <h2 class="text-xl font-bold mb-4">Latihan Soal</h2>
           <ul>
