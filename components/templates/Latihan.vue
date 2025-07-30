@@ -152,21 +152,28 @@ const submitJawaban = async () => {
 
 
 <template>
+  <!-- Timer -->
   <Section>
-    <Timer    ref="timerRef"
-    v-if="materi && materi.id"
-  :materiId="materi?.id"
-  :duration="60 * 30"
-  :isStarted="isSoalStart"
-  @autoSubmit="submitJawaban"/>
+    <Timer
+      ref="timerRef"
+      v-if="materi && materi.id"
+      :materiId="materi?.id"
+      :duration="60 * 30"
+      :isStarted="isSoalStart"
+      @autoSubmit="submitJawaban"
+    />
   </Section>
 
+  <!-- Soal Section -->
   <Section height="h-auto">
-    <div v-if="!isSoalStart">
+    <!-- Tombol mulai -->
+    <div v-if="!isSoalStart" class="text-center">
       <Button @click="soalStart">Mulai Kerjakan</Button>
     </div>
 
+    <!-- Tampilan soal -->
     <div v-else class="flex gap-4 w-full">
+      <!-- Area Soal -->
       <div class="soal w-[80%]">
         <div v-if="materi">
           <h2 class="text-xl font-bold mb-4">Materi: {{ materi.name }}</h2>
@@ -176,93 +183,40 @@ const submitJawaban = async () => {
               <p class="font-medium mb-2">
                 {{ currentIndex + 1 }}. {{ currentSoal.question }}
               </p>
+
+              <!-- Pilihan Jawaban -->
               <div class="space-y-2 ml-4">
-                <label
-                  v-if="currentSoal.optionA"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
-                  :class="{ 'bg-blue-100': isSelected('A') }"
-                >
-                  <input
-                    type="radio"
-                    value="A"
-                    v-model="jawabanUser[currentIndex]"
-                    :disabled="terkunci[currentIndex]"
-                    @change="pilihJawaban('A')"
-                  />
-                  <span>A. {{ currentSoal.optionA }}</span>
-                </label>
-
-                <label
-                  v-if="currentSoal.optionB"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
-                  :class="{ 'bg-blue-100': isSelected('B') }"
-                >
-                  <input
-                    type="radio"
-                    value="B"
-                    v-model="jawabanUser[currentIndex]"
-                    :disabled="terkunci[currentIndex]"
-                    @change="pilihJawaban('B')"
-                  />
-                  <span>B. {{ currentSoal.optionB }}</span>
-                </label>
-
-                <label
-                  v-if="currentSoal.optionC"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
-                  :class="{ 'bg-blue-100': isSelected('C') }"
-                >
-                  <input
-                    type="radio"
-                    value="C"
-                    v-model="jawabanUser[currentIndex]"
-                    :disabled="terkunci[currentIndex]"
-                    @change="pilihJawaban('C')"
-                  />
-                  <span>C. {{ currentSoal.optionC }}</span>
-                </label>
-
-                <label
-                  v-if="currentSoal.optionD"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
-                  :class="{ 'bg-blue-100': isSelected('D') }"
-                >
-                  <input
-                    type="radio"
-                    value="D"
-                    v-model="jawabanUser[currentIndex]"
-                    :disabled="terkunci[currentIndex]"
-                    @change="pilihJawaban('D')"
-                  />
-                  <span>D. {{ currentSoal.optionD }}</span>
-                </label>
-
-                <label
-                  v-if="currentSoal.optionE"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
-                  :class="{ 'bg-blue-100': isSelected('E') }"
-                >
-                  <input
-                    type="radio"
-                    value="E"
-                    v-model="jawabanUser[currentIndex]"
-                    :disabled="terkunci[currentIndex]"
-                    @change="pilihJawaban('E')"
-                  />
-                  <span>E. {{ currentSoal.optionE }}</span>
-                </label>
+                <template v-for="option in ['A', 'B', 'C', 'D', 'E']" :key="option">
+                  <label
+                    v-if="currentSoal[`option${option}`]"
+                    class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                    :class="{ 'bg-blue-100': isSelected(option) }"
+                  >
+                    <input
+                      type="radio"
+                      :value="option"
+                      v-model="jawabanUser[currentIndex]"
+                      :disabled="terkunci[currentIndex]"
+                      @change="pilihJawaban(option)"
+                    />
+                    <span>{{ option }}. {{ currentSoal[`option${option}`] }}</span>
+                  </label>
+                </template>
               </div>
 
-              <div class="mt-4 flex gap-2">
-                <Button @click="prevSoal" :disabled="currentIndex === 0"
-                  >Sebelumnya</Button
-                >
+              <!-- Navigasi dan aksi -->
+              <div class="mt-4 flex flex-wrap gap-2">
+                <Button @click="prevSoal" :disabled="currentIndex === 0">
+                  Sebelumnya
+                </Button>
+
                 <Button
                   @click="nextSoal"
                   :disabled="currentIndex === materi.soal.length - 1"
                 >
                   Selanjutnya
                 </Button>
+
                 <Button
                   @click="lockJawaban"
                   :disabled="terkunci[currentIndex]"
@@ -281,15 +235,18 @@ const submitJawaban = async () => {
               </div>
             </div>
           </div>
+
           <div v-else>
             <p>Tidak ada soal untuk materi ini.</p>
           </div>
         </div>
+
         <div v-else>
           <p>Loading atau materi tidak ditemukan...</p>
         </div>
       </div>
 
+      <!-- Navigasi Soal -->
       <div class="navsoal w-[20%]">
         <NavSoal
           :jumlahSoal="materi?.soal?.length || 0"
