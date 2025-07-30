@@ -175,21 +175,23 @@ const submitJawaban = async () => {
 
 <template>
   <Section>
-    <Timer    ref="timerRef"
-    v-if="materi && materi.id"
-  :materiId="materi?.id"
-  :duration="60 * materi.time"
-  :isStarted="isSoalStart"
-  @autoSubmit="submitJawaban"/>
+    <Timer
+      ref="timerRef"
+      v-if="materi && materi.id"
+      :materiId="materi?.id"
+      :duration="60 * materi.time"
+      :isStarted="isSoalStart"
+      @autoSubmit="submitJawaban"
+    />
   </Section>
-  
+
   <Section height="h-auto">
-    <div v-if="!isSoalStart">
+    <div v-if="!isSoalStart" class="flex justify-center">
       <Button @click="soalStart">Mulai Kerjakan</Button>
     </div>
 
-    <div v-else class="flex gap-4 w-full">
-      <div class="soal w-[80%]">
+    <div v-else class="flex flex-col lg:flex-row gap-4 w-full">
+      <div class="soal w-full lg:w-4/5">
         <div v-if="materi">
           <h2 class="text-xl font-bold mb-4">Materi: {{ materi.name }}</h2>
 
@@ -198,10 +200,10 @@ const submitJawaban = async () => {
               <p class="font-medium mb-2">
                 {{ currentIndex + 1 }}. {{ currentSoal.question }}
               </p>
-              <div class="space-y-2 ml-4">
+              <div class="space-y-2 ml-2">
                 <label
                   v-if="currentSoal.optionA"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  class="flex items-start gap-2 cursor-pointer p-2 rounded-md border"
                   :class="{ 'bg-blue-100': isSelected('A') }"
                 >
                   <input
@@ -216,7 +218,7 @@ const submitJawaban = async () => {
 
                 <label
                   v-if="currentSoal.optionB"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  class="flex items-start gap-2 cursor-pointer p-2 rounded-md border"
                   :class="{ 'bg-blue-100': isSelected('B') }"
                 >
                   <input
@@ -231,7 +233,7 @@ const submitJawaban = async () => {
 
                 <label
                   v-if="currentSoal.optionC"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  class="flex items-start gap-2 cursor-pointer p-2 rounded-md border"
                   :class="{ 'bg-blue-100': isSelected('C') }"
                 >
                   <input
@@ -246,7 +248,7 @@ const submitJawaban = async () => {
 
                 <label
                   v-if="currentSoal.optionD"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  class="flex items-start gap-2 cursor-pointer p-2 rounded-md border"
                   :class="{ 'bg-blue-100': isSelected('D') }"
                 >
                   <input
@@ -261,7 +263,7 @@ const submitJawaban = async () => {
 
                 <label
                   v-if="currentSoal.optionE"
-                  class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
+                  class="flex items-start gap-2 cursor-pointer p-2 rounded-md border"
                   :class="{ 'bg-blue-100': isSelected('E') }"
                 >
                   <input
@@ -275,10 +277,10 @@ const submitJawaban = async () => {
                 </label>
               </div>
 
-              <div class="mt-4 flex gap-2">
-                <Button @click="prevSoal" :disabled="currentIndex === 0"
-                  >Sebelumnya</Button
-                >
+              <div class="mt-4 flex flex-wrap gap-2">
+                <Button @click="prevSoal" :disabled="currentIndex === 0">
+                  Sebelumnya
+                </Button>
                 <Button
                   @click="nextSoal"
                   :disabled="currentIndex === materi.soal.length - 1"
@@ -312,7 +314,7 @@ const submitJawaban = async () => {
         </div>
       </div>
 
-      <div class="navsoal w-[20%]">
+      <div class="navsoal w-full lg:w-1/5">
         <NavSoal
           :jumlahSoal="materi?.soal?.length || 0"
           :statusList="soalStatus"

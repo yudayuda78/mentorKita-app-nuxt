@@ -3,7 +3,7 @@
 defineProps({
   colorClass: {
     type: String,
-    default: 'bg-black text-white'
+    default: 'bg-[#2966F2] text-[#ffffff]'
   }
 })
 defineOptions({ inheritAttrs: false })

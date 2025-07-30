@@ -1,146 +1,139 @@
 <script setup>
 defineEmits(['submitJawaban'])
-const route = useRoute();
-const latihanStore = useLatihanStore();
-const slug = route.params.slug;
-const auth = useAuthStore()
-const userId = computed(() => auth.user?.id || "");
 
-const materi = ref(null);
+const route = useRoute()
+const latihanStore = useLatihanStore()
+const slug = route.params.slug
+const auth = useAuthStore()
+const userId = computed(() => auth.user?.id || "")
+
+const materi = ref(null)
 const timerRef = ref(null)
-const isSoalStart = ref(false);
-const currentIndex = ref(0);
-const jawabanUser = ref([]);
-const terkunci = ref([]);
-const ragu = ref([]);
+const isSoalStart = ref(false)
+const currentIndex = ref(0)
+const jawabanUser = ref([])
+const terkunci = ref([])
+const ragu = ref([])
 
 const soalStart = () => {
-  isSoalStart.value = true;
+  isSoalStart.value = true
   timerRef.value?.startTimer()
-};
+}
 
 const loadSavedJawaban = (materiId, jumlahSoal) => {
-  const saved = localStorage.getItem(`latihanJawaban-${materiId}`);
+  const saved = localStorage.getItem(`latihanJawaban-${materiId}`)
   if (saved) {
     try {
-      const parsed = JSON.parse(saved);
+      const parsed = JSON.parse(saved)
       if (Array.isArray(parsed) && parsed.length === jumlahSoal) {
-        return parsed;
+        return parsed
       }
     } catch {}
   }
-  return Array(jumlahSoal).fill("");
+  return Array(jumlahSoal).fill("")
 }
 
 onMounted(async () => {
-  await latihanStore.latihanFetch();
+  await latihanStore.latihanFetch()
   const data = latihanStore.latihanData.flatMap((kelas) =>
     kelas.courses.flatMap((course) => course.materi)
-  );
+  )
   materi.value = data.find(
     (item) => item.slug === Number(slug) || item.slug === slug
-  );
+  )
 
   if (materi.value?.soal) {
-    const jumlahSoal = materi.value.soal.length;
-    jawabanUser.value = loadSavedJawaban(materi.value.id, jumlahSoal);
-    terkunci.value = Array(jumlahSoal).fill(false);
-    ragu.value = Array(jumlahSoal).fill(false);
+    const jumlahSoal = materi.value.soal.length
+    jawabanUser.value = loadSavedJawaban(materi.value.id, jumlahSoal)
+    terkunci.value = Array(jumlahSoal).fill(false)
+    ragu.value = Array(jumlahSoal).fill(false)
   }
 
-  const deadlineKey = `latihanTimerDeadline-${materi.value?.id}`;
-  const existingDeadline = localStorage.getItem(deadlineKey);
+  const deadlineKey = `latihanTimerDeadline-${materi.value?.id}`
+  const existingDeadline = localStorage.getItem(deadlineKey)
   if (existingDeadline) {
-    isSoalStart.value = false;
+    isSoalStart.value = false
   }
-});
+})
 
-// ✅ Simpan jawaban setiap kali berubah
 watch(jawabanUser, (newVal) => {
   if (materi.value?.id) {
-    localStorage.setItem(`latihanJawaban-${materi.value.id}`, JSON.stringify(newVal));
+    localStorage.setItem(`latihanJawaban-${materi.value.id}`, JSON.stringify(newVal))
   }
-}, { deep: true });
+}, { deep: true })
 
-const currentSoal = computed(
-  () => materi.value?.soal?.[currentIndex.value] || {}
-);
+const currentSoal = computed(() => materi.value?.soal?.[currentIndex.value] || {})
 
-const isSelected = (option) => {
-  return jawabanUser.value[currentIndex.value] === option;
-};
+const isSelected = (option) => jawabanUser.value[currentIndex.value] === option
 
 const pilihJawaban = (option) => {
   if (!terkunci.value[currentIndex.value]) {
-    jawabanUser.value[currentIndex.value] = option;
+    jawabanUser.value[currentIndex.value] = option
   }
-};
+}
 
 const nextSoal = () => {
   if (currentIndex.value < materi.value.soal.length - 1) {
-    currentIndex.value++;
+    currentIndex.value++
   }
-};
+}
 
 const prevSoal = () => {
   if (currentIndex.value > 0) {
-    currentIndex.value--;
+    currentIndex.value--
   }
-};
+}
 
 const lockJawaban = () => {
-  terkunci.value[currentIndex.value] = true;
-  ragu.value[currentIndex.value] = false;
-};
+  terkunci.value[currentIndex.value] = true
+  ragu.value[currentIndex.value] = false
+}
 
 const bukaKunci = () => {
   if (terkunci.value[currentIndex.value]) {
-    terkunci.value[currentIndex.value] = false;
-    ragu.value[currentIndex.value] = true;
+    terkunci.value[currentIndex.value] = false
+    ragu.value[currentIndex.value] = true
   }
-};
+}
 
-const soalStatus = computed(() => {
-  return jawabanUser.value.map((jawaban, index) => {
-    if (terkunci.value[index]) return "terkunci";
-    if (jawaban) return "dijawab";
-    return "belum";
-  });
-});
+const soalStatus = computed(() =>
+  jawabanUser.value.map((jawaban, index) => {
+    if (terkunci.value[index]) return "terkunci"
+    if (jawaban) return "dijawab"
+    return "belum"
+  })
+)
 
 const goToSoal = (index) => {
-  currentIndex.value = index;
-};
+  currentIndex.value = index
+}
 
 const submitJawaban = async () => {
   const payload = materi.value.soal.map((soal, index) => {
-    const jawaban = jawabanUser.value[index];
-    const benar = jawaban === soal.correctOption;
+    const jawaban = jawabanUser.value[index]
+    const benar = jawaban === soal.correctOption
     return {
       soalId: soal.id,
       jawaban,
       benar,
       userId: userId.value,
       materiSoal: soal.materiSoal,
-    };
-  });
+    }
+  })
 
-  const materiId = materi.value?.id;
+  const materiId = materi.value?.id
 
   try {
-    const response = await $fetch('/api/answer-latihan', {
+    await $fetch('/api/answer-latihan', {
       method: 'POST',
       body: { jawaban: payload },
-    });
+    })
 
-    alert('Jawaban telah disubmit');
-
-    // ✅ Hapus dari localStorage setelah submit
-    localStorage.removeItem(`latihanJawaban-${materiId}`);
-
+    alert('Jawaban telah disubmit')
+    localStorage.removeItem(`latihanJawaban-${materiId}`)
   } catch (err) {
-    console.error(err);
-    alert('Gagal menyimpan jawaban!');
+    console.error(err)
+    alert('Gagal menyimpan jawaban!')
   }
 
   useScoreLatihan(payload, materiId)
@@ -150,14 +143,13 @@ const submitJawaban = async () => {
 }
 </script>
 
-
 <template>
   <!-- Timer -->
   <Section>
     <Timer
       ref="timerRef"
       v-if="materi && materi.id"
-      :materiId="materi?.id"
+      :materiId="materi.id"
       :duration="60 * 30"
       :isStarted="isSoalStart"
       @autoSubmit="submitJawaban"
@@ -171,83 +163,72 @@ const submitJawaban = async () => {
       <Button @click="soalStart">Mulai Kerjakan</Button>
     </div>
 
-    <!-- Tampilan soal -->
-    <div v-else class="flex gap-4 w-full">
+    <!-- Tampilan soal aktif -->
+    <div v-else class="flex flex-col md:flex-row gap-4 w-full mt-4">
       <!-- Area Soal -->
-      <div class="soal w-[80%]">
-        <div v-if="materi">
-          <h2 class="text-xl font-bold mb-4">Materi: {{ materi.name }}</h2>
+      <div class="w-full md:w-[75%] space-y-4 overflow-auto">
+        <h2 class="text-xl font-bold">Materi: {{ materi.name }}</h2>
 
-          <div v-if="materi.soal && materi.soal.length">
-            <div>
-              <p class="font-medium mb-2">
-                {{ currentIndex + 1 }}. {{ currentSoal.question }}
-              </p>
+        <div v-if="materi.soal && materi.soal.length">
+          <p class="font-medium mb-2">
+            {{ currentIndex + 1 }}. {{ currentSoal.question }}
+          </p>
 
-              <!-- Pilihan Jawaban -->
-              <div class="space-y-2 ml-4">
-                <template v-for="option in ['A', 'B', 'C', 'D', 'E']" :key="option">
-                  <label
-                    v-if="currentSoal[`option${option}`]"
-                    class="flex items-center gap-2 cursor-pointer p-2 rounded-md"
-                    :class="{ 'bg-blue-100': isSelected(option) }"
-                  >
-                    <input
-                      type="radio"
-                      :value="option"
-                      v-model="jawabanUser[currentIndex]"
-                      :disabled="terkunci[currentIndex]"
-                      @change="pilihJawaban(option)"
-                    />
-                    <span>{{ option }}. {{ currentSoal[`option${option}`] }}</span>
-                  </label>
-                </template>
-              </div>
-
-              <!-- Navigasi dan aksi -->
-              <div class="mt-4 flex flex-wrap gap-2">
-                <Button @click="prevSoal" :disabled="currentIndex === 0">
-                  Sebelumnya
-                </Button>
-
-                <Button
-                  @click="nextSoal"
-                  :disabled="currentIndex === materi.soal.length - 1"
-                >
-                  Selanjutnya
-                </Button>
-
-                <Button
-                  @click="lockJawaban"
+          <!-- Pilihan jawaban -->
+          <div class="space-y-2 ml-2">
+            <template v-for="option in ['A', 'B', 'C', 'D', 'E']" :key="option">
+              <label
+                v-if="currentSoal[`option${option}`]"
+                class="flex items-center gap-2 p-2 rounded-md cursor-pointer"
+                :class="{ 'bg-blue-100': isSelected(option) }"
+              >
+                <input
+                  type="radio"
+                  :value="option"
+                  v-model="jawabanUser[currentIndex]"
                   :disabled="terkunci[currentIndex]"
-                  class="bg-red-500 text-white"
-                >
-                  Kunci Jawaban
-                </Button>
-
-                <Button
-                  v-if="terkunci[currentIndex]"
-                  @click="bukaKunci"
-                  class="bg-yellow-400 text-black"
-                >
-                  Belum Yakin
-                </Button>
-              </div>
-            </div>
+                  @change="pilihJawaban(option)"
+                />
+                <span>{{ option }}. {{ currentSoal[`option${option}`] }}</span>
+              </label>
+            </template>
           </div>
 
-          <div v-else>
-            <p>Tidak ada soal untuk materi ini.</p>
+          <!-- Navigasi -->
+          <div class="mt-4 flex flex-wrap gap-2">
+            <Button @click="prevSoal" :disabled="currentIndex === 0">
+              Sebelumnya
+            </Button>
+            <Button
+              @click="nextSoal"
+              :disabled="currentIndex === materi.soal.length - 1"
+            >
+              Selanjutnya
+            </Button>
+            <Button
+              @click="lockJawaban"
+              :disabled="terkunci[currentIndex]"
+              class="bg-red-500 text-white"
+            >
+              Kunci Jawaban
+            </Button>
+            <Button
+              v-if="terkunci[currentIndex]"
+              @click="bukaKunci"
+              class="bg-yellow-400 text-black"
+            >
+              Belum Yakin
+            </Button>
           </div>
         </div>
 
         <div v-else>
-          <p>Loading atau materi tidak ditemukan...</p>
+          <p>Tidak ada soal untuk materi ini.</p>
         </div>
       </div>
 
-      <!-- Navigasi Soal -->
-      <div class="navsoal w-[20%]">
+      <!-- Navigasi soal -->
+      <div class="w-full md:w-[25%]">
         <NavSoal
           :jumlahSoal="materi?.soal?.length || 0"
           :statusList="soalStatus"

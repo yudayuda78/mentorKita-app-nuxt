@@ -315,7 +315,7 @@ const copyPromo = async () => {
               :key="materi.id"
               class="p-4 border rounded-lg flex items-center justify-between"
             >
-              <div>
+              <div class="text-left">
                 <p class="font-semibold text-lg">{{ materi.name }}</p>
                 <p class="text-sm text-gray-500">
                   {{ Math.floor(materi.time) }} menit

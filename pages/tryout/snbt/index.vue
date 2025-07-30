@@ -21,7 +21,7 @@ const analyticsSnbt = async (userId, snbtTryoutId, snbtTryoutName) => {
     <Navbar />
     
     <main class="flex-grow">
-      <Section>
+      <Section height="min-h-[90vh] pb-16">
         <div class="wrapper">
           <!-- Responsive Grid Start -->
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -31,12 +31,12 @@ const analyticsSnbt = async (userId, snbtTryoutId, snbtTryoutName) => {
               class="bg-white shadow-md rounded-2xl p-6 flex  flex-col justify-between hover:shadow-xl transition-shadow duration-300"
             >
               <h3 class="text-lg font-semibold mb-2">{{ item.name || 'Try out ' + (index + 1) }}</h3>
-              
+              <img src="/public/snbtlogo/snbtlogo.webp" alt="">
               <p class="text-gray-600 mb-4" v-if="item.isfree===true">Free</p>
               <p class="text-gray-600 mb-4" v-if="item.isfree===false">Rp 15.000</p>
 
               <NuxtLink :to="`/tryout/snbt/${item.slug}`" @click="analyticsSnbt(userId, item.id, item.name)" class="mt-auto">
-                <Button class="w-full">Kerjakan</Button>
+                <Button class="w-full" :color-class="'bg-[#2966F2] text-[#ffffff]'">Kerjakan</Button>
               </NuxtLink>
             </div>
           </div>
