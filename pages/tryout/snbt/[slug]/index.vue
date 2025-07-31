@@ -150,8 +150,7 @@ const copyPromo = async () => {
 
 <template>
   <Navbar />
-  <Section>
-    
+  <Section height="min-h-[90vh] pb-16">
     <div v-if="isLoading" class="text-center py-10 text-gray-500">
       ⏳ Memuat data tryout...
     </div>

@@ -1,5 +1,11 @@
 <script setup>
-// Tidak perlu mengubah apa pun di sini jika tidak ada logika JavaScript
+
+
+const blogStore = useBlogStore()
+
+onMounted(() => {
+  blogStore.fetchBlog()
+})
 </script>
 
 <template>
@@ -11,46 +17,20 @@
     <h2 class="text-3xl font-bold mb-6">Artikel Terbaru</h2>
 
     <div class="space-y-10">
-      <!-- Artikel 1 -->
-      <article>
+      <article
+        v-for="item in blogStore.blog"
+        :key="item.id"
+      >
         <img
-          src=""
-          alt="Thumbnail SNBT 2026"
+          :src="item.thumbnail || 'https://via.placeholder.com/600x400?text=Thumbnail'"
+          :alt="item.title"
           class="w-full h-48 object-cover rounded-lg mb-3"
         />
-        <p class="text-sm text-gray-500">12 Juli 2025</p>
-        <h3 class="text-2xl font-semibold mt-1">Mengenal SNBT 2026</h3>
-        <p class="text-gray-700 mt-2">
-          SNBT atau Seleksi Nasional Berdasarkan Tes adalah jalur masuk PTN yang menggunakan ujian UTBK. Pada artikel ini kita bahas format dan strategi persiapannya.
+        <p class="text-sm text-gray-500">
+          {{ new Date(item.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }}
         </p>
-      </article>
-
-      <!-- Artikel 2 -->
-      <article>
-        <img
-          src=""
-          alt="Thumbnail Tips Belajar"
-          class="w-full h-48 object-cover rounded-lg mb-3"
-        />
-        <p class="text-sm text-gray-500">10 Juli 2025</p>
-        <h3 class="text-2xl font-semibold mt-1">Tips Belajar Efektif untuk UTBK</h3>
-        <p class="text-gray-700 mt-2">
-          Belajar efektif tidak berarti belajar lebih lama, tetapi lebih cerdas. Yuk pelajari metode seperti Pomodoro dan Active Recall.
-        </p>
-      </article>
-
-      <!-- Artikel 3 -->
-      <article>
-        <img
-          src=""
-          alt="Thumbnail Penalaran Umum"
-          class="w-full h-48 object-cover rounded-lg mb-3"
-        />
-        <p class="text-sm text-gray-500">8 Juli 2025</p>
-        <h3 class="text-2xl font-semibold mt-1">Strategi Menjawab Soal Penalaran Umum</h3>
-        <p class="text-gray-700 mt-2">
-          Soal penalaran sering membingungkan. Gunakan strategi seperti eliminasi, analisis premis, dan pemahaman konteks untuk menjawabnya dengan tepat.
-        </p>
+        <h3 class="text-2xl font-semibold mt-1" v-html="item.title" />
+        <p class="text-gray-700 mt-2">{{ item.excerpt }}</p>
       </article>
     </div>
   </section>

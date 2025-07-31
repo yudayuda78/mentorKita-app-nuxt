@@ -39,7 +39,7 @@ const copyToClipboard = (text, bank) => {
 <template>
   <Navbar />
 
-  <Section>
+  <Section height="min-h-[90vh] pb-16">
     <div v-if="productStore.loading">Memuat produk...</div>
     <div v-if="productStore.error" class="text-red-500">{{ productStore.error }}</div>
 
