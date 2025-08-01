@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia' // ✅ BENAR
 
 
 export const useBlogStore = defineStore('blog', () => {

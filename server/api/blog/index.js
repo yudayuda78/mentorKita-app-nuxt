@@ -10,4 +10,4 @@ export default defineEventHandler(async (event) => {
     message: 'Berhasil mendapatkan data blog',
     data: blog
   };
-})  
+})
