@@ -1,34 +1,41 @@
 <script setup>
-const blog = ref(null)
-const route = useRoute()
-const slug = route.params.slug  // ambil slug dari URL
-
-onMounted(async () => {
-  const response = await $fetch(`/api/blog/${slug}`)
-  blog.value = response.data
+definePageMeta({
+  ssr: true,
 })
+
+const route = useRoute()
+const slug = route.params.slug
+
+const { data: response, pending, error } = await useAsyncData(`blog-${slug}`, () =>
+  $fetch(`/api/blog/${slug}`)
+)
+
+const blog = computed(() => response.value?.data || {})
 </script>
 
 <template>
-    <Navbar/>
-     <div v-if="blog" class="max-w-3xl mx-auto px-4 py-10">
-    <h1 class="text-3xl font-bold mb-4" v-html="blog.title" />
-    
-    <img
-      :src="blog.thumbnail || 'https://via.placeholder.com/600x400?text=Thumbnail'"
-      alt="Thumbnail"
-      class="w-full h-64 object-cover rounded-lg mb-6"
-    />
-    
-    <p class="text-sm text-gray-500 mb-2">
-      Dipublikasikan pada:
-      {{ new Date(blog.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }) }}
-    </p>
-    
-    <p class="text-sm text-gray-500 mb-6">
-      Dilihat {{ blog.views }} kali
-    </p>
-    
-    <div class="prose" v-html="blog.artikel" />
+    <Navbar />
+  <div class="max-w-3xl mx-auto py-12 px-4">
+    <div v-if="pending" class="text-center text-gray-500">Loading...</div>
+    <div v-else-if="error" class="text-center text-red-500">Terjadi kesalahan saat memuat data.</div>
+    <div v-else>
+      <h1 class="text-3xl font-bold mb-4" v-html="blog.title" />
+      
+      <img
+        :src="blog.thumbnail || 'https://via.placeholder.com/600x400'"
+        alt="Thumbnail"
+        class="w-full h-auto rounded mb-6"
+      />
+
+      <p class="text-sm text-gray-500 mb-4">
+        Dibuat pada: {{ new Date(blog.createdAt).toLocaleDateString('id-ID', {
+          day: 'numeric', month: 'long', year: 'numeric'
+        }) }}
+      </p>
+
+      <p class="text-gray-800 leading-relaxed" v-html="blog.artikel" />
+    </div>
   </div>
+  <Footer />
 </template>
+

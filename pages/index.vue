@@ -1,4 +1,7 @@
 <script setup>
+definePageMeta({
+  ssr: true
+})
 const showStickyNavbar = ref(false)
 
 const handleScroll = () => {
