@@ -49,10 +49,13 @@ onBeforeUnmount(() => {
       <!-- Desktop Menu -->
       <ClientOnly>
         <ul class="hidden md:flex gap-6 items-center">
-          <li><NuxtLink to="/kelas" class="text-gray-700 hover:text-blue-600">Kelas</NuxtLink></li>
+          <li><NuxtLink to="/ranking" class="text-gray-700 hover:text-blue-600">Ranking</NuxtLink></li>
+          <!-- <li><NuxtLink to="/kelas" class="text-gray-700 hover:text-blue-600">Kelas</NuxtLink></li> -->
           <li><NuxtLink to="/tryout" class="text-gray-700 hover:text-blue-600">Try Out</NuxtLink></li>
-          <li><NuxtLink to="/mentoring" class="text-gray-700 hover:text-blue-600">Mentoring</NuxtLink></li>
-          <li><NuxtLink to="/product" class="text-gray-700 hover:text-blue-600">Product</NuxtLink></li>
+          <!-- <li><NuxtLink to="/mentoring" class="text-gray-700 hover:text-blue-600">Mentoring</NuxtLink></li> -->
+           <li><NuxtLink to="/product" class="text-gray-700 hover:text-blue-600">Product</NuxtLink></li>
+           <li><NuxtLink to="/blog" class="text-gray-700 hover:text-blue-600">Blog</NuxtLink></li>
+          
 
           <li v-if="!auth.user">
             <NuxtLink to="/login">
@@ -78,10 +81,12 @@ onBeforeUnmount(() => {
 
     <!-- Mobile Menu -->
     <div v-if="isMobileMenuOpen" class="md:hidden mt-4 space-y-3">
-      <NuxtLink to="/kelas" class="block text-gray-700 hover:text-blue-600">Kelas</NuxtLink>
+      <!-- <NuxtLink to="/kelas" class="block text-gray-700 hover:text-blue-600">Kelas</NuxtLink> -->
+       <NuxtLink to="/ranking" class="block text-gray-700 hover:text-blue-600">Ranking</NuxtLink>
       <NuxtLink to="/tryout" class="block text-gray-700 hover:text-blue-600">Try Out</NuxtLink>
-      <NuxtLink to="/mentoring" class="block text-gray-700 hover:text-blue-600">Mentoring</NuxtLink>
+      <!-- <NuxtLink to="/mentoring" class="block text-gray-700 hover:text-blue-600">Mentoring</NuxtLink> -->
       <NuxtLink to="/product" class="block text-gray-700 hover:text-blue-600">Product</NuxtLink>
+      <NuxtLink to="/blog" class="block text-gray-700 hover:text-blue-600">Blog</NuxtLink>
 
       <div v-if="!auth.user">
         <NuxtLink to="/login">
