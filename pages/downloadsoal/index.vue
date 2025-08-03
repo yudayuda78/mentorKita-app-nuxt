@@ -1,21 +1,13 @@
 <script setup>
-const items = [
-  {
-    title: 'Card 1',
-    description: 'Ini adalah deskripsi singkat untuk Card 1.',
-    link: '#'
-  },
-  {
-    title: 'Card 2',
-    description: 'Ini adalah deskripsi singkat untuk Card 2.',
-    link: '#'
-  },
-  {
-    title: 'Card 3',
-    description: 'Ini adalah deskripsi singkat untuk Card 3.',
-    link: '#'
-  }
-]
+definePageMeta({
+  ssr: true,
+})
+const downloadSoalStore = useDownloadsoalStore()
+await downloadSoalStore.fetchDownloadsoal()
+
+
+const items = downloadSoalStore.downloadsoal
+
 </script>
 
 <template>
