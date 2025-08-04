@@ -3,90 +3,90 @@ definePageMeta({
   ssr: true,
 })
 
-import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 
+// Ambil slug dari params langsung
 const route = useRoute()
+const slug = route.params.slug
 
-// Pastikan route.params.slug tidak undefined
-const slug = computed(() => route.params.slug)
+// Pastikan slug tidak kosong sebelum dipakai
+if (!slug) {
+  throw createError({ statusCode: 400, statusMessage: 'Slug tidak tersedia' })
+}
 
+// Fetch data dengan useAsyncData
 const { data: response, pending, error } = await useAsyncData(
-  () => `downloadsoal-${slug.value}`,
-  () => {
-    if (!slug.value) throw createError({ statusCode: 400, message: 'Slug tidak ditemukan' })
-    return $fetch(`/api/downloadsoal/${slug.value}`)
-  }
+  `downloadsoal-${slug}`,
+  () => $fetch(`/api/downloadsoal/${slug}`)
 )
 
-const downloadSoal = computed(() => response?.value?.data ?? null)
 
-
-// Email input dan kontrol UI
 const email = ref('')
-const emailSubmitted = ref(false)
-const emailError = ref('')
+const isSubmitted = ref(false)
+const showError = ref(false)
 
-const submitEmail = () => {
-  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!email.value || !emailPattern.test(email.value)) {
-    emailError.value = 'Masukkan email yang valid.'
+function submitEmail() {
+  if (!email.value || !email.value.includes('@')) {
+    showError.value = true
     return
   }
 
-  emailError.value = ''
-  emailSubmitted.value = true
+  // Simpan ke backend jika perlu (opsional)
+  // await $fetch('/api/submit-email', { method: 'POST', body: { email: email.value, slug } })
+
+  isSubmitted.value = true
+  showError.value = false
 }
 </script>
 
 <template>
-  <Navbar />
-  <Section height="min-h-[90vh] pb-16 flex items-center justify-center">
-    <div class="w-full max-w-xl text-center space-y-6">
-      <div v-if="pending" class="text-gray-600 text-lg font-medium">
-        Sedang memuat soal...
+    <Navbar />
+  <Section height="min-h-[90vh] pb-16">
+    <div class="max-w-3xl mx-auto px-4 py-10">
+  
+    <div v-if="pending">
+      <p>Loading...</p>
+    </div>
+
+    <div v-else-if="error">
+      <p class="text-red-600">Error: {{ error.message }}</p>
+    </div>
+
+    <div v-else-if="response?.data">
+      <h1 class="text-2xl font-bold mb-4">
+        Download Soal: {{ response.data.title }}
+      </h1>
+      <p class="mb-4">{{ response.data.description }}</p>
+
+      <div v-if="!isSubmitted" class="max-w-md space-y-4">
+        <label class="block text-gray-700">Masukkan Email untuk mendownload:</label>
+        <input
+          v-model="email"
+          type="email"
+          placeholder="contoh@email.com"
+          class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          @click="submitEmail"
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Submit Email
+        </button>
+        <p v-if="showError" class="text-red-500 text-sm">Email tidak valid.</p>
       </div>
 
-      <div v-else-if="error" class="text-red-600 text-lg font-medium">
-        Terjadi kesalahan saat mengambil data.
-      </div>
-
-      <div v-else-if="downloadSoal">
-        <p class="text-xl font-semibold text-gray-800">
-          Download latihan soal: <span class="text-blue-600">{{ downloadSoal.title }}</span>
-        </p>
-
-        <div v-if="!emailSubmitted" class="space-y-4 mt-6">
-          <p class="text-gray-700">Silakan masukkan email untuk melanjutkan:</p>
-          <input
-            v-model="email"
-            type="email"
-            placeholder="Email Anda"
-            class="border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 rounded px-4 py-2 w-full"
-          />
-          <p v-if="emailError" class="text-red-600 text-sm">{{ emailError }}</p>
-          <button
-            @click="submitEmail"
-            class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition duration-200"
-          >
-            Submit
-          </button>
-        </div>
-
-        <div v-else class="mt-6">
-          <Button v-if="downloadSoal.fileUrl">
-            <a
-              :href="downloadSoal.fileUrl"
-              target="_blank"
-              class="block w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded text-center transition duration-200"
-            >
-              Download Soal
-            </a>
-          </Button>
-        </div>
+      <div v-else class="mt-6">
+        <p class="mb-4 text-green-600">Terima kasih! Silakan klik tombol di bawah untuk download.</p>
+        <a
+          :href="response.data.fileUrl"
+          download
+          class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        >
+          Download File
+        </a>
       </div>
     </div>
-  </Section>
-  <Footer />
+  </div>
+    </Section>
+    <Footer />
 </template>
-
