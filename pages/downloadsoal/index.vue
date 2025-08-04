@@ -23,12 +23,13 @@ const items = downloadSoalStore.downloadsoal
           <h2 class="text-xl font-semibold mb-2">{{ item.title }}</h2>
           <p class="text-gray-600">{{ item.description }}</p>
         </div>
-        <a
-          :href="item.link"
-          class="mt-4 inline-block text-sm bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+        <NuxtLink
+          :to="`/downloadsoal/${item.slug}`"
+          class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-300"
         >
-          Selengkapnya
-        </a>
+          Lihat Soal
+        </NuxtLink>
+          
       </div>
     </div>
   </Section>
