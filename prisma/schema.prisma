@@ -355,3 +355,36 @@ model DownloadSoalUser{
   email String
   createdAt DateTime @default(now())
 }
+
+model MiniQuiz{
+  id Int @id @default(autoincrement())
+  title String
+  slug String @unique
+  description String?
+  thumbnail String? 
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  soalMiniQuiz SoalMiniQuiz[]
+}
+
+model SoalMiniQuiz{
+  id Int @id @default(autoincrement())
+  nomorSoal Int?
+  question String
+  questionImage String?
+  optionA String?
+  optionAImage String? 
+  optionB String?
+  optionBImage String? 
+  optionC String?
+  optionCImage String? 
+  optionD String?
+  optionDImage String? 
+  optionE String?
+  optionEImage String? 
+  correctOption AnswerOption? // untuk pilihan ganda
+  correctEssay String? 
+  pembahasan String?
+  miniQuiz MiniQuiz @relation(fields: [miniQuizId], references: [id])
+  miniQuizId Int
+}
