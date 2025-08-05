@@ -348,3 +348,10 @@ model DownloadSoal{
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model DownloadSoalUser{
+  id Int @id @default(autoincrement())
+  downloadSoalTitle String
+  email String
+  createdAt DateTime @default(now())
+}

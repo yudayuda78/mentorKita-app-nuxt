@@ -3,7 +3,7 @@ definePageMeta({
   ssr: true,
 })
 
-import { useRoute } from 'vue-router'
+
 
 // Ambil slug dari params langsung
 const route = useRoute()
@@ -25,7 +25,7 @@ const email = ref('')
 const isSubmitted = ref(false)
 const showError = ref(false)
 
-function submitEmail() {
+async function submitEmail() {
   if (!email.value || !email.value.includes('@')) {
     showError.value = true
     return
@@ -33,6 +33,7 @@ function submitEmail() {
 
   // Simpan ke backend jika perlu (opsional)
   // await $fetch('/api/submit-email', { method: 'POST', body: { email: email.value, slug } })
+  await $fetch('/api/downloadsoal', { method: 'POST', body: { title: response.value.data.title,  email: email.value } })
 
   isSubmitted.value = true
   showError.value = false
