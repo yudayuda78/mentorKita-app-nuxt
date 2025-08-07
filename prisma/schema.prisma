@@ -388,3 +388,10 @@ model SoalMiniQuiz{
   miniQuiz MiniQuiz @relation(fields: [miniQuizId], references: [id])
   miniQuizId Int
 }
+
+model MiniQuizUser{
+  id Int @id @default(autoincrement())
+  miniQuizTitle String
+  email String
+  createdAt DateTime @default(now())
+}
