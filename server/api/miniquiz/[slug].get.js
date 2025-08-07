@@ -3,15 +3,13 @@
 export default defineEventHandler(async (event) => {
     const slug = event.context.params.slug
 
-    const quiz = await prisma.miniquiz.findUnique({
+    const quiz = await prisma.MiniQuiz.findUnique({
         where: {
             slug: slug,
         },
         include: {
-            soalminiquiz: {
-                include: {
-                    options: true,
-                },
+            soalMiniQuiz: {
+                include: true
             },
         },
     })
@@ -23,5 +21,5 @@ export default defineEventHandler(async (event) => {
         })
     }
 
-    return quiz
+    return { statusCode: 200, statusMessage: "Miniquiz retrieved successfully", data: quiz }
 })
