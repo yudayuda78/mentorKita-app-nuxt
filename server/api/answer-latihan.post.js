@@ -1,3 +1,5 @@
+import prisma from "../prisma/client.js"
+
 export default defineEventHandler( async (event) => {
     const { jawaban } = await readBody(event)
     

@@ -1,3 +1,6 @@
+import prisma from "../../prisma/client.js"
+
+
 export default defineEventHandler(async (event) => {
   const { slug } = event.context.params
 

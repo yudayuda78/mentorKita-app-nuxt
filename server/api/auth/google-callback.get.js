@@ -2,6 +2,8 @@ import { google } from 'googleapis'
 import { setCookie } from 'h3'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import prisma from "../../prisma/client.js"
+
 
 
 export default defineEventHandler(async (event) => {

@@ -1,3 +1,5 @@
+import prisma from "../../prisma/client.js"
+
 
 function generateSlug(name) {
   return name

@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 import { getCookie } from 'h3'
+import prisma from "../../prisma/client.js"
+
 
 
 export default defineEventHandler(async (event) => {

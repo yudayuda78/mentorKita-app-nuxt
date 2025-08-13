@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
+import prisma from "../../prisma/client.js"
+
 
 export default defineEventHandler(async(event) => {
     const body = await readBody(event)

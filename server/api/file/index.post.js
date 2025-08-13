@@ -2,6 +2,7 @@
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 
+
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const files = body.files || []

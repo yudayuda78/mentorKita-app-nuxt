@@ -1,3 +1,6 @@
+import prisma from "../../prisma/client.js"
+
+
 export default defineEventHandler(async () => {
   try {
     const allScore = await prisma.averageScoreTryout.findMany({

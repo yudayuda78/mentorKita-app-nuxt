@@ -1,3 +1,5 @@
+
+
 export default defineEventHandler(async (event) => {
     const {token, email, password, passwordConfirm} = await readBody(event)
 

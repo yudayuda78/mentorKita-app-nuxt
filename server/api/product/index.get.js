@@ -1,3 +1,6 @@
+import prisma from "../../prisma/client.js"
+
+
 export default defineEventHandler(async (event) => {
   try {
     const products = await prisma.product.findMany({

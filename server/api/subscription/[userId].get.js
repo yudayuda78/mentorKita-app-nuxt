@@ -1,3 +1,6 @@
+import prisma from "../../prisma/client.js"
+
+
 export default defineEventHandler( async(event) => {
     const userId = parseInt(event.context.params?.userId || '')
 

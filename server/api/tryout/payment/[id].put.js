@@ -1,3 +1,6 @@
+import prisma from "../../../prisma/client.js"
+
+
 export default defineEventHandler(async (event) => {
   const id = parseInt(event.context.params.id) // Ambil ID dari URL
   const body = await readBody(event)            // Ambil body dari request

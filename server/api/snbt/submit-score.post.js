@@ -1,4 +1,6 @@
 import { averageScore } from "~/server/utils/irt"
+import prisma from "../../prisma/client.js"
+
 
 export default defineEventHandler(async (event) => {
  

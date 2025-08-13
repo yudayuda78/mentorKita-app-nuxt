@@ -1,3 +1,5 @@
+
+
 export default defineEventHandler((event) => {
   const redirectUrl = 'https://accounts.google.com/o/oauth2/v2/auth?' +
     new URLSearchParams({

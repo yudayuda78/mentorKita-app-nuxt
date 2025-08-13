@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   typescript: { strict: false },
-  modules: ["@prisma/nuxt", "@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss'],
+  modules: [ "@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss'],
   components: [
     '~/components',  // seluruh components
     '~/components/ui', // juga pastikan ini kalau kamu override array
@@ -15,6 +15,9 @@ export default defineNuxtConfig({
   vite: {
     server: {
       allowedHosts: ['cae914927b7c.ngrok-free.app']
+    },
+    ssr: {
+      noExternal: ['@prisma/client']
     }
   },
   app: {

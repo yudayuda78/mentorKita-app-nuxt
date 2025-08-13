@@ -1,3 +1,5 @@
+
+
 export default defineEventHandler(async (event) => {
     const { email } = await readBody(event)
 

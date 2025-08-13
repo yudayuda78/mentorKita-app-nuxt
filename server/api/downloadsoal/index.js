@@ -1,3 +1,6 @@
+import prisma from "../../prisma/client.js"
+
+
 export default defineEventHandler(async (event) => {
     const soal = await prisma.DownloadSoal.findMany({
         orderBy: {

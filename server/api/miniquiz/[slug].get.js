@@ -1,3 +1,4 @@
+import prisma from "../../prisma/client.js"
 
 
 export default defineEventHandler(async (event) => {
