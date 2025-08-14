@@ -45,7 +45,8 @@ export default defineNuxtConfig({
   },
    runtimeConfig: {
     public: {
-      baseUrl: 'https://cae914927b7c.ngrok-free.app'
+      baseUrl: 'https://mentorkita.id',
+      databaseUrl: process.env.DATABASE_URL
       // baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }
   },

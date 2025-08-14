@@ -71,8 +71,8 @@
           Jika Anda memiliki pertanyaan tentang Kebijakan Privasi ini, silakan hubungi kami:
         </p>
         <ul class="list-disc pl-6">
-          <li>Email: <a href="mailto:support@contoh.com" class="text-blue-600 hover:underline">support@contoh.com</a></li>
-          <li>Telepon: +62-812-3456-7890</li>
+          <li>Email: <a href="mailto:mentorkita20@gmail.com" class="text-blue-600 hover:underline">mentorkita20@gmail.com</a></li>
+          <li>Whatsapp: +62-895-2640-9087</li>
         </ul>
       </div>
     </section>
