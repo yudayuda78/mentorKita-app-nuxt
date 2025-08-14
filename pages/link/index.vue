@@ -23,7 +23,7 @@
       <!-- Tombol Link -->
       <div class="space-y-4 text-left">
         <!-- Instagram -->
-        <a href="https://instagram.com/mentorkita" target="_blank"
+        <a href="https://instagram.com/mentor.kita" target="_blank"
            class="flex items-center px-4 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition shadow border">
           <img src="/icons/instagram.svg" alt="Instagram" class="w-6 h-6" />
           <span class="ml-2">Instagram</span>
@@ -37,21 +37,21 @@
         </a>
 
         <!-- WhatsApp - Channel -->
-        <a href="https://wa.me/6281234567890" target="_blank"
+        <a href="https://whatsapp.com/channel/0029VbBHIk90bIdiCPDJbx21" target="_blank"
            class="flex items-center px-4 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition shadow border">
           <img src="/icons/whatsapp.svg" alt="WhatsApp" class="w-6 h-6" />
           <span class="ml-2">Channel WhatsApp</span>
         </a>
 
         <!-- WhatsApp - Grup 1 -->
-        <a href="https://wa.me/6281234567890" target="_blank"
+        <a href="https://chat.whatsapp.com/GGRunAy5H6cC4u6bFnZgX4" target="_blank"
            class="flex items-center px-4 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition shadow border">
           <img src="/icons/whatsapp.svg" alt="WhatsApp" class="w-6 h-6" />
           <span class="ml-2">Grup WhatsApp 1</span>
         </a>
 
         <!-- WhatsApp - Grup 2 -->
-        <a href="https://wa.me/6281234567890" target="_blank"
+        <a href="https://chat.whatsapp.com/F8VJhlhaGIqDH7IVfBjcXl" target="_blank"
            class="flex items-center px-4 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition shadow border">
           <img src="/icons/whatsapp.svg" alt="WhatsApp" class="w-6 h-6" />
           <span class="ml-2">Grup WhatsApp 2</span>
