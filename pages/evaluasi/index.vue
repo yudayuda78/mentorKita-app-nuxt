@@ -6,7 +6,7 @@ const evaluasi = useEvaluasiStore()
 
 <template>
   <Navbar />
-
+  <WhatsappButton />
   <Section>
     <div class="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-lg space-y-6 text-center">
       <h2 class="text-2xl md:text-3xl font-bold text-gray-800">

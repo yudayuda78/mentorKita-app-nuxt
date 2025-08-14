@@ -42,6 +42,7 @@ async function submitEmail() {
 
 <template>
     <Navbar />
+    <WhatsappButton />
   <Section height="min-h-[90vh] pb-16">
     <div class="max-w-3xl mx-auto px-4 py-10">
   

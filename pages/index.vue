@@ -19,7 +19,7 @@ onUnmounted(() => {
 
 <template>
   <Navbar />
-  
+  <WhatsappButton />
   <StickyNavbar v-if="showStickyNavbar" />
   <LandingPageContent />
   <Footer />

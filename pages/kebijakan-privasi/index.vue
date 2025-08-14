@@ -1,5 +1,6 @@
 <template>
     <Navbar />
+    <WhatsappButton />
   <div class="max-w-4xl mx-auto px-4 py-12 text-gray-800">
     <h1 class="text-3xl font-bold mb-6">Kebijakan Privasi</h1>
 

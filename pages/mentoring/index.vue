@@ -1,10 +1,11 @@
 <script setup>
-  
+  const phoneNumber = "6285888442400"
+const message = "Halo, saya tertarik untuk bimbingan di MentorKita"
 </script>
 
 <template>
   <Navbar />
-
+  <WhatsappButton />
   <Section height="h-[70vh]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
@@ -16,7 +17,15 @@
             <li>⏰ Waktu fleksibel</li>
             <li>💰 Biaya terjangkau</li>
           </ul>
-          <Button class="mt-auto w-full sm:w-auto">Bimbingan Sekarang</Button>
+          <NuxtLink
+    :to="`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`"
+    target="_blank"
+    external
+  >
+    <Button class="mt-auto w-full sm:w-auto">
+      Bimbingan Sekarang
+    </Button>
+  </NuxtLink>
         </div>
 
         <!-- Bimbingan Offline -->
@@ -27,7 +36,15 @@
             <li>⏰ Waktu fleksibel</li>
             <li>💰 Biaya terjangkau</li>
           </ul>
-          <Button class="mt-auto w-full sm:w-auto">Bimbingan Sekarang</Button>
+          <NuxtLink
+    :to="`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`"
+    target="_blank"
+    external
+  >
+    <Button class="mt-auto w-full sm:w-auto">
+      Bimbingan Sekarang
+    </Button>
+  </NuxtLink>
         </div>
 
         <!-- Bimbingan Skripsi -->
@@ -38,7 +55,15 @@
             <li>💰 Biaya terjangkau</li>
             <li>✅ Step-by-step dengan mentor</li>
           </ul>
-          <Button class="mt-auto w-full sm:w-auto">Bimbingan Sekarang</Button>
+          <NuxtLink
+    :to="`https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`"
+    target="_blank"
+    external
+  >
+    <Button class="mt-auto w-full sm:w-auto">
+      Bimbingan Sekarang
+    </Button>
+  </NuxtLink>
         </div>
       </div>
     </div>
