@@ -9,7 +9,7 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "generate:env": "node scripts/generate-env.js",
-    "start": "node .output/server/index.mjs"
+    "start": "node --env-file=.env .output/server/index.mjs"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.1",
@@ -27,6 +27,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.14.0",
+    "dotenv-cli": "^10.0.0",
     "nuxt-file-storage": "^0.3.0"
   }
 }
