@@ -19,7 +19,7 @@ const { data: blogs } = await useAsyncData('blogs', () =>
       <article v-for="item in blogs" :key="item.id">
         <NuxtLink :to="`/blog/${item.slug}`">
           <img
-            :src="item.thumbnail ? `/blog/${item.thumbnail}` : 'https://via.placeholder.com/600x400?text=Thumbnail'"
+            :src="`/blog/${item.thumbnail}`"
             :alt="item.title"
             class="w-full h-48 object-cover rounded-lg mb-3"
           />
