@@ -4,7 +4,7 @@ definePageMeta({
 })
 
 const { data: blogs } = await useAsyncData('blogs', () =>
-  $fetch('/api/blog').then(res => res.data) // <- ambil langsung 'data'
+  $fetch('/api/blog').then(res => res.data) 
 )
 </script>
 
@@ -19,7 +19,7 @@ const { data: blogs } = await useAsyncData('blogs', () =>
       <article v-for="item in blogs" :key="item.id">
         <NuxtLink :to="`/blog/${item.slug}`">
           <img
-            :src="item.thumbnail || 'https://via.placeholder.com/600x400?text=Thumbnail'"
+            :src="item.thumbnail ? `/blog/${item.thumbnail}` : 'https://via.placeholder.com/600x400?text=Thumbnail'"
             :alt="item.title"
             class="w-full h-48 object-cover rounded-lg mb-3"
           />
