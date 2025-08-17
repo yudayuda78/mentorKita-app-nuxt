@@ -330,7 +330,7 @@ model Blog{
   title String
   slug String @unique
   excerpt String?
-  artikel String
+  artikel String @db.Text
   thumbnail String? 
   views       Int       @default(0)
   createdAt   DateTime @default(now())

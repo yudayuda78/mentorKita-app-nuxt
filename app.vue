@@ -3,7 +3,7 @@ useHead({
  title: 'MentorKita',
   link: [
     { rel: 'icon', type: 'image/x-icon', href: '/mentorkita.ico' },
-    { rel: 'apple-touch-icon', href: '/mentorkita.png' }
+    { rel: 'apple-touch-icon', href: '/mentorkita.ico' }
   ],
   meta: [
  
