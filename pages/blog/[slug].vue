@@ -30,7 +30,7 @@ const blog = computed(() => response.value?.data ?? {});
 </div>
 
     <div v-else>
-       <h1 class="text-3xl font-bold mb-4" v-html="blog.title" />
+       <h1 class="text-3xl font-bold mb-4" >{{ blog.title }}</h1>
       
       <img
         :src="blog.thumbnail"
@@ -45,7 +45,7 @@ const blog = computed(() => response.value?.data ?? {});
       </p>
 
       <div class="text-gray-800 leading-relaxed whitespace-pre-line">
-        {{ blog.artikel }}
+        <p>{{ blog.artikel }}</p>
       </div>
     </div>
   </div>
