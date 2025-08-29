@@ -34,7 +34,7 @@
         <div>
           <img src="/icons/icon3.webp" alt="Try Out UTBK Icon" />
           <h2 class="text-xl font-semibold text-gray-800 mb-2">Try Out UTBK</h2>
-          <p class="text-gray-500">Coming Soon</p>
+          
         </div>
         <NuxtLink to="/tryout/snbt">
           <Button class="mt-auto w-full sm:w-auto bg-[#2966F2] text-white hover:bg-[#1f4fd1]" :colorClass="'bg-[#2966F2] text-white hover:bg-[#1f4fd1]'">Latihan Sekarang</Button>

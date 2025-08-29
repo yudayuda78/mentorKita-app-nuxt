@@ -1,4 +1,5 @@
 <script setup>
+
 const snbtStore = useSnbtStore()
 const snbtData = computed(() => Array.isArray(snbtStore.snbtData) ? snbtStore.snbtData.slice().reverse() : [])
 const analyticsStore = useAnalyticsStore()

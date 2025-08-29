@@ -1,4 +1,7 @@
 <script setup>
+  definePageMeta({
+  middleware: 'auth'
+})
 import { useShareStore } from '~/stores/useShareStore';
 
 const { handleFileInput: handleFileInput1, files: files1 } = useFileStorage({
