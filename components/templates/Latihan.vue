@@ -171,7 +171,7 @@ const submitJawaban = async () => {
 
         <div v-if="materi.soal && materi.soal.length">
           <p class="font-medium mb-2">
-            {{ currentIndex + 1 }}. {{ currentSoal.question }}
+            {{ currentIndex + 1 }}. <img v-if="currentSoal.questionImage" :src="`/questionImage/${currentSoal.questionImage}`"  alt="Belajar" class="w-full max-w-[500px] md:max-w-[50%] h-auto mx-auto my-4 rounded-lg shadow" />{{ currentSoal.question }}
           </p>
 
           <!-- Pilihan jawaban -->
