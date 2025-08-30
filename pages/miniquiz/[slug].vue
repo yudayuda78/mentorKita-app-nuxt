@@ -106,9 +106,16 @@ async function submitEmail() {
       <!-- Quiz Content -->
       <div v-else v-if="miniquiz.soalMiniQuiz && miniquiz.soalMiniQuiz.length" class="max-w-3xl mx-auto mt-10 space-y-6">
         <div class="bg-white p-6 rounded-lg shadow">
-          <p class="font-medium text-lg mb-4">
-            {{ currentIndex + 1 }}. <img v-if="currentSoal.questionImage" :src="`/miniQuizImage/${currentSoal.questionImage}`"  alt="Belajar" class="w-full max-w-[500px] md:max-w-[50%] h-auto mx-auto my-4 rounded-lg shadow" /> {{ currentSoal.question }}
-          </p>
+         <p class="font-medium text-lg mb-4">
+  {{ currentIndex + 1 }}.
+  <img 
+    v-if="currentSoal.questionImage" 
+    :src="`/miniQuizImage/${currentSoal.questionImage}`"  
+    alt="Belajar" 
+    class="w-full max-w-[500px] md:max-w-[50%] h-auto mx-auto my-4 rounded-lg shadow" 
+  />
+  <LatexContent v-if="currentSoal.question" :content="currentSoal.question" />
+</p>
 
           <div class="space-y-3">
             <template v-for="option in ['A', 'B', 'C', 'D', 'E']" :key="option">
