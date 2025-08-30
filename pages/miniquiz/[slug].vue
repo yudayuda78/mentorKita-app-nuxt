@@ -106,7 +106,7 @@ async function submitEmail() {
       <!-- Quiz Content -->
       <div v-else v-if="miniquiz.soalMiniQuiz && miniquiz.soalMiniQuiz.length" class="max-w-3xl mx-auto mt-10 space-y-6">
         <div class="bg-white p-6 rounded-lg shadow">
-         <p class="font-medium text-lg mb-4">
+         <p class="font-medium text-lg mb-4 whitespace-pre-line">
   {{ currentIndex + 1 }}.
   <img 
     v-if="currentSoal.questionImage" 

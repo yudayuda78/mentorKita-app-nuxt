@@ -197,8 +197,8 @@ const submitJawaban = async () => {
 
           <div v-if="materi.soal && materi.soal.length">
             <div>
-              <p class="font-medium mb-2">
-                {{ currentIndex + 1 }}. <img v-if="currentSoal.questionImage" :src="`/questionImage/${currentSoal.questionImage}`"  alt="Belajar" class="w-full max-w-[500px] md:max-w-[50%] h-auto mx-auto my-4 rounded-lg shadow" />{{ currentSoal.question }}
+              <p class="font-medium mb-2 whitespace-pre-line">
+                {{ currentIndex + 1 }}. <img v-if="currentSoal.questionImage" :src="`/questionImage/${currentSoal.questionImage}`"  alt="Belajar" class="w-full max-w-[500px] md:max-w-[50%] h-auto mx-auto my-4 rounded-lg shadow" /><LatexContent v-if="currentSoal.question" :content="currentSoal.question" />
               </p>
               <div class="space-y-2 ml-2">
                 <label
