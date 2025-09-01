@@ -167,7 +167,7 @@ async function submitEmail() {
             Jawaban yang benar: {{ currentSoal.correctOption }}
           </p>
           <p class="mt-2 text-gray-700 whitespace-pre-line">
-            Pembahasan: {{ currentSoal.pembahasan }}
+            Pembahasan: <LatexContent v-if="currentSoal.pembahasan" :content="currentSoal.pembahasan" />
           </p>
         </div>
       </div>
