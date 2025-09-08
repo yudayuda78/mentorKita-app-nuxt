@@ -8,7 +8,8 @@ export const useShareStore = defineStore("share", () => {
             console.log("Sharing SNBT Tryout:", { userId, snbtTryoutId, snbtTryoutName })
             const res = await $fetch("/api/snbt/share", {
                 method: "POST",
-                body: {userId, snbtTryoutId, snbtTryoutName}
+                body: {userId, snbtTryoutId, snbtTryoutName},
+                credentials: 'include'
             })
 
             isShared.value = res.data
@@ -29,7 +30,9 @@ export const useShareStore = defineStore("share", () => {
 
     const getShared = async (userId, snbtTryoutId) => {
         try {
-            const res = await $fetch (`/api/snbt/share?userId=${userId}&snbtTryoutId=${snbtTryoutId}`)
+            const res = await $fetch(`/api/snbt/share?userId=${userId}&snbtTryoutId=${snbtTryoutId}`, {
+                credentials: 'include'
+            })
             isShared.value = res?.data ?? null
             return {
                 status: 'success',
