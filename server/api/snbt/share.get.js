@@ -3,7 +3,12 @@ import prisma from "../../prisma/client.js"
 
 export default defineEventHandler(async (event) => {
       const query = getQuery(event)
+
+  const token = getCookie(event, 'token')
+  console.log("Cookie token:", token)
+
   const user = await getUserFromToken(event)
+  console.log("Authenticated user:", user)
 
 
   
