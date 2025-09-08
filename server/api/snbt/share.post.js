@@ -17,6 +17,8 @@ export default defineEventHandler(async (event) => {
     },
   })
 
+
+
     return {
         status: 'success',
         message: 'SNBT Tryout berhasil dibagikan',

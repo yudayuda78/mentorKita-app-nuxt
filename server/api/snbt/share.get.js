@@ -4,6 +4,8 @@ import prisma from "../../prisma/client.js"
 export default defineEventHandler(async (event) => {
       const query = getQuery(event)
   const user = await getUserFromToken(event)
+
+
   
    if (!user) {
     throw createError({
@@ -15,6 +17,8 @@ export default defineEventHandler(async (event) => {
 
   const userId = user.id
   const snbtTryoutId = parseInt(query.snbtTryoutId)
+
+
     const getShared = await prisma.shareSnbt.findFirst({
         where: {
             userId,
@@ -22,8 +26,14 @@ export default defineEventHandler(async (event) => {
         },
     })
 
-    if(!getShared){
-        return null
+     
+
+    if (!getShared) {
+        return {
+        status: 'not_found',
+        message: 'Belum ada share SNBT',
+        data: null,
+        }
     }
 
     return {
