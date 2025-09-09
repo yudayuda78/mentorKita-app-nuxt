@@ -16,7 +16,7 @@ console.log("getUserFromToken → decoded:", decoded)
       where: { id: decoded.id }
     })
     console.log("getUserFromToken → prisma user:", user)
-
+ 
   
 
 
