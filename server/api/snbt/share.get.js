@@ -6,12 +6,17 @@ export default defineEventHandler(async (event) => {
       
 
   const token = getCookie(event, 'token')
-  console.log("Cookie token:", token)
+  console.log("getUserFromToken → raw token:", token)
 
-  const user = await getUserFromToken(event)
-  console.log("Authenticated user:", user)
-  console.log("JWT_SECRET from env:", process.env.JWT_SECRET)
+   const decoded = jwt.verify(token, process.env.JWT_SECRET)
+console.log("getUserFromToken → decoded:", decoded)
 
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.id }
+    })
+    console.log("getUserFromToken → prisma user:", user)
+
+  
 
 
   
