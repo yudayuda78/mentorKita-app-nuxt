@@ -55,7 +55,7 @@ onBeforeUnmount(() => {
             <li><NuxtLink to="/ranking" class="text-gray-700 hover:text-blue-600">Ranking</NuxtLink></li>
           <li><NuxtLink to="/tryout" class="text-gray-700 hover:text-blue-600">Try Out</NuxtLink></li>
           <!-- <li><NuxtLink to="/mentoring" class="text-gray-700 hover:text-blue-600">Mentoring</NuxtLink></li> -->
-          <li><NuxtLink to="/product" class="text-gray-700 hover:text-blue-600">Product</NuxtLink></li>
+          <!--<li><NuxtLink to="/product" class="text-gray-700 hover:text-blue-600">Product</NuxtLink></li>-->
             <li><NuxtLink to="/blog" class="text-gray-700 hover:text-blue-600">Blog</NuxtLink></li>
 
           <li v-if="!auth.user">
