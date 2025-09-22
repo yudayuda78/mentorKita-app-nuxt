@@ -9,7 +9,8 @@
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "generate:env": "node scripts/generate-env.js",
-    "start": "node --env-file=.env .output/server/index.mjs"
+    "start": "node --env-file=.env .output/server/index.mjs",
+    "clear-cache": "rm -rf .nuxt .output .nitro node_modules/.vite"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.11.1",
