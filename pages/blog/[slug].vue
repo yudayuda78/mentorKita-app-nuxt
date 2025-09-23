@@ -19,6 +19,23 @@ const { data: response, pending, error } = await useAsyncData(
 console.log(response.value)
 
 const blog = computed(() => response.value?.data ?? {});
+
+useHead(() => ({
+  title: blog.value?.title || "Artikel Blog MentorKita",
+  meta: [
+    {
+      name: "description",
+      content: blog.value?.excerpt || blog.value?.artikel?.slice(0, 160) || "Baca artikel terbaru di MentorKita."
+    },
+    { name: "keywords", content: "SNBT, belajar, mentoring, pendidikan, teknik belajar" },
+    { property: "og:title", content: blog.value?.title },
+    { property: "og:description", content: blog.value?.excerpt || blog.value?.artikel?.slice(0, 160) },
+    { property: "og:type", content: "article" },
+    { property: "og:url", content: `https://mentorkita.id/blog/${slug}` },
+    { property: "og:image", content: blog.value?.thumbnail || "https://mentorkita.id/default-thumbnail.jpg" },
+    { name: "twitter:card", content: "summary_large_image" }
+  ]
+}))
 </script>
 
 <template>

@@ -5,11 +5,12 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   typescript: { strict: false },
-  modules: [ "@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss'],
+  modules: [ "@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss', "@nuxt/scripts"],
   components: [
     '~/components',  // seluruh components
     '~/components/ui', // juga pastikan ini kalau kamu override array
-    '~/components/templates'
+    '~/components/templates',
+    
   ],
   css: ['~/assets/css/main.css'],
   vite: {
@@ -49,6 +50,15 @@ export default defineNuxtConfig({
       databaseUrl: process.env.DATABASE_URL
       // baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }
+  },
+
+  // @ts-expect-error - properti ini ditambahkan oleh @nuxt/scripts
+  scripts: {
+      registry: {
+        googleAdsense: {
+          client: "ca-pub-4270039076501112", // AdSense Publisher ID
+        },
+      },
   },
 
 
