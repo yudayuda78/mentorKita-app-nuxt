@@ -1,7 +1,7 @@
 <script setup>
 
 
-const auth = useAuthStore()
+
 const admin = useAdminStore()
 
 const username = ref('')
@@ -10,6 +10,7 @@ const error = ref('')
 const showPassword = ref(false)
 
 const handleLogin = async () => {
+ 
   error.value = ''
   const success = await admin.login(username.value, password.value)
 
@@ -17,6 +18,7 @@ const handleLogin = async () => {
     error.value = admin.error
     return
   }
+  
 
   await navigateTo('/mentorkita-admin')
 }

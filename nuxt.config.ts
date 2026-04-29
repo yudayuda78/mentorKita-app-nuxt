@@ -5,7 +5,7 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-05-15',
   devtools: { enabled: true },
   typescript: { strict: false },
-  modules: [ "@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss', "@nuxt/scripts"],
+  modules: ["@pinia/nuxt", 'nuxt-file-storage', '@nuxtjs/tailwindcss', "@nuxt/scripts", '@nuxt/icon'],
   components: [
     '~/components',  // seluruh components
     '~/components/ui', // juga pastikan ini kalau kamu override array

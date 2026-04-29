@@ -7,9 +7,10 @@ export default defineEventHandler(async(event) => {
     const body = await readBody(event)
     const {username, password } = body
 
-    const user = await prisma.admin.findUnique({
+    const user = await prisma.user.findUnique({
         where: { username: username}
     })
+
 
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {

@@ -13,6 +13,7 @@
     "clear-cache": "rm -rf .nuxt .output .nitro node_modules/.vite"
   },
   "dependencies": {
+    "@nuxt/icon": "^2.2.1",
     "@nuxt/scripts": "^0.11.13",
     "@pinia/nuxt": "^0.11.1",
     "@prisma/client": "^6.12.0",

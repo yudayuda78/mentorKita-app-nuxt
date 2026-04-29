@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET) 
-    const admin = await prisma.admin.findUnique({
+    const admin = await prisma.user.findUnique({
         where: { id: decoded.id },
         select: { id: true, username: true }
     })
