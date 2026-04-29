@@ -30,10 +30,26 @@ export const useAdminStore = defineStore("admin", () => {
     }
   }
 
+  const me  = async () => {
+    try {
+      const response = await $fetch("/api/admin/me", {
+        method: "GET",
+        credentials: 'include'
+      })
+      
+      admin.value = response.admin // ✅ ini aman
+      return true
+    } catch (err) {
+      error.value = err?.data?.message || err.message || 'Gagal login'
+      return false
+    }
+  }
+
   return {
     admin,
     error,
     login,
-    logout
+    logout,
+    me
   }
 })
