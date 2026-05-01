@@ -25,6 +25,7 @@ const routes = [
   { path: '/mentorkita-admin/pembayaran-tryout', label: 'Pembayaran TryOut', icon: 'lucide:credit-card' },
   { path: '/mentorkita-admin/pembayaran-product', label: 'Pembayaran Product', icon: 'lucide:shopping-bag' },
   { path: '/mentorkita-admin/statistik-tryout', label: 'Statistik TryOut', icon: 'lucide:bar-chart-3' },
+  { path: '/mentorkita-admin/latihan-soal', label: 'Latihan Soal', icon: 'lucide:book-open' },
   { path: '/mentorkita-admin/pengaturan', label: 'Pengaturan', icon: 'lucide:settings' },
 ]
 
