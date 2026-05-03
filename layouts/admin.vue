@@ -33,28 +33,21 @@ const routes = [
 const route = useRoute()
 
 
-const isActive = (path) => route.path === path
-const isDropdownOpen = ref(false)
-
-// Fungsi untuk menutup dropdown
-const closeDropdown = () => {
-  isDropdownOpen.value = false
+const isActive = (path) => {
+  if (path === '/mentorkita-admin') return route.path === path
+  return route.path.startsWith(path)
 }
 
-// Tambahkan listener untuk klik di luar
-onMounted(() => {
-  window.addEventListener('click', closeDropdown)
-})
-
-onUnmounted(() => {
-  window.removeEventListener('click', closeDropdown)
-})
+const isDropdownOpen = ref(false)
 </script>
 
 <template>
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <aside class="w-24 bg-[#2966F3] rounded-3xl m-5">
+    <aside 
+      class="w-24 rounded-3xl m-5 transition-all duration-300 border border-transparent"
+      :class="route.meta.sidebarColor === 'white' ? 'bg-white shadow-xl border-gray-100' : 'bg-[#2966F3]'"
+    >
    
       <nav class="p-2 space-y-4">
         <NuxtLink 
@@ -62,7 +55,11 @@ onUnmounted(() => {
           :key="item.path"
           :to="item.path" 
           class="flex flex-col items-center p-2 rounded-2xl transition-all group"
-          :class="isActive(item.path) ? 'bg-white text-[#2966F3] shadow-lg' : 'hover:bg-white/20 text-white'"
+          :class="[
+            isActive(item.path) 
+              ? (route.meta.sidebarColor === 'white' ? 'bg-[#2966F3] text-white shadow-lg' : 'bg-white text-[#2966F3] shadow-lg')
+              : (route.meta.sidebarColor === 'white' ? 'hover:bg-gray-50 text-[#2966F3]' : 'hover:bg-white/20 text-white')
+          ]"
         >
           <Icon :name="item.icon" class="w-6 h-6 mb-1 group-hover:scale-110 transition-transform" />
           <span class="text-[10px] font-medium text-center leading-tight">{{ item.label }}</span>
