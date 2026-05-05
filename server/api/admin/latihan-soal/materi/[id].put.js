@@ -5,7 +5,7 @@ export default defineEventHandler(async(event) => {
     const body = await readBody(event)
     const { name } = body
 
-    const kelas = await prisma.latihanClass.update({
+    const materi = await prisma.latihanMateri.update({
         where: {
             id: parseInt(id)
         },
@@ -17,6 +17,6 @@ export default defineEventHandler(async(event) => {
     return {
         statusCode: 200,
         message: 'Data berhasil diupdate',
-        data: kelas
+        data: materi
     }
 })

@@ -6,6 +6,8 @@ export const useLatihanSoalAdminStore = defineStore('latihanSoalAdmin', () => {
     const currentClass = ref(null)
     const courses = ref([])
     const currentCourse = ref(null)
+    const materi = ref([])
+    const currentMateri = ref(null)
 
     // Class Actions
     const getClasses = async() => {
@@ -87,6 +89,10 @@ export const useLatihanSoalAdminStore = defineStore('latihanSoalAdmin', () => {
         })
         if (res.statusCode === 200) {
             courses.value = courses.value.filter(item => item.id !== id)
+            // Update juga di dalam currentClass agar halaman detail ikut berubah
+            if (currentClass.value && currentClass.value.courses) {
+                currentClass.value.courses = currentClass.value.courses.filter(item => item.id !== id)
+            }
         }
     }
 
@@ -105,6 +111,46 @@ export const useLatihanSoalAdminStore = defineStore('latihanSoalAdmin', () => {
         }
     }
 
+    // Materi Actions
+    const addMateri = async(payload) => {
+        const fetch = useRequestFetch()
+        const res = await fetch('/api/admin/latihan-soal/materi', {
+            method: 'POST',
+            body: payload
+        })
+        if (res.data) {
+            if (currentCourse.value && currentCourse.value.id === res.data.courseId) {
+                if (!currentCourse.value.materi) currentCourse.value.materi = []
+                currentCourse.value.materi.push(res.data)
+            }
+        }
+    }
+
+    const deleteMateri = async(id) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/latihan-soal/materi/${id}`, {
+            method: 'DELETE',
+        })
+        if (res.statusCode === 200) {
+            if (currentCourse.value && currentCourse.value.materi) {
+                currentCourse.value.materi = currentCourse.value.materi.filter(item => item.id !== id)
+            }
+        }
+    }
+
+    const updateMateri = async(id, payload) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/latihan-soal/materi/${id}`, {
+            method: 'PUT',
+            body: payload
+        })
+        if (res.data) {
+            if (currentCourse.value && currentCourse.value.materi) {
+                currentCourse.value.materi = currentCourse.value.materi.map(item => item.id === id ? res.data : item)
+            }
+        }
+    }
+
     return { 
         classes, 
         currentClass, 
@@ -119,6 +165,11 @@ export const useLatihanSoalAdminStore = defineStore('latihanSoalAdmin', () => {
         getCourseById, 
         addCourse, 
         deleteCourse, 
-        updateCourse
+        updateCourse,
+        materi,
+        currentMateri,
+        addMateri,
+        deleteMateri,
+        updateMateri
     }
 })
