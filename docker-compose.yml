@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mentorkita-app
+    ports:
+      - "3000:3000"
+    environment:
+      # Mengubah DATABASE_URL agar menunjuk ke service db di docker-compose
+      - DATABASE_URL=postgresql://admin:admin12qwaszx34erdfcv!@db:5432/mentorkita
+    env_file:
+      - .env
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: mentorkita-db
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin12qwaszx34erdfcv!
+      POSTGRES_DB: mentorkita
+    ports:
+      - "5432:5432" # Anda bisa ubah port host jika 5432 sudah dipakai di lokal Anda
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
