@@ -151,6 +151,52 @@ export const useLatihanSoalAdminStore = defineStore('latihanSoalAdmin', () => {
         }
     }
 
+    const getMateriById = async(id) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/latihan-soal/materi/${id}`)
+        currentMateri.value = res.data
+    }
+
+    // Soal Actions
+    const addSoal = async(payload) => {
+        const fetch = useRequestFetch()
+        const res = await fetch('/api/admin/latihan-soal/soal', {
+            method: 'POST',
+            body: payload
+        })
+        if (res.data) {
+            if (currentMateri.value && currentMateri.value.id === res.data.materiId) {
+                if (!currentMateri.value.soal) currentMateri.value.soal = []
+                currentMateri.value.soal.push(res.data)
+            }
+        }
+    }
+
+    const updateSoal = async(id, payload) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/latihan-soal/soal/${id}`, {
+            method: 'PUT',
+            body: payload
+        })
+        if (res.data) {
+            if (currentMateri.value && currentMateri.value.soal) {
+                currentMateri.value.soal = currentMateri.value.soal.map(item => item.id === id ? res.data : item)
+            }
+        }
+    }
+
+    const deleteSoal = async(id) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/latihan-soal/soal/${id}`, {
+            method: 'DELETE',
+        })
+        if (res.statusCode === 200) {
+            if (currentMateri.value && currentMateri.value.soal) {
+                currentMateri.value.soal = currentMateri.value.soal.filter(item => item.id !== id)
+            }
+        }
+    }
+
     return { 
         classes, 
         currentClass, 
@@ -170,6 +216,10 @@ export const useLatihanSoalAdminStore = defineStore('latihanSoalAdmin', () => {
         currentMateri,
         addMateri,
         deleteMateri,
-        updateMateri
+        updateMateri,
+        getMateriById,
+        addSoal,
+        updateSoal,
+        deleteSoal
     }
 })

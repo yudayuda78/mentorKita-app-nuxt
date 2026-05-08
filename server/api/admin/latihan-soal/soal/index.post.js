@@ -2,13 +2,22 @@ import prisma from '../../../../prisma/client.js'
 
 export default defineEventHandler(async(event) => {
     const body = await readBody(event)
-    const { title, materiId, questions, duration } = body
+    const { materiId, nomorSoal, question, type, optionA, optionB, optionC, optionD, optionE, correctOption, correctEssay, materiSoal } = body
 
     const soal = await prisma.latihanSoal.create({
         data: {
             materiId: parseInt(materiId),
-            questions: questions,
-            duration: parseInt(duration)
+            nomorSoal: nomorSoal ? parseInt(nomorSoal) : null,
+            question: question,
+            type: type || "PILIHAN_GANDA",
+            optionA: optionA,
+            optionB: optionB,
+            optionC: optionC,
+            optionD: optionD,
+            optionE: optionE,
+            correctOption: type === 'PILIHAN_GANDA' ? correctOption : null,
+            correctEssay: type === 'ESAI' ? correctEssay : null,
+            materiSoal: materiSoal
         }
     })
 

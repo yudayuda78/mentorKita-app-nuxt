@@ -145,10 +145,10 @@ const handleConfirmDeleteMateri = async () => {
                 <h3 class="text-lg font-bold text-gray-800 mb-1">{{ item.name }}</h3>
                 <p class="text-gray-400 text-xs mb-6 uppercase tracking-wider font-mono">#ID-{{ item.id }}</p>
 
-                <button class="w-full py-3 rounded-2xl bg-gray-50 text-gray-700 font-bold text-sm hover:bg-[#2966F3] hover:text-white transition-all flex items-center justify-center space-x-2">
+                <NuxtLink :to="`/mentorkita-admin/latihan-soal/materi/${item.id}`" class="w-full py-3 rounded-2xl bg-gray-50 text-gray-700 font-bold text-sm hover:bg-[#2966F3] hover:text-white transition-all flex items-center justify-center space-x-2">
                     <Icon name="lucide:layout-list" size="18" />
                     <span>Kelola Soal</span>
-                </button>
+                </NuxtLink>
             </div>
         </div>
 

@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: mentorkita-app-dev
+    ports:
+      - "3000:3000"
+      - "24678:24678" # Port untuk Vite Hot Module Replacement (HMR) Nuxt 3
+    environment:
+      - DATABASE_URL=postgresql://admin:admin12qwaszx34erdfcv!@db:5432/mentorkita
+      - NODE_ENV=development
+      - HOST=0.0.0.0
+      - PORT=3000
+    env_file:
+      - .env
+    volumes:
+      # Sinkronisasi folder lokal dengan folder /app di dalam container secara real-time
+      - .:/app
+      # Melindungi node_modules lokal (Mac) agar tidak bentrok dengan node_modules container (Linux)
+      - node_modules_dev:/app/node_modules
+      - nuxt_dev:/app/.nuxt
+    depends_on:
+      - db
+    restart: unless-stopped
+
+  db:
+    image: postgres:15-alpine
+    container_name: mentorkita-db-dev
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin12qwaszx34erdfcv!
+      POSTGRES_DB: mentorkita
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data_dev:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  postgres_data_dev:
+  node_modules_dev:
+  nuxt_dev:
