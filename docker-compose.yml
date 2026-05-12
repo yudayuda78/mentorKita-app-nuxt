@@ -10,7 +10,7 @@ services:
       - "3000:3000"
     environment:
       # Mengubah DATABASE_URL agar menunjuk ke service db di docker-compose
-      - DATABASE_URL=postgresql://admin:admin12qwaszx34erdfcv!@db:5432/mentorkita
+      - DATABASE_URL=postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
     env_file:
       - .env
     depends_on:
@@ -21,9 +21,9 @@ services:
     image: postgres:15-alpine
     container_name: mentorkita-db
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin12qwaszx34erdfcv!
-      POSTGRES_DB: mentorkita
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5432:5432" # Anda bisa ubah port host jika 5432 sudah dipakai di lokal Anda
     volumes:
