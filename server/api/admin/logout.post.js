@@ -2,10 +2,10 @@ import { deleteCookie } from 'h3'
 
 
 export default defineEventHandler((event) => {
-  deleteCookie(event, 'token', {
+  deleteCookie(event, 'admin_token', {
     path: '/',
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
   })
 
   return {
