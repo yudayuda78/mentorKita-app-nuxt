@@ -17,6 +17,21 @@ const hashedPassword = await bcrypt.hash("superadmin122333", 10);
       role: "ADMIN",
     },
   });
+
+  const adminPassword = process.env.ADMIN_SEED_PASSWORD || "admin123";
+  const superAdminPassword = process.env.SUPERADMIN_SEED_PASSWORD || "superadmin122333";
+
+  await prisma.admin.upsert({
+    where: { username: "admin" },
+    update: { password: await bcrypt.hash(adminPassword, 10), role: "admin" },
+    create: { username: "admin", password: await bcrypt.hash(adminPassword, 10), role: "admin" },
+  });
+
+  await prisma.admin.upsert({
+    where: { username: "superadmin" },
+    update: { password: await bcrypt.hash(superAdminPassword, 10), role: "admin" },
+    create: { username: "superadmin", password: await bcrypt.hash(superAdminPassword, 10), role: "admin" },
+  });
 }
 
 async function runSeed() {
