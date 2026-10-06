@@ -2,6 +2,8 @@ import prisma from "../../prisma/client.js"
 
 
 export default defineEventHandler( async (event) => {
+    await requireAdmin(event)
+
     const body = await readBody(event)
     const {userId} = body
 

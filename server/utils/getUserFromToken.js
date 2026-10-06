@@ -7,6 +7,7 @@ export async function getUserFromToken(event) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    if (decoded.typ === 'admin') return null
     const user = await prisma.user.findUnique({
       where: { id: decoded.id }
     })

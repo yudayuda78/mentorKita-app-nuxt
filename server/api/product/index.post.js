@@ -11,6 +11,8 @@ function generateSlug(name) {
 }
 
 export default defineEventHandler(async (event) => {
+  await requireAdmin(event)
+
   try {
     const body = await readBody(event)
 
