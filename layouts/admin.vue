@@ -22,6 +22,7 @@ console.log(name.value)
 const currentYear = new Date().getFullYear()
 const routes = [
   { path: '/mentorkita-admin', label: 'Dashboard', icon: 'lucide:layout-dashboard' },
+  { path: '/mentorkita-admin/tryout', label: 'Kelola Tryout', icon: 'lucide:clipboard-list' },
   { path: '/mentorkita-admin/pembayaran-tryout', label: 'Pembayaran TryOut', icon: 'lucide:credit-card' },
   { path: '/mentorkita-admin/pembayaran-product', label: 'Pembayaran Product', icon: 'lucide:shopping-bag' },
   { path: '/mentorkita-admin/statistik-tryout', label: 'Statistik TryOut', icon: 'lucide:bar-chart-3' },
