@@ -8,9 +8,22 @@ export default defineEventHandler(async (event) => {
 
   const token = getCookie(event, 'token')
 
+  if (!token) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized: token tidak ditemukan'
+    })
+  }
 
-   const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
+  let decoded
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET)
+  } catch (err) {
+    throw createError({
+      statusCode: 401,
+      statusMessage: 'Unauthorized: token tidak valid'
+    })
+  }
 
     const user = await prisma.user.findUnique({
       where: { id: decoded.id }

@@ -144,11 +144,7 @@ const onPaid = async () => {
 const expiredAt = ref(null);
 const hasSubscription = ref(false);
 
-const isExpired = computed(() => {
-  if (!hasSubscription.value) return true; // ✅ Anggap expired jika tidak punya subscription
-  if (!expiredAt.value) return true; // ✅ Anggap expired jika tidak ada tanggal expired
-  return new Date(expiredAt.value) < new Date();
-});
+const isExpired = computed(() => !hasSubscription.value);
 
 const hasAccess = computed(() => {
   const detail = store.snbtDetail;
@@ -165,7 +161,7 @@ onMounted(async () => {
     await subscriptionStore.getSubscriptionDetails(userId.value)
 
     const detail = subscriptionStore.subscriptionDetail
-    hasSubscription.value = !!detail
+    hasSubscription.value = detail?.status === 'active'
     expiredAt.value = detail?.expiredAt ?? null
 
     await shareStore.getShared(userId.value, snbtId.value)
@@ -228,7 +224,7 @@ const copyPromo = async () => {
     </div>
 
     <template v-else>
-      <div v-if="(isExpired && store.snbtDetail?.isfree) && !isShared">
+      <div v-if="!hasAccess && store.snbtDetail?.isfree">
         <p
           class="mt-6 px-4 py-3 bg-green-50 border border-green-300 text-green-800 rounded-lg text-sm shadow-sm"
         >
@@ -346,7 +342,7 @@ const copyPromo = async () => {
 
 
     <div
-      v-if="!store.snbtDetail?.isfree && !hasPaid"
+      v-if="!hasAccess && !store.snbtDetail?.isfree"
       class="max-w-xl mx-auto"
     >
       <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-md mb-4">
