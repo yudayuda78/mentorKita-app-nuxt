@@ -49,8 +49,7 @@ export default defineNuxtConfig({
     starqrisApiKey: process.env.STARQRIS_API_KEY || '',
     starqrisWebhookSecret: process.env.STARQRIS_WEBHOOK_SECRET || '',
     public: {
-      baseUrl: 'https://mentorkita.id',
-      databaseUrl: process.env.DATABASE_URL
+      baseUrl: 'https://mentorkita.id'
       // baseUrl: process.env.BASE_URL || 'http://localhost:3000'
     }
   },
