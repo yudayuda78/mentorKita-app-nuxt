@@ -45,6 +45,9 @@ export default defineNuxtConfig({
         mount: '/home/$USR/development/nuxt-file-storage/server/files',
   },
    runtimeConfig: {
+    starqrisBaseUrl: process.env.STARQRIS_BASE_URL || 'https://starqris.web.id/api/v1',
+    starqrisApiKey: process.env.STARQRIS_API_KEY || '',
+    starqrisWebhookSecret: process.env.STARQRIS_WEBHOOK_SECRET || '',
     public: {
       baseUrl: 'https://mentorkita.id',
       databaseUrl: process.env.DATABASE_URL
