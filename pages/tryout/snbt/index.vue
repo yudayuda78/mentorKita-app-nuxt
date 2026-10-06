@@ -34,7 +34,7 @@ const analyticsSnbt = async (userId, snbtTryoutId, snbtTryoutName) => {
               <h3 class="text-lg font-semibold mb-2">{{ item.name || 'Try out ' + (index + 1) }}</h3>
               <img src="/public/snbtlogo/snbtlogo.webp" alt="">
               <p class="text-gray-600 mb-4" v-if="item.isfree===true">Free</p>
-              <p class="text-gray-600 mb-4" v-if="item.isfree===false">Rp 15.000</p>
+              <p class="text-gray-600 mb-4" v-if="item.isfree===false">Rp {{ (item.price || 15000).toLocaleString('id-ID') }}</p>
 
               <NuxtLink :to="`/tryout/snbt/${item.slug}`" @click="analyticsSnbt(userId, item.id, item.name)" class="mt-auto">
                 <Button class="w-full" :color-class="'bg-[#2966F2] text-[#ffffff]'">Kerjakan</Button>

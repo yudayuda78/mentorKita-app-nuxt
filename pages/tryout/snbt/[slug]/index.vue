@@ -83,6 +83,61 @@ const snbtId = computed(() => store.snbtDetail?.id || null);
 const snbtMateri = computed(() => store.snbtDetail?.name || null);
 const isShared = computed(() => shareStore.isShared?.isShared === true)
 
+const paymentLoading = ref(false);
+const paymentError = ref('');
+const paymentData = ref(null);
+const transferAccounts = ref([]);
+const hasPaid = ref(false);
+
+const loadTransferAccounts = async () => {
+  try {
+    const res = await $fetch('/api/payment/transfer-accounts', { credentials: 'include' });
+    transferAccounts.value = res?.data || [];
+  } catch (e) {
+    transferAccounts.value = [];
+  }
+};
+
+const checkPaid = async () => {
+  if (!snbtId.value) return;
+  try {
+    const res = await $fetch('/api/tryout/payment/check', {
+      query: { snbtTryoutId: snbtId.value },
+      credentials: 'include',
+    });
+    hasPaid.value = !!res?.data?.isPaid;
+  } catch (e) {
+    hasPaid.value = false;
+  }
+};
+
+const payWithQris = async () => {
+  paymentError.value = '';
+  paymentLoading.value = true;
+  try {
+    const res = await $fetch('/api/tryout/payment', {
+      method: 'POST',
+      credentials: 'include',
+      body: {
+        snbtTryoutId: snbtId.value,
+        snbtTryoutName: snbtMateri.value,
+      },
+    });
+    paymentData.value = res.data;
+    if (res.data?.isPaid) {
+      hasPaid.value = true;
+    }
+  } catch (e) {
+    paymentError.value = e?.data?.statusMessage || e?.statusMessage || 'Gagal membuat invoice QRIS.';
+  } finally {
+    paymentLoading.value = false;
+  }
+};
+
+const onPaid = async () => {
+  hasPaid.value = true;
+};
+
 
 
 
@@ -93,6 +148,13 @@ const isExpired = computed(() => {
   if (!hasSubscription.value) return true; // ✅ Anggap expired jika tidak punya subscription
   if (!expiredAt.value) return true; // ✅ Anggap expired jika tidak ada tanggal expired
   return new Date(expiredAt.value) < new Date();
+});
+
+const hasAccess = computed(() => {
+  const detail = store.snbtDetail;
+  if (!detail) return false;
+  if (detail.isfree) return hasSubscription.value || isShared.value;
+  return hasPaid.value;
 });
 
 
@@ -107,6 +169,13 @@ onMounted(async () => {
     expiredAt.value = detail?.expiredAt ?? null
 
     await shareStore.getShared(userId.value, snbtId.value)
+
+    if (store.snbtDetail && !store.snbtDetail.isfree) {
+      await checkPaid();
+      if (!hasPaid.value) {
+        loadTransferAccounts();
+      }
+    }
   } catch (e) {
     console.error("Error saat mengambil data:", e)
   } finally {
@@ -277,26 +346,43 @@ const copyPromo = async () => {
 
 
     <div
-      v-if="isExpired && !store.snbtDetail?.isfree"
-      class="text-center text-red-500"
+      v-if="!store.snbtDetail?.isfree && !hasPaid"
+      class="max-w-xl mx-auto"
     >
-     <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-md max-w-xl mx-auto">
-    <p class="font-semibold text-lg mb-2">💰 Akses Tryout Premium</p>
-    <p class="text-sm mb-2">Silakan transfer ke salah satu rekening berikut:</p>
-    <ul class="text-sm text-left list-disc list-inside mb-4">
-      <li><strong>BCA:</strong> 1234567890 a.n. MentorKita Digital</li>
-      <li><strong>BNI:</strong> 9876543210 a.n. MentorKita Digital</li>
-      <li><strong>Mandiri:</strong> 1112223334 a.n. MentorKita Digital</li>
-    </ul>
-    <p class="text-sm mb-2">Atau scan QRIS berikut untuk pembayaran instan:</p>
-    
-    <p class="text-sm text-gray-500">Setelah transfer, silakan hubungi admin untuk aktivasi.</p>
-  </div>
+      <div class="bg-yellow-50 border border-yellow-300 text-yellow-800 p-4 rounded-md mb-4">
+        <p class="font-semibold text-lg mb-1">💰 Akses Tryout Premium</p>
+        <p class="text-sm">
+          Bayar sekali untuk membuka akses tryout ini. Pembayaran terverifikasi otomatis.
+        </p>
+      </div>
+
+      <div v-if="!paymentData" class="text-center">
+        <button
+          class="bg-[#2966F2] text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition disabled:opacity-50"
+          :disabled="paymentLoading"
+          @click="payWithQris"
+        >
+          {{ paymentLoading ? 'Membuat invoice...' : 'Bayar dengan QRIS' }}
+        </button>
+        <p v-if="paymentError" class="text-sm text-red-500 mt-3">{{ paymentError }}</p>
+      </div>
+
+      <QrisPayment
+        v-else
+        :order-id="paymentData.orderId"
+        :total-amount="paymentData.totalAmount"
+        :unique-code="paymentData.uniqueCode"
+        :qris-base64="paymentData.qrisBase64"
+        :qris-payload="paymentData.qrisPayload"
+        :expires-at="paymentData.expiresAt"
+        :transfer-accounts="transferAccounts"
+        @paid="onPaid"
+      />
     </div>
 
 
 
-    <div v-else-if="!isExpired || isShared" class="text-center text-gray-500">
+    <div v-else-if="hasAccess" class="text-center text-gray-500">
       <div class="wrapper py-10 max-w-3xl mx-auto">
         <div v-if="store.loading" class="text-center text-gray-500">
           Loading...
