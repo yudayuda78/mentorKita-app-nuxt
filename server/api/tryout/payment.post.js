@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Harga tryout belum diatur.' })
   }
 
-  const orderId = `MK-TRY-${tryoutId}-${user.id}`
+  const generateOrderId = () => `MK-TRY-${tryoutId}-${user.id}-${Date.now().toString(36)}`
 
   let payment = await prisma.paymentSnbtTryout.findFirst({
     where: { userId: user.id, snbtTryoutId: tryoutId },
@@ -53,7 +53,7 @@ export default defineEventHandler(async (event) => {
         userId: user.id,
         snbtTryoutId: tryoutId,
         snbtMateri: snbtTryoutName || tryout.name || `Tryout ${tryoutId}`,
-        orderId,
+        orderId: generateOrderId(),
         amount: tryout.price,
         status: 'pending',
       },
@@ -69,12 +69,13 @@ export default defineEventHandler(async (event) => {
     payment.qrisPayload &&
     payment.expiresAt &&
     new Date(payment.expiresAt) > now &&
-    payment.orderId === orderId
+    payment.amount === tryout.price
 
   if (reusable) {
     return buildResponse(payment)
   }
 
+  const orderId = generateOrderId()
   const invoice = await createInvoice(event, {
     orderId,
     amount: tryout.price,
