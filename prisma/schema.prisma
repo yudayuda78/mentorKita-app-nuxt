@@ -199,6 +199,7 @@ model SnbtTryout{
   slug String? @unique
   isfree Boolean?
   isclosed Boolean?
+  price Int?
   marketing String?
   startedAt  DateTime // waktu mulai
   endedAt    DateTime // waktu selesai
@@ -272,7 +273,21 @@ model PaymentSnbtTryout{
   snbtTryoutId Int
   snbtMateri String
   isPaid Boolean @default(false)
+  orderId String? @unique
+  amount Int?
+  totalAmount Int?
+  uniqueCode Int?
+  qrisFee Int?
+  invoiceNumber String?
+  qrisPayload String? @db.Text
+  qrisBase64 String? @db.Text
+  status String @default("pending")
+  expiresAt DateTime?
+  paidAt DateTime?
+  statusCheckedAt DateTime?
   createdAt DateTime @default(now())
+
+  @@unique([userId, snbtTryoutId])
 }
 
 model PaymentProduct{
