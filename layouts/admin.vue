@@ -28,6 +28,12 @@ const routes = [
   { path: '/mentorkita-admin/statistik-tryout', label: 'Statistik TryOut', icon: 'lucide:bar-chart-3' },
   { path: '/mentorkita-admin/latihan-soal', label: 'Latihan Soal', icon: 'lucide:book-open' },
   { path: '/mentorkita-admin/mini-quiz', label: 'Mini Quiz', icon: 'lucide:book-open' },
+  { path: '/mentorkita-admin/product', label: 'Produk', icon: 'lucide:shopping-bag' },
+  { path: '/mentorkita-admin/blog', label: 'Blog', icon: 'lucide:newspaper' },
+  { path: '/mentorkita-admin/download-soal', label: 'Download Soal', icon: 'lucide:download' },
+  { path: '/mentorkita-admin/user', label: 'User', icon: 'lucide:users' },
+  { path: '/mentorkita-admin/subscription', label: 'Subscription', icon: 'lucide:badge-check' },
+  { path: '/mentorkita-admin/account', label: 'Akun Admin', icon: 'lucide:shield' },
   { path: '/mentorkita-admin/pengaturan', label: 'Pengaturan', icon: 'lucide:settings' },
 ]
 

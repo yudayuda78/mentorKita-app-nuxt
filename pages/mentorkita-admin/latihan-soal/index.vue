@@ -2,7 +2,8 @@
 
 
 definePageMeta({
-    layout: 'admin'
+    layout: 'admin',
+    middleware: 'admin'
 })
 
 const store = useLatihanSoalAdminStore()
