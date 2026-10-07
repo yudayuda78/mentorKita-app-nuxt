@@ -51,16 +51,41 @@ export const useMiniquizAdminStore = defineStore('miniquizAdmin', () => {
         return res
     }
 
-    // Question Actions (Placeholder for now, assuming endpoints will be similar)
+    // Question Actions
     const addQuestion = async (payload) => {
         const fetch = useRequestFetch()
-        const res = await fetch('/api/admin/miniquiz/question', {
+        const res = await fetch('/api/admin/miniquiz/soal', {
             method: 'POST',
             body: payload
         })
         if (res.data && currentMiniquiz.value) {
             if (!currentMiniquiz.value.soalMiniQuiz) currentMiniquiz.value.soalMiniQuiz = []
             currentMiniquiz.value.soalMiniQuiz.push(res.data)
+        }
+        return res
+    }
+
+    const updateQuestion = async (id, payload) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/miniquiz/soal/${id}`, {
+            method: 'PUT',
+            body: payload
+        })
+        if (res.data && currentMiniquiz.value?.soalMiniQuiz) {
+            currentMiniquiz.value.soalMiniQuiz = currentMiniquiz.value.soalMiniQuiz.map(item =>
+                item.id === id ? res.data : item
+            )
+        }
+        return res
+    }
+
+    const deleteQuestion = async (id) => {
+        const fetch = useRequestFetch()
+        const res = await fetch(`/api/admin/miniquiz/soal/${id}`, {
+            method: 'DELETE',
+        })
+        if (res.statusCode === 200 && currentMiniquiz.value?.soalMiniQuiz) {
+            currentMiniquiz.value.soalMiniQuiz = currentMiniquiz.value.soalMiniQuiz.filter(item => item.id !== id)
         }
         return res
     }
@@ -73,6 +98,8 @@ export const useMiniquizAdminStore = defineStore('miniquizAdmin', () => {
         addMiniquiz,
         updateMiniquiz,
         deleteMiniquiz,
-        addQuestion
+        addQuestion,
+        updateQuestion,
+        deleteQuestion
     }
 })
