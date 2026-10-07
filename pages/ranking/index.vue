@@ -1,87 +1,63 @@
 <script setup>
-
-const score = useScoreStore()
-
-
-onMounted(async() => {
-  const fetchAllScore = await score.fetchAllScore()
-
-  const response = await $fetch('/api/ranking/filter-dropdown')
-  if (response.success) {
-    tryoutOptions.value = response.data
-  }
-  
-})
-
-
-
-// Ranking global
-const rankings = computed(() => {
-  return [...score.allScore]
-    .sort((a, b) => b.score - a.score)
-    .map((item, index) => ({ ...item, rank: index + 1 }))
-})
+const ranking = useRankingStore()
 
 const searchQuery = ref('')
-const currentPage = ref(1)
-const itemsPerPage = 5
-
-// Jumlah tryout & rata-rata
-const totalTryouts = computed(() => rankings.value.length)
-const averageScore = computed(() => {
-  const total = rankings.value.reduce((sum, item) => sum + item.score, 0)
-  return (total / rankings.value.length).toFixed(2)
-})
-
-// Filter
-
-const tryoutOptions = ref([]) 
 const selectedTryout = ref('')
+const currentPage = ref(1)
+const pageSize = 20
 
-const filteredRankings = computed(() =>
-  rankings.value.filter(item =>
-    (item.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-     item.school.toLowerCase().includes(searchQuery.value.toLowerCase())) &&
-    (selectedTryout.value === '' || item.slug === selectedTryout.value)
-  )
-)
+let searchTimer = null
 
-const totalPages = computed(() =>
-  Math.ceil(filteredRankings.value.length / itemsPerPage)
-)
-
-const paginatedRankings = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  return filteredRankings.value.slice(start, start + itemsPerPage)
-})
-
-function goToPage(page) {
-  currentPage.value = page
+const loadLeaderboard = async () => {
+  if (!selectedTryout.value) return
+  await ranking.fetchLeaderboard({
+    slug: selectedTryout.value,
+    page: currentPage.value,
+    pageSize,
+    q: searchQuery.value.trim(),
+  })
 }
 
-watch(selectedTryout, async (newVal) => {
-  currentPage.value = 1 // reset ke halaman pertama
-
-  if (newVal === '') {
-    await score.fetchAllScore()
-  } else {
-    try {
-      const response = await $fetch('/api/ranking/filter-tryout', {
-        method: 'POST',
-        body: { tryoutSlug: newVal }
-      })
-
-      if (response.success && Array.isArray(response.data)) {
-        score.setAllScore(response.data)
-      } else {
-        score.setAllScore([]) // kosongkan jika gagal
-      }
-    } catch (err) {
-      console.error('Gagal memfilter ranking:', err)
-    }
+onMounted(async () => {
+  await ranking.fetchTryouts()
+  if (ranking.tryoutOptions.length) {
+    selectedTryout.value = ranking.tryoutOptions[0].slug
+    await loadLeaderboard()
   }
 })
 
+watch(selectedTryout, async () => {
+  currentPage.value = 1
+  await loadLeaderboard()
+})
+
+watch(searchQuery, () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    currentPage.value = 1
+    loadLeaderboard()
+  }, 300)
+})
+
+const goToPage = async (page) => {
+  if (page < 1 || page > ranking.meta.totalPages || page === currentPage.value) return
+  currentPage.value = page
+  await loadLeaderboard()
+}
+
+// Paginasi berjendela agar tidak merender ribuan tombol
+const pageWindow = computed(() => {
+  const total = ranking.meta.totalPages || 0
+  const current = currentPage.value
+  const span = 2
+  const start = Math.max(1, current - span)
+  const end = Math.min(total, current + span)
+  const pages = []
+  for (let i = start; i <= end; i++) pages.push(i)
+  return pages
+})
+
+const totalParticipants = computed(() => ranking.meta.total || 0)
 </script>
 
 <template>
@@ -90,34 +66,29 @@ watch(selectedTryout, async (newVal) => {
   <section class="p-6 max-w-5xl mx-auto">
     <h1 class="text-3xl font-bold mb-4 text-blue-700">Ranking & Score</h1>
 
-    <!-- Info Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
       <div class="bg-blue-100 text-blue-900 p-4 rounded-xl shadow">
-        <p class="text-sm font-semibold">Jumlah Tryout Diikuti</p>
-        <p class="text-2xl font-bold">{{ totalTryouts }}</p>
+        <p class="text-sm font-semibold">Peserta Tryout</p>
+        <p class="text-2xl font-bold">{{ totalParticipants }}</p>
       </div>
       <div class="bg-green-100 text-green-900 p-4 rounded-xl shadow">
-        <p class="text-sm font-semibold">Nilai Rata-rata Semua Tryout</p>
-        <p class="text-2xl font-bold">{{ averageScore }}</p>
+        <p class="text-sm font-semibold">Tryout Dipilih</p>
+        <p class="text-lg font-bold truncate">{{ ranking.tryout?.name || '-' }}</p>
       </div>
     </div>
 
-<div class="mb-4">
-  <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tryout:</label>
-  <select
-    v-model="selectedTryout"
-    class="w-full border px-4 py-2 rounded-lg shadow"
-  >
-    <option value="">Semua Tryout</option>
-    <option v-for="option in tryoutOptions" :key="option.slug" :value="option.slug">
-      {{ option.name }}
-    </option>
-  </select>
-</div>
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700 mb-1">Filter Tryout:</label>
+      <select
+        v-model="selectedTryout"
+        class="w-full border px-4 py-2 rounded-lg shadow"
+      >
+        <option v-for="option in ranking.tryoutOptions" :key="option.slug" :value="option.slug">
+          {{ option.name }} ({{ option.participants }})
+        </option>
+      </select>
+    </div>
 
-    
-
-    <!-- Search -->
     <input
       v-model="searchQuery"
       type="text"
@@ -125,39 +96,49 @@ watch(selectedTryout, async (newVal) => {
       class="border px-4 py-2 rounded-lg w-full mb-4 shadow"
     />
 
-    <!-- Table -->
     <div class="overflow-x-auto rounded-xl shadow">
       <table class="w-full text-left border border-gray-200">
         <thead class="bg-gray-100">
           <tr>
-            <th class="px-4 py-3 border">Rank</th>
+            <th class="px-4 py-3 border w-20">Rank</th>
             <th class="px-4 py-3 border">Nama</th>
             <th class="px-4 py-3 border">Asal Sekolah</th>
-            <th class="px-4 py-3 border">Score</th>
+            <th class="px-4 py-3 border w-24">Score</th>
           </tr>
         </thead>
         <tbody>
+          <tr v-if="ranking.loading">
+            <td colspan="4" class="text-center p-4 text-gray-500">Memuat ranking...</td>
+          </tr>
           <tr
-            v-for="item in paginatedRankings"
-            :key="item.name"
+            v-else
+            v-for="item in ranking.entries"
+            :key="`${item.rank}-${item.name}`"
             class="hover:bg-gray-50 transition"
           >
-            <td class="px-4 py-2 border">{{ item.rank }}</td>
+            <td class="px-4 py-2 border font-semibold">{{ item.rank }}</td>
             <td class="px-4 py-2 border">{{ item.name }}</td>
             <td class="px-4 py-2 border">{{ item.school }}</td>
             <td class="px-4 py-2 border">{{ item.score }}</td>
           </tr>
-          <tr v-if="!paginatedRankings.length">
-            <td colspan="4" class="text-center p-4">Tidak ada hasil.</td>
+          <tr v-if="!ranking.loading && !ranking.entries.length">
+            <td colspan="4" class="text-center p-4 text-gray-500">Tidak ada hasil.</td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <!-- Pagination -->
-    <div class="flex justify-center mt-6 gap-2">
+    <div v-if="ranking.meta.totalPages > 1" class="flex justify-center mt-6 gap-2 flex-wrap">
       <button
-        v-for="page in totalPages"
+        @click="goToPage(currentPage - 1)"
+        :disabled="currentPage === 1"
+        class="px-4 py-2 border rounded-full transition disabled:opacity-40"
+      >
+        &laquo;
+      </button>
+
+      <button
+        v-for="page in pageWindow"
         :key="page"
         @click="goToPage(page)"
         class="px-4 py-2 border rounded-full transition"
@@ -167,6 +148,14 @@ watch(selectedTryout, async (newVal) => {
         }"
       >
         {{ page }}
+      </button>
+
+      <button
+        @click="goToPage(currentPage + 1)"
+        :disabled="currentPage === ranking.meta.totalPages"
+        class="px-4 py-2 border rounded-full transition disabled:opacity-40"
+      >
+        &raquo;
       </button>
     </div>
   </section>
