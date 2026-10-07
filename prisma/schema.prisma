@@ -181,8 +181,10 @@ model SnbtFinalScore{
   tryout SnbtTryout @relation(fields: [snbtTryoutId], references: [id])
   snbtTryoutId Int
   score Int
+  createdAt DateTime @default(now())
 
   @@unique([userId, snbtTryoutId])
+  @@index([snbtTryoutId, score(sort: Desc), createdAt, userId])
 }
 
 model AverageScoreTryout{
