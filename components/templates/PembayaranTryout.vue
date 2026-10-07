@@ -1,137 +1,148 @@
+<script setup>
+const payments = ref([])
+const meta = ref({ total: 0, page: 1, pageSize: 10, totalPages: 0 })
+const loading = ref(false)
+const searchQuery = ref('')
+const statusFilter = ref('')
+const page = ref(1)
+const perPage = 10
+const savingId = ref(null)
+
+let searchTimer = null
+
+const formatRupiah = (v) => (v === null || v === undefined ? '-' : 'Rp ' + Number(v).toLocaleString('id-ID'))
+const formatDate = (d) => (d ? new Date(d).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-')
+
+const statusClass = (s) =>
+  s === 'paid' ? 'bg-green-50 text-green-600'
+  : s === 'pending' ? 'bg-amber-50 text-amber-600'
+  : s === 'ambiguous' ? 'bg-purple-50 text-purple-600'
+  : 'bg-red-50 text-red-600'
+
+const load = async () => {
+  loading.value = true
+  try {
+    const res = await $fetch('/api/admin/payment/tryout', {
+      query: { page: page.value, pageSize: perPage, q: searchQuery.value.trim(), status: statusFilter.value },
+      credentials: 'include',
+    })
+    payments.value = res.data || []
+    meta.value = res.meta || meta.value
+  } finally {
+    loading.value = false
+  }
+}
+
+onMounted(load)
+
+watch(searchQuery, () => {
+  clearTimeout(searchTimer)
+  searchTimer = setTimeout(() => {
+    page.value = 1
+    load()
+  }, 300)
+})
+
+watch(statusFilter, () => {
+  page.value = 1
+  load()
+})
+
+const goToPage = (p) => {
+  if (p < 1 || p > meta.value.totalPages || p === page.value) return
+  page.value = p
+  load()
+}
+
+const togglePaid = async (item) => {
+  const target = !item.isPaid
+  if (!confirm(target ? `Tandai lunas untuk ${item.user?.username}?` : `Batalkan status lunas ${item.user?.username}?`)) return
+  savingId.value = item.id
+  try {
+    await $fetch(`/api/tryout/payment/${item.id}`, {
+      method: 'PUT',
+      credentials: 'include',
+      body: { isPaid: target },
+    })
+    await load()
+  } finally {
+    savingId.value = null
+  }
+}
+</script>
+
 <template>
-  <div class="p-4">
-    <h2 class="text-xl font-bold mb-4">Daftar Pembayaran Tryout</h2>
+  <div class="p-6">
+    <div class="flex justify-between items-center mb-6">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-800">Pembayaran Tryout</h1>
+        <p class="text-gray-500 text-sm">Total {{ meta.total }} pembayaran.</p>
+      </div>
+      <div class="flex items-center gap-3">
+        <input v-model="searchQuery" type="text" placeholder="Cari user / invoice / order..." class="px-4 py-2 rounded-xl border border-gray-200 text-sm w-64 outline-none focus:border-[#2966F3]" />
+        <select v-model="statusFilter" class="px-3 py-2 rounded-xl border border-gray-200 text-sm outline-none">
+          <option value="">Semua Status</option>
+          <option value="pending">Pending</option>
+          <option value="paid">Paid</option>
+          <option value="failed">Failed</option>
+          <option value="ambiguous">Ambiguous</option>
+        </select>
+      </div>
+    </div>
 
-    <!-- 🔍 Search -->
-    <input
-      v-model="searchQuery"
-      type="text"
-      placeholder="Cari username, email, atau nama tryout..."
-      class="mb-4 w-full p-2 border rounded"
-    />
+    <div class="overflow-x-auto bg-white rounded-2xl border border-gray-100 shadow-sm">
+      <table class="min-w-full text-sm">
+        <thead class="bg-gray-50 text-gray-500 text-left">
+          <tr>
+            <th class="px-4 py-3 font-semibold">User</th>
+            <th class="px-4 py-3 font-semibold">Tryout</th>
+            <th class="px-4 py-3 font-semibold">Invoice</th>
+            <th class="px-4 py-3 font-semibold">Total</th>
+            <th class="px-4 py-3 font-semibold">Status</th>
+            <th class="px-4 py-3 font-semibold">Tanggal</th>
+            <th class="px-4 py-3 font-semibold text-right">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="item in payments" :key="item.id" class="border-t border-gray-50 hover:bg-gray-50/60">
+            <td class="px-4 py-3">
+              <div class="font-medium text-gray-700">{{ item.user?.username }}</div>
+              <div class="text-xs text-gray-400">{{ item.user?.email }}</div>
+            </td>
+            <td class="px-4 py-3 text-gray-600">{{ item.snbtTryout?.name || item.snbtMateri }}</td>
+            <td class="px-4 py-3">
+              <div class="font-mono text-xs text-gray-600">{{ item.invoiceNumber || '-' }}</div>
+              <div class="font-mono text-[10px] text-gray-400">{{ item.orderId || '-' }}</div>
+            </td>
+            <td class="px-4 py-3">
+              <div class="text-gray-700">{{ formatRupiah(item.totalAmount) }}</div>
+              <div class="text-[10px] text-gray-400">{{ formatRupiah(item.amount) }}<span v-if="item.uniqueCode"> + {{ item.uniqueCode }}</span></div>
+            </td>
+            <td class="px-4 py-3">
+              <span class="px-2 py-1 rounded-lg text-xs font-semibold" :class="statusClass(item.status)">{{ item.status }}</span>
+            </td>
+            <td class="px-4 py-3 text-gray-500">{{ formatDate(item.paidAt || item.createdAt) }}</td>
+            <td class="px-4 py-3 text-right">
+              <button
+                @click="togglePaid(item)"
+                :disabled="savingId === item.id"
+                class="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all disabled:opacity-50"
+                :class="item.isPaid ? 'text-red-600 bg-red-50 hover:bg-red-100' : 'text-green-600 bg-green-50 hover:bg-green-100'"
+              >
+                {{ item.isPaid ? 'Batalkan' : 'Tandai Lunas' }}
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-if="!loading && !payments.length" class="text-center py-10 text-gray-400 italic">Tidak ada data.</div>
+      <div v-if="loading" class="text-center py-6 text-gray-400">Memuat...</div>
+    </div>
 
-    <!-- 📋 Tabel -->
-    <table class="min-w-full table-auto border">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="border px-4 py-2">Username</th>
-          <th class="border px-4 py-2">Email</th>
-          <th class="border px-4 py-2">Nama Tryout</th>
-          <th class="border px-4 py-2">Status</th>
-          <th class="border px-4 py-2">Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="(item, index) in paginatedPayments"
-          :key="item.id"
-        >
-          <td class="border px-4 py-2">{{ item.user.username }}</td>
-          <td class="border px-4 py-2">{{ item.user.email }}</td>
-          <td class="border px-4 py-2">{{ item.snbtTryout.name }}</td>
-          <td class="border px-4 py-2">
-            <select v-model="item.status" class="border px-2 py-1 rounded">
-              <option value="false">Belum Bayar</option>
-              <option value="true">Terbayar</option>
-            </select>
-          </td>
-          <td class="border px-4 py-2">
-            <button
-              class="bg-blue-500 text-white px-4 py-1 rounded hover:bg-blue-600"
-              @click="saveStatus(item)"
-            >
-              Save
-            </button>
-          </td>
-        </tr>
-        <tr v-if="paginatedPayments.length === 0">
-          <td colspan="5" class="text-center p-4 text-gray-500">
-            Tidak ada data ditemukan.
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- ⏩ Pagination -->
-    <div class="mt-4 flex items-center justify-center space-x-2">
-      <button @click="prevPage" :disabled="page === 1" class="px-3 py-1 border rounded">
-        &laquo;
-      </button>
-
-      <button
-        v-for="i in totalPages"
-        :key="i"
-        @click="setPage(i)"
-        :class="['px-3 py-1 border rounded', { 'bg-blue-500 text-white': page === i }]"
-      >
-        {{ i }}
-      </button>
-
-      <button @click="nextPage" :disabled="page === totalPages" class="px-3 py-1 border rounded">
-        &raquo;
-      </button>
+    <div v-if="meta.totalPages > 1" class="flex justify-center mt-6 gap-2">
+      <button @click="goToPage(page - 1)" :disabled="page === 1" class="px-4 py-2 border rounded-full transition disabled:opacity-40">&laquo;</button>
+      <span class="px-4 py-2 text-sm text-gray-500">Halaman {{ page }} / {{ meta.totalPages }}</span>
+      <button @click="goToPage(page + 1)" :disabled="page === meta.totalPages" class="px-4 py-2 border rounded-full transition disabled:opacity-40">&raquo;</button>
     </div>
   </div>
 </template>
-
-<script setup>
-import { ref, computed, onMounted } from 'vue'
-
-const payments = ref([])
-const searchQuery = ref('')
-const page = ref(1)
-const perPage = 5
-
-// 🚀 Ambil data awal
-onMounted(async () => {
-  const data = await $fetch('/api/tryout/payment')
-  payments.value = data.map(p => ({
-    ...p,
-    status: p.isPaid.toString()
-  }))
-})
-
-// 🔍 Filter berdasarkan input
-const filteredPayments = computed(() => {
-  const query = searchQuery.value.toLowerCase()
-  return payments.value.filter(p =>
-    p.user.username.toLowerCase().includes(query) ||
-    p.user.email.toLowerCase().includes(query) ||
-    (p.snbtTryout.name || '').toLowerCase().includes(query)
-  )
-})
-
-// 📄 Hitung total halaman
-const totalPages = computed(() => {
-  return Math.ceil(filteredPayments.value.length / perPage)
-})
-
-// ⛳ Data per halaman
-const paginatedPayments = computed(() => {
-  const start = (page.value - 1) * perPage
-  return filteredPayments.value.slice(start, start + perPage)
-})
-
-// 🔁 Navigasi halaman
-const setPage = (p) => {
-  page.value = p
-}
-const prevPage = () => {
-  if (page.value > 1) page.value--
-}
-const nextPage = () => {
-  if (page.value < totalPages.value) page.value++
-}
-
-// 💾 Simpan status
-const saveStatus = async (item) => {
-  await $fetch(`/api/tryout/payment/${item.id}`, {
-    method: 'PUT',
-    body: {
-      isPaid: item.status === 'true'
-    }
-  })
-
-  alert(`Status untuk ${item.user.username} berhasil disimpan!`)
-}
-</script>

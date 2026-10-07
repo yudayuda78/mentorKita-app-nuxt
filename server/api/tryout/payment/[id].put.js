@@ -15,11 +15,18 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    const data = { isPaid: body.isPaid }
+    if (body.isPaid) {
+      data.status = 'paid'
+      data.paidAt = new Date()
+    } else {
+      data.status = 'pending'
+      data.paidAt = null
+    }
+
     const updated = await prisma.paymentSnbtTryout.update({
       where: { id },
-      data: {
-        isPaid: body.isPaid
-      }
+      data,
     })
 
     return {
