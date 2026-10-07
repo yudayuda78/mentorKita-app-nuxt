@@ -5,12 +5,14 @@ import { randomUUID } from 'crypto'
 const MAX_FILES = 10
 const MAX_FILE_BYTES = 5 * 1024 * 1024
 const ALLOWED_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.pdf']
+const ALLOWED_FOLDERS = ['uploads', 'blog', 'questionImage', 'miniQuizImage']
 
 export default defineEventHandler(async (event) => {
   await requireUser(event)
 
   const body = await readBody(event)
   const files = Array.isArray(body?.files) ? body.files : []
+  const folder = ALLOWED_FOLDERS.includes(body?.folder) ? body.folder : 'uploads'
 
   if (!files.length) {
     throw createError({ statusCode: 400, statusMessage: 'Tidak ada file yang dikirim.' })
@@ -19,7 +21,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: `Maksimal ${MAX_FILES} file.` })
   }
 
-  const uploadDir = join(process.cwd(), 'public', 'uploads')
+  const uploadDir = join(process.cwd(), 'public', folder)
   await mkdir(uploadDir, { recursive: true })
 
   const saved = []
@@ -51,7 +53,7 @@ export default defineEventHandler(async (event) => {
     }
 
     await writeFile(targetPath, buffer)
-    saved.push(`/uploads/${safeName}`)
+    saved.push(`/${folder}/${safeName}`)
   }
 
   return {

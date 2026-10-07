@@ -167,6 +167,12 @@ const handleConfirmDelete = async () => {
               </span>
             </td>
             <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+              <NuxtLink
+                :to="`/mentorkita-admin/tryout/${item.id}`"
+                class="text-blue-600 bg-blue-50 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-blue-100 transition-all"
+              >
+                Materi
+              </NuxtLink>
               <button
                 @click="openEditModal(item)"
                 class="text-amber-600 bg-amber-50 px-3 py-1.5 rounded-lg text-xs font-semibold hover:bg-amber-100 transition-all"
