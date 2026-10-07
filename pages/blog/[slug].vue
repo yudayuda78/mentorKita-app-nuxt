@@ -50,7 +50,8 @@ useHead(() => ({
        <h1 class="text-3xl font-bold mb-4" >{{ blog.title }}</h1>
       
       <img
-        :src="blog.thumbnail"
+        v-if="blog.thumbnail"
+        :src="blog.thumbnail.startsWith('http') ? blog.thumbnail : `/blog/${blog.thumbnail}`"
         alt="Thumbnail"
         class="w-full h-auto rounded mb-6"
       />
