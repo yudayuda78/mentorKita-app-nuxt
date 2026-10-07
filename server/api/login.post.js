@@ -10,6 +10,20 @@ export default defineEventHandler(async(event) => {
         where: { email: email}
     })
 
+    if (!user) {
+        return {
+            error: true,
+            message: 'Email atau password salah'
+        }
+    }
+
+    if (user.isActive === false) {
+        return {
+            error: true,
+            message: 'Akun Anda dinonaktifkan. Hubungi admin.'
+        }
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password)
     if (!isPasswordValid) {
         return {

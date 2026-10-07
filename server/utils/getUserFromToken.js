@@ -11,6 +11,7 @@ export async function getUserFromToken(event) {
     const user = await prisma.user.findUnique({
       where: { id: decoded.id }
     })
+    if (!user || user.isActive === false) return null
     return user
   } catch (err) {
     return null

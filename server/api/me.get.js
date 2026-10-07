@@ -16,8 +16,12 @@ export default defineEventHandler(async (event) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET) 
     const user = await prisma.user.findUnique({
         where: { id: decoded.id },
-        select: { id: true, email: true, username: true }
+        select: { id: true, email: true, username: true, isActive: true }
     })
+
+    if (user && user.isActive === false) {
+        return { error: true, message: 'Akun dinonaktifkan' }
+    }
 
     return { user }
 })
